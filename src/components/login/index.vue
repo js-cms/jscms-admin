@@ -2,7 +2,7 @@
   <div class="login-vue">
     <div class="login-container">
       <div class="login-content">
-        <div class="login-title">JSCMS管理系统</div>
+        <div class="login-title">JsCms管理系统</div>
         <div class="login-name">
           <input type="text" v-model="login.email" placeholder="用户名（邮箱）"/>
         </div>
@@ -13,7 +13,7 @@
           <Button :loading="loading" block color="primary" size="l" @click="submit">登录</Button>
         </div>
       </div>
-      <p class="copyright"> Copyright © 2019 JsCms. - <a href="https://www.jscms.top/">jscms.top</a></p>
+      <p class="copyright"> Copyright © 2019 JsCms. - <a href="https://www.jscms.top/">JsCms.Top</a></p>
     </div>
   </div>
 </template>
@@ -31,9 +31,10 @@ export default {
   },
   methods: {
     async submit() {
-      console.log(this.login);
       let res = req.post("/api/login", this.login);
-      console.log(res);
+      if (res.code === 1) {
+        
+      }
     }
   }
 };
@@ -50,7 +51,7 @@ export default {
   left: 0;
   background: #f7f8fa;
   .login-container {
-    width: 400px;
+    width: 320px;
     position: absolute;
     top: 50%;
     left: 50%;
@@ -58,10 +59,10 @@ export default {
     .login-content {
       letter-spacing: 2px;
       background: #FFF;
-      padding: 120px 40px 60px;
+      padding: 70px 30px 20px;
       border: none!important;
       background: #fff;
-      box-shadow: 0 1px 3px 0 rgba(0,0,0,.06);
+      box-shadow: 0 1px 3px 0 #0000000f;
       border-radius: 3px;
       border-radius: 3px;
       box-sizing: border-box;
@@ -117,7 +118,7 @@ export default {
     }
     .copyright {
       letter-spacing: 1px;
-      margin-top: 10px;
+      margin-top: 40px;
       color: #333;
       a {
         color: #000;
