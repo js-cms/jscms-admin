@@ -1,0 +1,49 @@
+@frame-box-shadow: rgba(0,21,41,.08);
+
+#app{
+  .app-frame {
+    min-height: 100vh;
+  }
+
+  .h-layout-sider{
+    z-index: 2;
+    box-shadow: 0 1px 4px @frame-box-shadow;
+  }
+  .h-layout-header{
+    box-shadow: 0px 1px 4px 0 @frame-box-shadow;
+  }
+
+  .h-layout-sider-collapsed {
+    .app-logo{
+      padding-left: 5px;
+    }
+    .h-layout-header-fixed {
+      .sys-tabs-vue {
+        left: @layout-sider-collapse-width;
+      }
+    }
+  }
+
+  .h-layout-header-fixed {
+    .sys-tabs-vue {
+      position: fixed;
+      top: @layout-header-height;
+      right: 0;
+      z-index: 2;
+      left: @layout-sider-width;
+    }
+    .sys-tabs-vue + .h-layout-content {
+      margin-top: 45px;
+    }
+  }
+
+  .h-layout-sider-theme-dark .app-logo a{
+    color: #FFF;
+  }
+  
+}
+
+@media (max-width: 600px) {
+  #app {
+  }
+}
