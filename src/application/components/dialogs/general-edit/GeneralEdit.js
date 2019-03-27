@@ -9,19 +9,21 @@ export default class GeneralEdit {
    * @description 构造函数
    */
   constructor(vueComponentInstance, opts = {}) {
-    this.that = vueComponentInstance;
+    this.parent = vueComponentInstance;
     this.isShow = false;
     this.me = this;
-    if ( opts.form ) {
-      this.form = opts.form;
-      console.log(this.form);
-    }
+
+    this.title = opts.title || '编辑';
+    this.form = opts.form || '';
+    this.width = opts.width || 700;
+    this._create = opts.create || '';
+    this._update = opts.update || '';
   }
 
   /**
    * @description 显示Dialog
    */
-  show(data = {}) {
+  _show(data = {}, type = 'create') {
     //合并对象
     for (const key in data) {
       if (data.hasOwnProperty(key)) {
@@ -29,7 +31,22 @@ export default class GeneralEdit {
         this[key] = value;
       }
     }
+    this._type = type;
     this.isShow = true;
+  }
+
+  /**
+   * @description 显示Dialog
+   */
+  create(data = {}) {
+    this._show(data, 'create');
+  }
+
+  /**
+   * @description 显示Dialog
+   */
+  update(data = {}) {
+    this._show(data, 'update');
   }
 
   /**
@@ -49,7 +66,25 @@ export default class GeneralEdit {
   /**
    * @description 确认事件
    */
-  onConfirm(result) {
-    
+  onConfirm(form) {
+    let res = form.validator.all();
+    if (res.length > 0) {
+      this.parent.$Message({
+        type: 'error',
+        text: res[0].displayName + '格式的格式不正确且不能为空'
+      });
+      return;
+    }
+    if (this._type === 'create') {
+      if ( typeof this._create === 'function' ) {
+        this._create.call(this.parent, form);
+        this.onClose();
+      }
+    } else if (this._type === 'update') {
+      if ( typeof this._update === 'function' ) {
+        this._update.call(this.parent, form);
+        this.onClose();
+      }
+    }
   }
 }

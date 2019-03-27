@@ -8,7 +8,7 @@ export default class Table {
    */
   constructor(opts = {}) {
     this.model = opts.model || {};
-    this.data = opts.data || {};
+    this.list = opts.list || [];
     this.pagination = opts.pagination || {
       page: 1,
       size: 20,

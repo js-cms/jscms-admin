@@ -20,6 +20,7 @@
 
 <script>
 import Login from './ModelLogin';
+import storejs from 'store';
 import { req } from '@/application/common/request/index.js';
 
 export default {
@@ -31,9 +32,33 @@ export default {
   },
   methods: {
     async submit() {
-      let res = req.post("/api/login", this.login);
-      if (res.code === 1) {
-        
+      let res = await req.post("/api/login", this.login);
+      console.log(res);
+      if (res.code === 0) {
+        this.$Message({
+          type: 'success',
+          text: res.msg, 
+          timeout: 3000
+        });
+        storejs.set('token', res.data.token);
+        storejs.set('uuid', res.data.userInfo._id);
+        this.$router.push({
+          name: 'Home'
+        });
+      } else {
+        if ( res.msg.detail ) {
+          this.$Message({
+            type: 'error',
+            text: res.msg.detail[0].message, 
+            timeout: 3000
+          });
+        } else {
+          this.$Message({
+            type: 'error',
+            text: res.msg, 
+            timeout: 3000
+          });
+        }
       }
     }
   }

@@ -1,67 +1,77 @@
 <template>
   <div class="jscms-table">
-    <!-- <div class="table">
-      <Table :loading="data.loading" :datas="data.list">
-        <TableItem title="序号">
-          <template slot-scope="{index}">{{index+1}}</template>
-        </TableItem>
-        <template slot-scope="props">
-          <td>{{props.index}}</td>
-          <td>{{props.data.id}}</td>
-          <td>{{props.data.name}}</td>
-          <td>{{props.data.age}}</td>
-          <td>{{props.data.address}}</td>
+    <Table :datas="list" stripe>
+      <TableItem 
+        v-for="(f, key, index) in model.fields"
+        :key="index"
+        :title="f.displayName"
+        v-if="f.tableField===true"
+      >
+        <template slot-scope="{data}">{{data[key]}}</template>
+      </TableItem>
+      <TableItem title="操作" :width="100" fixed="right">
+        <template slot-scope="{index, data}">
+          <button class="h-btn h-btn-s">
+            <i class="h-icon-edit"></i>
+          </button>
+          <Poptip :content="`确定要删除该${model.model.displayName}项？`" @confirm="()=>{
+            parent.deleteData(data, index);
+          }">
+            <button class="h-btn h-btn-s h-btn-red">
+              <i class="h-icon-trash"></i>
+            </button>
+          </Poptip>
         </template>
-      </Table>
-    </div>
-    <div class="pagination">
-      <Pagination
-        v-if="data.pagination.total>0"
-        :size="data.pagination.size"
-        :cur="data.pagination.page"
-        align="right"
-        :total="data.pagination.total"
-        @change="(page) => {
-            this.data.pagination.page = page.cur;
-            this.data.pagination.size = page.size;
-            this.fetchData();
-          }"
-      />
-    </div> -->
+      </TableItem>
+      <div slot="empty">暂无数据</div>
+    </Table>
+    <Pagination
+      v-if="pagination.total>0"
+      :size="pagination.size"
+      :cur="pagination.page"
+      align="right"
+      :total="pagination.total"
+      @change="() => {
+        pagination.page = page.cur;
+        pagination.size = page.size;
+        parent.fetchData();
+      }"
+    />
   </div>
 </template>
-
 <script>
-// import TableComText from "@/components/table-components/com-text";
-// import TableComStrings from "@/components/table-components/com-strings";
-// import TableComTags  from "@/components/table-components/com-tags";
-// import TableComStringsObject from "@/components/table-components/com-strings-object";
-// import TableComDate from "@/components/table-components/com-date";
-// import TableComUser from "@/components/table-components/com-user";
-// import TableComPrice from "@/components/table-components/com-price";
-// import TableComPoster from "@/components/table-components/com-poster";
-// import TableComSex from "@/components/table-components/com-sex";
-// import TableComPercentage from "@/components/table-components/com-percentage";
-// import TableComUserGroup from "@/components/table-components/com-user-group";
-// import TableComOperation from "@/components/table-components/com-operation";
 
 export default {
   props: ['data', 'parent'],
-  data(){return{
-
-  }},
+  data() {
+    return {
+      list: [],
+      model: {},
+      pagination: {
+        page: 1,
+        size: 20,
+        total: 0
+      }
+    };
+  },
 
   watch: {
-    'data': {
+    data: {
       handler: function() {
-
+        this.parse();
       },
       deep: true
     }
   },
 
+  mounted() {
+    this.parse();
+  },
+
   methods: {
     parse() {
+      this.model = this.data.model;
+      this.list = this.data.list;
     }
   }
 };

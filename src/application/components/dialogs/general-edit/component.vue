@@ -1,9 +1,9 @@
 <template>
   <div class="dialog">
-    <Modal v-model="isShow" :closeOnMask="false" >
+    <Modal v-model="isShow" :closeOnMask="false">
       <div slot="header">{{title}}</div>
-      <div v-width="700" v-if="form">
-        <Form :label-width="110" :model="form.fields" ref="form" showErrorTip>
+      <div v-width="width" v-if="form">
+        <Form :label-width="labelWidth" labelPosition="left" :model="form.fields" ref="form" showErrorTip>
           <template v-for="(f, key, index) in form.fields">
             <FormItem :label="f.displayName" prop="input" v-if="!f.extra.comType" :key="index">
               <input :name="f.name" type="text" v-model="f.value">
@@ -20,8 +20,12 @@
         </Form>
       </div>
       <div slot="footer">
-        <button class="h-btn">取消</button>
-        <Button color="primary">确定</Button>
+        <button class="h-btn" @click="() => {
+          options.onCancel.call(options.me);
+        }">取消</button>
+        <Button color="primary" @click="() => {
+          options.onConfirm.call(options.me, form);
+        }">确定</Button>
       </div>
     </Modal>
   </div>
@@ -34,6 +38,8 @@ export default {
     return {
       isShow: false,
       title: '编辑',
+      width: 700,
+      labelWidth: 60,
       form: ''
     };
   },
@@ -53,6 +59,8 @@ export default {
     onShow() {
       this.title = this.options.title || '编辑';
       this.form = this.options.form || '';
+      this.width = this.options.width || 700;
+      this.getLabelWidth();
     },
 
     handlerEvent(handlerName) {
@@ -67,6 +75,17 @@ export default {
           this.options.onClose.call(this.options.me);
           break;
       }
+    },
+
+    getLabelWidth() {
+      let labelWidth = 30;
+      for (const key in this.form.fields) {
+        if (this.form.fields.hasOwnProperty(key)) {
+          const element = this.form.fields[key];
+          labelWidth = 30 + (15 * element.displayName.length);
+        }
+      }
+      this.labelWidth = labelWidth;
     }
   }
 };

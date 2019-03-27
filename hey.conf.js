@@ -1,7 +1,7 @@
 const path = require('path');
 
 module.exports = {
-  port: 9012,
+  port: 8080,
   root: 'dist',
   webpack: {
     console: false,

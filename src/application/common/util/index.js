@@ -1,9 +1,19 @@
-import log from './util.log.js'
-import cookies from './util.cookies.js'
+let util = {}
 
-let util = {
-  cookies,
-  log
+/**
+ * @description 更新标题
+ * @param {String} title 标题
+ */
+util.setData = function (target, source) {
+  for (const key in target) {
+    if (target.hasOwnProperty(key)) {
+      const element = target[key];
+      const sourceVal = source[key];
+      if ( sourceVal ) {
+        target[key] = sourceVal;
+      }
+    }
+  }
 }
 
 /**
@@ -11,8 +21,7 @@ let util = {
  * @param {String} title 标题
  */
 util.title = function (titleText) {
-  const processTitle = process.env.VUE_APP_TITLE || '刺梨之家后台'
-  window.document.title = `${processTitle}${titleText ? ` | ${titleText}` : ''}`
+  window.document.title = titleText;
 }
 
 /**

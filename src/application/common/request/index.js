@@ -22,7 +22,8 @@ fly.interceptors.response.use(
       storejs.remove('uuid');
       window.location.href = "/";
     }
-    return response;
+    //只返回data
+    return response.data;
   },
   (err) => {
     //发生网络错误后会走到这里
