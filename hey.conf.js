@@ -4,7 +4,7 @@ module.exports = {
   port: 9012,
   root: 'dist',
   webpack: {
-    console: true,
+    console: false,
     publicPath: '/',
     output: {
       './index.html': {

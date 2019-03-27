@@ -13,14 +13,14 @@ export default [
         title: '域名配置',
         key: 'WebConfigDomainList'
       },
-      // {
-      //   title: '网站配置',
-      //   key: 'TableSearch'
-      // },
-      // {
-      //   title: '菜单配置',
-      //   key: 'TableSearch'
-      // }
+      {
+        title: '网站配置',
+        key: 'WebConfigSite'
+      },
+      {
+        title: '菜单配置',
+        key: 'WebConfigMenu'
+      }
     ]
   },
   {

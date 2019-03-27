@@ -7,7 +7,6 @@ Vue.use(VueRouter);
 
 const initRouter = () => {
   const routerParam = {
-    mode: 'history',
     routes: [{
       path: '/login',
       name: 'Login',
