@@ -6,7 +6,8 @@ export default [
     count: 1
   },
   {
-    title: '网站配置',
+    title: '站点配置',
+    key: 'WebConfig',
     icon: 'icon-grid-2',
     children: [
       {
@@ -29,13 +30,17 @@ export default [
   },
   {
     title: '内容管理',
-    key: 'form-folder',
+    key: 'Content',
     icon: 'icon-paper',
     children: [
       {
         title: '文章管理',
-        key: 'Form'
+        key: 'ContentArticlesList'
       },
+      {
+        title: '评论管理',
+        key: 'ContentCommentsList'
+      }
       // {
       //   title: '标签管理',
       //   key: 'FormDetail'
@@ -44,6 +49,17 @@ export default [
       //   title: '分类管理',
       //   key: 'FormDetail'
       // }
+    ]
+  },
+  {
+    title: '资源管理',
+    key: 'Resource',
+    icon: 'icon-disc',
+    children: [
+      {
+        title: '图片管理',
+        key: 'ResourceImagesList'
+      }
     ]
   },
   {
