@@ -1,7 +1,7 @@
 import modelman from 'modelman';
 
 let model = new modelman.Model({
-  name: 'configDomain',
+  name: 'configDomains',
   displayName: '域名配置'
 });
 

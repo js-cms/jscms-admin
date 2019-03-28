@@ -66,8 +66,9 @@ export default class GeneralEdit {
   /**
    * @description 确认事件
    */
-  onConfirm(form) {
+  onConfirm(form, index) {
     let res = form.validator.all();
+    console.log(res);
     if (res.length > 0) {
       this.parent.$Message({
         type: 'error',
@@ -82,7 +83,7 @@ export default class GeneralEdit {
       }
     } else if (this._type === 'update') {
       if ( typeof this._update === 'function' ) {
-        this._update.call(this.parent, form);
+        this._update.call(this.parent, form, index);
         this.onClose();
       }
     }

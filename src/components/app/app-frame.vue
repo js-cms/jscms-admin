@@ -11,8 +11,8 @@
         <!-- <keep-alive> -->
         <router-view></router-view>
         <!-- </keep-alive> -->
+        <HFooter><appFooter></appFooter></HFooter>
       </Content>
-      <HFooter><appFooter></appFooter></HFooter>
     </Layout>
   </Layout>
   <Modal v-model="openSetting" type="drawer-right">
@@ -28,6 +28,7 @@ import appMenu from './app-menu';
 import appFooter from './app-footer';
 import SysTabs from '../common/sys-tabs';
 import store from 'js/vuex/store';
+import storejs from 'store';
 import { mapState } from 'vuex';
 
 export default {
@@ -46,11 +47,21 @@ export default {
   mounted() {
     // 如果无后台数据，将此处屏蔽
     this.init();
-
+    // 检查是否登陆
+    this.chekcLogin();
     // 如果无后台数据，将此处打开
     // this.loading = false;
   },
   methods: {
+    chekcLogin() {
+      let token = storejs.get('token');
+      let uuid = storejs.get('uuid');
+      if ( !token || !uuid ) {
+        this.$router.push({
+          name: 'Login'
+        });
+      }
+    },
     init() {
       this.$Loading('加载中');
       R.User.info().then((resp) => {

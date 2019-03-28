@@ -1,8 +1,9 @@
 let util = {}
 
 /**
- * @description 更新标题
- * @param {String} title 标题
+ * @description 为一个对象的已有属性的值进行填充。
+ * @param {Object} target 对象
+ * @param {Object} source 对象
  */
 util.setData = function (target, source) {
   for (const key in target) {

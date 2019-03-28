@@ -10,16 +10,20 @@ export default [
     icon: 'icon-grid-2',
     children: [
       {
-        title: '域名配置',
-        key: 'WebConfigDomainList'
-      },
-      {
         title: '网站配置',
         key: 'WebConfigSite'
       },
       {
+        title: '域名配置',
+        key: 'WebConfigDomainsList'
+      },
+      {
         title: '菜单配置',
-        key: 'WebConfigMenu'
+        key: 'WebConfigMenusList'
+      },
+      {
+        title: '链接配置',
+        key: 'WebConfigLinksList'
       }
     ]
   },

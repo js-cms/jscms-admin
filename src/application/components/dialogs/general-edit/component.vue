@@ -24,7 +24,7 @@
           options.onCancel.call(options.me);
         }">取消</button>
         <Button color="primary" @click="() => {
-          options.onConfirm.call(options.me, form);
+          options.onConfirm.call(options.me, form, index);
         }">确定</Button>
       </div>
     </Modal>
@@ -40,6 +40,7 @@ export default {
       title: '编辑',
       width: 700,
       labelWidth: 60,
+      index: 0,
       form: ''
     };
   },
@@ -60,6 +61,14 @@ export default {
       this.title = this.options.title || '编辑';
       this.form = this.options.form || '';
       this.width = this.options.width || 700;
+      if ( this.options.index ) {
+        this.index = this.options.index || 0;
+      }
+      if ( this.options.formData ) {
+        console.log(this.options.formData);
+        this.form.setData(this.options.formData);
+        console.log(this.form);
+      } 
       this.getLabelWidth();
     },
 

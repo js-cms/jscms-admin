@@ -7,11 +7,17 @@
         :title="f.displayName"
         v-if="f.tableField===true"
       >
-        <template slot-scope="{data}">{{data[key]}}</template>
+        <template slot-scope="{data}">{{data[key] === '' || data[key] === undefined ? '无' : data[key]}}</template>
       </TableItem>
       <TableItem title="操作" :width="100" fixed="right">
         <template slot-scope="{index, data}">
-          <button class="h-btn h-btn-s">
+          <button class="h-btn h-btn-s" @click="()=>{
+            parent.dialog.generalEdit.update({
+              title: '编辑' + parent.page.name,
+              index: index,
+              formData: data
+            });
+          }">
             <i class="h-icon-edit"></i>
           </button>
           <Poptip :content="`确定要删除该${model.model.displayName}项？`" @confirm="()=>{
