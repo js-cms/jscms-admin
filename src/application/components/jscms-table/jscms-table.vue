@@ -138,7 +138,8 @@ export default {
           index++;
         }
       }
-      return width * index;
+      let res = (width * index) * 0.9;
+      return res < 100 ? 100 : res;
     } 
   }
 };
