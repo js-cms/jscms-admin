@@ -1,32 +1,68 @@
 <template>
-  <div class="jscms-table">
+  <div class="jscms-table" v-if="model">
     <Table :datas="list" stripe>
-      <TableItem 
+      <TableItem
         v-for="(f, key, index) in model.fields"
         :key="index"
         :title="f.displayName"
         v-if="f.tableField===true"
       >
-        <template slot-scope="{data}">{{data[key] === '' || data[key] === undefined ? '无' : data[key]}}</template>
+        <template slot-scope="{data}">
+          <com-objectid
+            v-if="f.constructor === modelman.type.ObjectId"
+            :data="data"
+            :field="f"
+            :keyname="key"
+            :index="index"
+          ></com-objectid>
+          <com-text
+            v-if="f.constructor === modelman.type.String || f.constructor === modelman.type.Number"
+            :data="data"
+            :field="f"
+            :keyname="key"
+            :index="index"
+          ></com-text>
+          <com-date
+            v-if="f.constructor === modelman.type.Timestamp"
+            :data="data"
+            :field="f"
+            :keyname="key"
+            :index="index"
+          ></com-date>
+        </template>
       </TableItem>
-      <TableItem title="操作" :width="100" fixed="right">
+      <TableItem title="操作" :width="operationWidth" fixed="right" v-if="operation">
         <template slot-scope="{index, data}">
-          <button class="h-btn h-btn-s" @click="()=>{
-            parent.dialog.generalEdit.update({
-              title: '编辑' + parent.page.name,
-              index: index,
-              formData: data
-            });
-          }">
-            <i class="h-icon-edit"></i>
-          </button>
-          <Poptip :content="`确定要删除该${model.model.displayName}项？`" @confirm="()=>{
-            parent.deleteData(data, index);
-          }">
-            <button class="h-btn h-btn-s h-btn-red">
-              <i class="h-icon-trash"></i>
+          <span v-for="(obj, opkey, index) in operation" :key="index">
+            <button
+              v-if="opkey!=='delete'"
+              :class="obj.btnClass"
+              v-tooltip
+              placement="bottom"
+              :content="obj.name"
+              @click="()=>{
+                obj.click.call(parent, data, index);
+              }"
+            >
+              <i :class="obj.iClass"></i>
             </button>
-          </Poptip>
+            <Poptip
+              v-if="opkey==='delete'"
+              :content="`确定要删除该${model.model.displayName}项？`"
+              @confirm="()=>{
+              obj.click.call(parent, data, index);
+            }"
+            >
+              <button
+                :class="obj.btnClass"
+                v-tooltip
+                placement="bottom"
+                :content="obj.name"
+              >
+                <i :class="obj.iClass"></i>
+              </button>
+            </Poptip>
+          </span>
         </template>
       </TableItem>
       <div slot="empty">暂无数据</div>
@@ -46,13 +82,25 @@
   </div>
 </template>
 <script>
+import modelman from 'modelman';
+import ComText from './components/text';
+import ComObjectid from './components/objectid';
+import ComDate from './components/date';
 
 export default {
   props: ['data', 'parent'],
+  components: {
+    ComText,
+    ComObjectid,
+    ComDate
+  },
   data() {
     return {
+      modelman: modelman,
       list: [],
-      model: {},
+      model: "",
+      operationWidth: 100,
+      operation: {},
       pagination: {
         page: 1,
         size: 20,
@@ -78,7 +126,20 @@ export default {
     parse() {
       this.model = this.data.model;
       this.list = this.data.list;
-    }
+      this.operation = this.data.operation;
+      this.operationWidth = this.getOperationWidth();
+    },
+
+    getOperationWidth() {
+      let index = 0;
+      let width = 50;
+      for (const key in this.operation) {
+        if (this.operation.hasOwnProperty(key)) {
+          index++;
+        }
+      }
+      return width * index;
+    } 
   }
 };
 </script>

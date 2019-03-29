@@ -65,10 +65,8 @@ export default {
         this.index = this.options.index || 0;
       }
       if ( this.options.formData ) {
-        console.log(this.options.formData);
         this.form.setData(this.options.formData);
-        console.log(this.form);
-      } 
+      }
       this.getLabelWidth();
     },
 

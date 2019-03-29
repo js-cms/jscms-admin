@@ -21,6 +21,7 @@
   </div>
 </template>
 <script>
+import storejs from 'store';
 import util from '@/application/common/util/index.js';
 import domain from './model/Article';
 import Table from '@/application/common/class/Table';
@@ -39,9 +40,7 @@ export default {
       page: {
         name: ''
       },
-      data: new Table({
-        model: domain
-      }),
+      data: {},
       dialog: {
         generalEdit: new dialogGeneralEdit.GeneralEdit(this, {
           form: domain,
@@ -73,7 +72,39 @@ export default {
     init() {
       this.page.name = this.model.model.displayName;
       this.data = new Table({
-        model: this.model
+        model: this.model,
+        operation: {
+          edit: {
+            click: function (data, index) {
+              this.$router.push({
+                name: 'ContentArticlesEdit',
+                query: {
+                  id: data._id
+                }
+              });
+            }
+          },
+          view: {
+            btnClass: 'h-btn h-btn-s h-btn-text-primary',
+            iClass: 'h-icon-link',
+            name: '前台查看文章',
+            click: function (data, index) {
+              window.open(`${storejs.get('origin')}/${data.serialNumber}.html`)
+            }
+          },
+          fastEdit: {
+            btnClass: 'h-btn h-btn-s h-btn-text-primary',
+            iClass: 'h-icon-edit',
+            name: '快速编辑',
+            click: function (data, index) {
+              this.dialog.generalEdit.update({
+                title: '快速编辑' + this.page.name,
+                index: index,
+                formData: data
+              });
+            }
+          }
+        }
       });
     },
 

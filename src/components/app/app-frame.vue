@@ -1,36 +1,39 @@
 <style lang='less'>
 </style>
 <template>
-<div>
-  <Layout class="app-frame" v-if="!loading" :siderCollapsed="siderCollapsed" :siderFixed="layoutConfig.siderFixed">
-    <Sider :theme="layoutConfig.siderTheme"><appMenu :theme="layoutConfig.siderTheme"></appMenu></Sider>
-    <Layout :headerFixed="layoutConfig.headerFixed">
-      <HHeader theme="white"><appHead @openSetting="openSetting=true" :layoutConfig="layoutConfig"></appHead></HHeader>
-      <SysTabs v-if="layoutConfig.showSystab" homePage="Home"></SysTabs>
-      <Content>
-        <!-- <keep-alive> -->
-        <router-view></router-view>
-        <!-- </keep-alive> -->
-        <HFooter><appFooter></appFooter></HFooter>
-      </Content>
+  <div>
+    <Layout class="app-frame" v-if="!loading" :siderCollapsed="siderCollapsed" :siderFixed="layoutConfig.siderFixed">
+      <Sider :theme="layoutConfig.siderTheme">
+        <appMenu :theme="layoutConfig.siderTheme"></appMenu>
+      </Sider>
+      <Layout :headerFixed="layoutConfig.headerFixed">
+        <HHeader theme="white">
+          <appHead @openSetting="openSetting=true" :layoutConfig="layoutConfig"></appHead>
+        </HHeader>
+        <SysTabs v-if="layoutConfig.showSystab" homePage="Home"></SysTabs>
+        <Content>
+          <!-- <keep-alive> -->
+          <router-view></router-view>
+          <!-- </keep-alive> -->
+          <HFooter>
+            <appFooter></appFooter>
+          </HFooter>
+        </Content>
+      </Layout>
     </Layout>
-  </Layout>
-  <Modal v-model="openSetting" type="drawer-right">
-    <appLayoutSetting :layoutConfig="layoutConfig"></appLayoutSetting>
-  </Modal>
-</div>
+    <Modal v-model="openSetting" type="drawer-right">
+      <appLayoutSetting :layoutConfig="layoutConfig"></appLayoutSetting>
+    </Modal>
+  </div>
 </template>
 <script>
-
 import appLayoutSetting from './modules/app-layout-setting';
 import appHead from './app-header';
 import appMenu from './app-menu';
 import appFooter from './app-footer';
 import SysTabs from '../common/sys-tabs';
 import store from 'js/vuex/store';
-import storejs from 'store';
 import { mapState } from 'vuex';
-
 export default {
   data() {
     return {
@@ -47,24 +50,13 @@ export default {
   mounted() {
     // 如果无后台数据，将此处屏蔽
     this.init();
-    // 检查是否登陆
-    this.chekcLogin();
     // 如果无后台数据，将此处打开
     // this.loading = false;
   },
   methods: {
-    chekcLogin() {
-      let token = storejs.get('token');
-      let uuid = storejs.get('uuid');
-      if ( !token || !uuid ) {
-        this.$router.push({
-          name: 'Login'
-        });
-      }
-    },
     init() {
       this.$Loading('加载中');
-      R.User.info().then((resp) => {
+      R.User.info().then(resp => {
         if (resp.ok) {
           resp.body.avatar = require('../../images/avatar.png');
           store.dispatch('updateAccount', resp.body);
@@ -73,7 +65,7 @@ export default {
       });
     },
     initDict() {
-      R.Dict.get().then((resp) => {
+      R.Dict.get().then(resp => {
         if (resp.ok) {
           let dicts = resp.body;
           for (let dict of dicts) {
