@@ -64,7 +64,7 @@
         font-size: 13px;
         overflow: hidden;
         margin-right: 15px;
-        .icon-monitor, .icon-paper {
+        .tabs-item-icon {
           position: relative;
           top: -1px;
         }
@@ -143,7 +143,7 @@
         <DropdownMenu :datas="menus" @click="trigger" @show="show" trigger="contextMenu" :toggleIcon="false">
           <span v-for="(item, index) of tagList" :key="`sys-tab-${index}`" :index="index" @click="handleClick(item)" class="tabs-item" :class="{'tabs-item-chosen': isCurrentTab(item)}" >
             <div class="tabs-item-title">
-              <span :class="item.meta.icon"></span>
+              <span :class="item.meta.icon" class="tabs-item-icon"></span>
               <span>{{item.meta.title}}</span>
             </div>
             <span class="tabs-item-close h-icon-close" @click.stop="handleClose(item)" v-if="homePage!=item.name"></span>
