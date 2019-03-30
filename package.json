@@ -33,7 +33,7 @@
     "lodash.debounce": "^4.0.8",
     "manba": "^1.2.8",
     "marked": "^0.5.2",
-    "modelman": "^0.0.7",
+    "modelman": "^0.0.8",
     "moment": "^2.24.0",
     "plupload-es6": "^2.1.11",
     "qiniu-js-es6": "^1.0.31",

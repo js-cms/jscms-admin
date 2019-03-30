@@ -34,21 +34,21 @@ export default [
     icon: 'icon-paper',
     children: [
       {
+        title: '分类管理',
+        key: 'ContentCategoriesList'
+      },
+      {
         title: '文章管理',
         key: 'ContentArticlesList'
+      },
+      {
+        title: '标签管理',
+        key: 'ContentTagsList'
       },
       {
         title: '评论管理',
         key: 'ContentCommentsList'
       }
-      // {
-      //   title: '标签管理',
-      //   key: 'FormDetail'
-      // },
-      // {
-      //   title: '分类管理',
-      //   key: 'FormDetail'
-      // }
     ]
   },
   {
@@ -59,83 +59,33 @@ export default [
       {
         title: '图片管理',
         key: 'ResourceImagesList'
+      },
+      {
+        title: '文件管理',
+        key: 'ResourceFilesList'
       }
     ]
   },
   {
     title: '页面管理',
-    key: 'AutoComplete-folder',
+    key: 'Page',
     icon: 'icon-disc',
     children: [
       {
-        title: '模糊搜索',
-        key: 'Autocomplete1'
-      },
-      {
-        title: '场景应用',
-        key: 'Autocomplete2'
-      },
-      {
-        title: '复杂场景',
-        key: 'Autocomplete3'
+        title: '自定义页面',
+        key: 'PageCustomsList'
       }
     ]
   },
   {
-    title: '商城系统',
-    key: 'Advance-folder',
-    icon: 'icon-bar-graph-2',
+    title: '用户系统',
+    key: 'User',
+    icon: 'icon-cog',
     children: [
       {
-        title: '图表',
-        key: 'Chart'
-      },
-      {
-        title: '富文本编辑器',
-        key: 'RicktextEditor'
-      },
-      {
-        title: '代码编辑器',
-        key: 'CodeEditor'
-      },
-      {
-        title: 'Markdown编辑器',
-        key: 'MarkdownEditor'
-      }, {
-        title: '百度地图',
-        key: 'BaiduMap'
+        title: '用户列表',
+        key: 'UsersList'
       }
     ]
-  },
-  // {
-  //   title: '论坛系统',
-  //   key: 'SysSetting',
-  //   icon: 'icon-cog',
-  //   children: [
-  //     {
-  //       title: '个人中心',
-  //       key: 'AccountBasic'
-  //     },
-  //     {
-  //       title: '安全设置',
-  //       key: 'SecuritySetting'
-  //     }
-  //   ]
-  // },
-  // {
-  //   title: '用户管理',
-  //   key: 'SysSetting',
-  //   icon: 'icon-cog',
-  //   children: [
-  //     {
-  //       title: '个人中心',
-  //       key: 'AccountBasic'
-  //     },
-  //     {
-  //       title: '安全设置',
-  //       key: 'SecuritySetting'
-  //     }
-  //   ]
-  // }
+  }
 ];
-

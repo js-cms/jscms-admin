@@ -110,6 +110,7 @@
 <script>
 import { mapState } from 'vuex';
 import appHeaderMessage from './modules/app-header-message';
+import storejs from 'store';
 
 export default {
   components: {
@@ -142,10 +143,12 @@ export default {
     goBook() {
       window.open('https://heyui.github.io/heyui-admin-docs');
     },
-    trigger(data) {
+    async trigger(data) {
       if (data == 'logout') {
-        Utils.removeLocal('token');
-        this.$router.replace({ name: 'Login' });
+        await this.req$.get(`/api/logout?token=${storejs.get('token')}&userId=${storejs.get('uuid')}`);
+        storejs.remove('token');
+        storejs.remove('uuid');
+        this.$router.replace({ name: 'Login' }); 
       } else {
         this.$router.push({ name: 'AccountBasic' });
       }
