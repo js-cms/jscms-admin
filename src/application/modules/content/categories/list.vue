@@ -46,7 +46,7 @@ export default {
     };
   },
   mounted() {
-    this.fetchModel$('评论', 'comment', (model) => {
+    this.fetchModel$('分类', 'category', (model) => {
       this.model = model;
       this.init();
       //this.fetchData();
@@ -93,7 +93,19 @@ export default {
       this.dialog = {
         generalEdit: new dialogGeneralEdit.GeneralEdit(this, {
           form: this.model,
-          width: '500'
+          width: '450',
+          // create: function(form) {
+          //   let json = form.to.json();
+          //   this.saveData(json, 1);
+          // },
+          // update: function(form, index) {
+          //   let json = form.to.json();
+          //   let id = this.data.list[index]._id;
+          //   let category = Object.assign(json, {
+          //     _id: id
+          //   });
+          //   this.saveData(category, 2);
+          // }
         })
       }
     },

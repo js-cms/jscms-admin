@@ -1,18 +1,10 @@
 import { Request } from '@/application/common/request/index.js';
 import modelman from 'modelman';
 
-// model.assign({
-//   protocol: { n: '协议', type: 'String', f: true, t: true, r: true }, //协议
-//   host: { n: '域名', type: 'String', f: true, t: true, r: true }, //域名
-//   port: { n: '端口', type: 'Number', f: true, t: true, r: true } //端口
-// });
-
-// export default model;
-
 export default {
   data: function () {
     return {
-      containerLoading: false,
+      containerLoading: true,
       req$: Request(this)
     }
   },
@@ -23,10 +15,20 @@ export default {
         name: modelName[0].toUpperCase() + modelName.substr(1),
         displayName: displayName
       });
-      model.assign(res.data.model);
-      if (typeof callback === "function") {
-        callback(model);
+      if (res.data.model) {
+        model.assign(res.data.model);
+        if (typeof callback === "function") {
+          callback(model);
+        }
+      } else {
+        if (typeof callback === "function") {
+          callback(false);
+        }
       }
+    },
+
+    log(...argv) {
+      console.log(...argv);
     }
   }
 }

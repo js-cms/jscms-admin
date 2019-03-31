@@ -10,7 +10,7 @@ util.setData = function (target, source) {
     if (target.hasOwnProperty(key)) {
       const element = target[key];
       const sourceVal = source[key];
-      if ( sourceVal ) {
+      if (sourceVal) {
         target[key] = sourceVal;
       }
     }
@@ -39,4 +39,24 @@ util.open = function (url) {
   document.body.removeChild(document.getElementById('d2admin-menu-link'))
 }
 
-export default util
+/**
+ * 计算字符像素宽度
+ */
+util.textSize = function (fontSize, text) {
+  let span = document.createElement("span");
+  let result = {};
+  span.innerText = text;
+  result.width = span.offsetWidth;
+  result.height = span.offsetHeight;
+  span.style.visibility = "hidden";
+  span.style.fontSize = fontSize;
+  span.style.display = "inline-block";
+  document.body.appendChild(span);
+  result.width = span.offsetWidth;
+  result.height =span.offsetHeight;
+  span.parentNode.removeChild(span);
+  return result;
+}
+
+export default util;
+

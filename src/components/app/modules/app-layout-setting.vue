@@ -66,8 +66,6 @@ export default {
     return {
     };
   },
-  mounted() {
-  },
   methods: {
     copySetting() {
       this.$Clipboard({ text: JSON.stringify(this.layoutConfig, null, 2), showSuccessTip: '复制成功' });

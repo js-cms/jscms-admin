@@ -41,7 +41,7 @@ export default {
       openSetting: false,
       layoutConfig: {
         siderTheme: 'white',
-        showSystab: false,
+        showSystab: true,
         headerFixed: true,
         siderFixed: true
       }

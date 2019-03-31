@@ -2,31 +2,15 @@
   <div class="app-form frame-page basic-form-vue">
     <div class="h-panel">
       <div class="h-panel-bar">
-        <span class="h-panel-title">{{page.name}}</span>
+        <span class="h-panel-title">{{`${id ? '编辑' : '新建'}${page.name}`}}</span>
+        <span style="float: right">
+          <button class="h-btn h-btn-primary" @click="submit">{{`${id ? '保存修改' : '确认新建'}`}}</button>
+        </span>
       </div>
-      <div class="h-panel-body" >
-        <Row>
-          <Cell width="12" >
-            <Form
-              :label-width="150"
-              :model="form.fields"
-              ref="form"
-              showErrorTip
-            >
-              <template v-for="(f, key, index) in form.fields" >
-                <FormItem :label="f.displayName" prop="input" v-if="!f.extra.comType" :key="index">
-                  <input :name="f.name" type="text" v-model="f.value" >
-                </FormItem>
-                <FormItem :label="f.displayName" prop="input" v-if="f.extra.comType==='textarea'" :key="index">
-                  <textarea :name="f.name" v-model="f.value" rows=4 ></textarea>
-                </FormItem>
-              </template>
-              <FormItem>
-                <Button color="primary" :loading="isLoading" @click="submit">保存修改</Button>
-              </FormItem>
-            </Form>
-          </Cell>
-        </Row>
+      <div class="h-panel-body">
+        <div v-width="'100%'" v-if="form!==''">
+          <jscms-form :form="form" :parent="this"></jscms-form>
+        </div>
         <Loading text="Loading" :loading="containerLoading"></Loading>
       </div>
     </div>
@@ -34,28 +18,35 @@
 </template>
 <script>
 import util from '@/application/common/util/index.js';
-import { setTimeout } from 'timers';
+import jscmsForm from '@/application/components/jscms-form/jscms-form.vue';
 
 export default {
+  components: {
+    jscmsForm
+  },
   data() {
     return {
       id: this.$route.query.id,
       page: {
         name: ''
       },
-      form: {},
-      isLoading: false,
-      mode: 'single',
+      form: '',
+      mode: 'single'
     };
   },
 
   mounted() {
-    this.fetchModel$('文章', 'article', (model) => {
+    this.fetchModel$('文章', 'article', model => {
       this.form = model;
       this.init();
-      this.fetchData();
+      if (this.id) {
+        this.fetchData(() => {
+          this.containerLoading = false;
+        });
+      } else {
+        this.containerLoading = false;
+      }
     });
-    this.fetchData();
   },
 
   methods: {
@@ -65,43 +56,35 @@ export default {
 
     submit() {
       let validResult = this.form.validator.all();
+      console.log(this.form);
       if (validResult.length > 0) {
         this.$Message({
           type: 'error',
-          text: res[0].displayName + '格式的格式不正确且不能为空'
+          text: validResult[0].displayName + '格式不正确且不能为空'
         });
         return;
       }
-      this.saveData(this.form.to.json());
+      console.log(this.form);
+      this.saveData(this.form.to.json({ formField: true }));
     },
 
-    async saveData(info, callback) {
-      this.config.info = info;
+    async saveData(article, callback) {
       let type = '保存';
-      let res = await this.req$.get('/api/article', {
-        id: this.id
+      let res = await this.req$.post('/api/article/create', article);
+      this.$Message({
+        text: res.msg,
+        type: res.code === 0 ? 'success' : 'error'
       });
-      if ( res.code === 0 ) {
-        this.$Message({
-          text: type + '成功',
-          type: 'success'
-        });
-        typeof callback === 'function' ? callback() : void(0);
-      } else {
-        this.$Message({
-          text: type + '失败',
-          type: 'error'
-        });
-      }
+      typeof callback === 'function' ? callback() : void 0;
     },
 
-    async fetchData(reload = false) {
+    async fetchData(callback) {
       let res = await this.req$.get('/api/article', {
         id: this.id
       });
       this.form.setData(res.data);
+      typeof callback === 'function' ? callback() : void 0;
     }
-
   }
 };
 </script>
@@ -111,5 +94,9 @@ export default {
   .h-panel-body {
     padding-right: 60px;
   }
+}
+
+.form-btns {
+  padding-left: 100px;
 }
 </style>

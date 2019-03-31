@@ -23,7 +23,7 @@
 <script>
 import util from '@/application/common/util/index.js';
 import domain from './model/Domain';
-import Table from '@/application/common/class/Table';
+import Table from '@/application/components/jscms-table/Table';
 import dialogGeneralEdit from '@/application/components/dialogs/general-edit/index.js';
 import jscmsTable from '@/application/components/jscms-table/jscms-table.vue';
 import { req } from '@/application/common/request/index.js';
@@ -45,6 +45,7 @@ export default {
         _id: ""
       },
       data: new Table({
+        auto: false,
         model: domain
       }),
       dialog: {

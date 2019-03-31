@@ -8,7 +8,11 @@
         <Row :space-x="19" :space-y="5">
           <Cell style="float: right">
             <div>
-              <Button color="primary" @click="dialog.generalEdit.create({title: '新增' + page.name})">新增{{page.name}}</Button>
+              <Button color="primary" @click="()=>{
+                $router.push({
+                  name: 'ContentArticlesEdit'
+                });
+              }">新增{{page.name}}</Button>
             </div>
           </Cell>
         </Row>
@@ -24,7 +28,7 @@
 import storejs from 'store';
 import util from '@/application/common/util/index.js';
 import domain from './model/Article';
-import Table from '@/application/common/class/Table';
+import Table from '@/application/components/jscms-table/Table';
 import dialogGeneralEdit from '@/application/components/dialogs/general-edit/index.js';
 import jscmsTable from '@/application/components/jscms-table/jscms-table.vue';
 import { req } from '@/application/common/request/index.js';
@@ -65,7 +69,6 @@ export default {
     this.fetchModel$('文章', 'article', (model) => {
       this.model = model;
       this.init();
-      this.fetchData();
     });
   },
   methods: {
@@ -89,7 +92,7 @@ export default {
             iClass: 'h-icon-link',
             name: '前台查看文章',
             click: function (data, index) {
-              window.open(`${storejs.get('origin')}/${data.serialNumber}.html`)
+              window.open(`${storejs.get('origin')}/${data.numberId}.html`)
             }
           },
           fastEdit: {
@@ -108,23 +111,6 @@ export default {
       });
     },
 
-    async fetchData(reload = false) {
-      if (reload) {
-        this.data.pagination.page = 1;
-      }
-      let res = await req.get(`/api/article/list?pageSize=${10}&pageNumber=${0}`);
-      let list = res.data.list;
-      // list.forEach(i => {
-      // })
-      this.data.list = res.data.list;
-      this.data.pagination.total = 100;
-    },
-
-    async deleteData(data, index) {
-      this.data.list.splice(index, 1);
-      this.saveData(this.data.list, '删除');
-    },
-
     async saveData(info, type, callback) {
       this.config.info = info;
       let res = await req.post('/api/config', this.config);
@@ -141,12 +127,8 @@ export default {
           type: 'error'
         });
       }
-    },
-
-    reload() {
-      this.fetchData(true);
     }
-    
+
   }
 };
 </script>

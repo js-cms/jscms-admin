@@ -15,7 +15,7 @@
           <Button :loading="loading" block color="primary" size="l" @click="submit">登录</Button>
         </div>
       </div>
-      <p class="copyright"> Copyright © 2019 vvpvvp - <a href="https://www.heyui.top/">heyui.top</a></p>
+      <p class="copyright"> Copyright © 2019 <a href="http://jscms.top" target="_blank">JSCMS</a></p>
     </div>
   </div>
 </template>
@@ -42,6 +42,7 @@ export default {
         });
         storejs.set('token', res.data.token);
         storejs.set('uuid', res.data.userInfo._id);
+        storejs.set('userInfo', res.data.userInfo);
         this.$router.push({
           name: 'Home'
         });

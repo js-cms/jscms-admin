@@ -95,14 +95,8 @@
         <i class="icon-content-left"></i>
       </div>
       <appHeaderMessage></appHeaderMessage>
-      <div class="app-header-icon-item" v-tooltip content="GitHub" theme="white" @click="goGithub">
-        <i class="h-icon-github"></i>
-      </div>
-      <div class="app-header-icon-item" v-tooltip content="教学文档" theme="white" @click="goBook">
-        <i class="h-icon-help"></i>
-      </div>
       <DropdownMenu className="app-header-dropdown" trigger="hover" offset="0 5" :width="150" placement="bottom-end" :datas="infoMenu" @onclick="trigger">
-        <Avatar :src="User.avatar" :width="30"><span>{{User.name}}</span></Avatar>
+        <Avatar :src="userInfo.avatar" :width="30"><span>{{userInfo.nickname}}</span></Avatar>
       </DropdownMenu>
     </div>
   </div>
@@ -122,7 +116,8 @@ export default {
       infoMenu: [
         { key: 'info', title: '个人信息', icon: 'h-icon-user' },
         { key: 'logout', title: '退出登录', icon: 'h-icon-outbox' }
-      ]
+      ],
+      userInfo: storejs.get('userInfo')
     };
   },
   computed: {
@@ -137,9 +132,6 @@ export default {
     }
   },
   methods: {
-    goGithub() {
-      window.open('https://github.com/heyui/heyui-admin');
-    },
     goBook() {
       window.open('https://heyui.github.io/heyui-admin-docs');
     },

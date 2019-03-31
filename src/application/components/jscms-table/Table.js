@@ -13,6 +13,7 @@ export default class Table {
   }) {
     this.model = opts.model || {};
     this.list = opts.list || [];
+    this.auto = opts.auto === false ? opts.auto : true;
     this.pagination = opts.pagination || {
       page: 1,
       size: 20,
@@ -35,7 +36,7 @@ export default class Table {
         btnClass: 'h-btn h-btn-s h-btn-red',
         iClass: 'h-icon-trash',
         name: '删除',
-        click: function () {
+        click: function (data, index) {
           this.deleteData(data, index);
         }
       }

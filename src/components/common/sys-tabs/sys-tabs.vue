@@ -28,7 +28,7 @@
       // overflow: hidden;
       // display: flex;
       // white-space: nowrap;
-      border-bottom: 3px solid #fff;
+      box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.09);
       padding: 8px 8px 0;
       .h-dropdownmenu {
         display: block;
