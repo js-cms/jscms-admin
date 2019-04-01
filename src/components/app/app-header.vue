@@ -105,6 +105,11 @@
 import { mapState } from 'vuex';
 import appHeaderMessage from './modules/app-header-message';
 import storejs from 'store';
+let userInfo = storejs.get('userInfo');
+let origin = storejs.get('origin');
+if ( userInfo ) {
+  userInfo.avatar = userInfo.avatar.indexOf('http') === -1 ? (origin + userInfo.avatar) : userInfo.avatar;
+}
 
 export default {
   components: {
@@ -117,7 +122,7 @@ export default {
         { key: 'info', title: '个人信息', icon: 'h-icon-user' },
         { key: 'logout', title: '退出登录', icon: 'h-icon-outbox' }
       ],
-      userInfo: storejs.get('userInfo')
+      userInfo: userInfo || {}
     };
   },
   computed: {

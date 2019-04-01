@@ -36,22 +36,31 @@ export default {
   },
 
   mounted() {
-    this.fetchModel$('文章', 'article', model => {
-      this.form = model;
-      this.init();
-      if (this.id) {
-        this.fetchData(() => {
-          this.containerLoading = false;
-        });
-      } else {
-        this.containerLoading = false;
-      }
-    });
+    this.init();
   },
 
   methods: {
-    init() {
-      this.page.name = this.form.model.displayName;
+    async init() {
+      this.fetchModel$('文章', 'article', async model => {
+        this.page.name = model.model.displayName;
+        let categoriesRes = await this.fetchCategory();
+        let categories = categoriesRes.map(i => `${i._id}:${i.name}`);
+        model._iterator(f => {
+          if (f.extra.comType==='select') {
+            if(f.extra.options === 'categories') {
+              f.extra.options = categories.join(',');
+            }
+          }
+        });
+        this.form = model;
+        if (this.id) {
+          this.fetchData(() => {
+            this.containerLoading = false;
+          });
+        } else {
+          this.containerLoading = false;
+        } 
+      });
     },
 
     submit() {
@@ -84,6 +93,11 @@ export default {
       });
       this.form.setData(res.data);
       typeof callback === 'function' ? callback() : void 0;
+    },
+
+    async fetchCategory(callback) {
+      let res = await this.req$.get('/api/category/list');
+      return res.data;
     }
   }
 };
