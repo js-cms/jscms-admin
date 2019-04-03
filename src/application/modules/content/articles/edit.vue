@@ -65,7 +65,6 @@ export default {
 
     submit() {
       let validResult = this.form.validator.all();
-      console.log(this.form);
       if (validResult.length > 0) {
         this.$Message({
           type: 'error',
@@ -73,13 +72,18 @@ export default {
         });
         return;
       }
-      console.log(this.form);
       this.saveData(this.form.to.json({ formField: true }));
     },
 
     async saveData(article, callback) {
-      let type = '保存';
-      let res = await this.req$.post('/api/article/create', article);
+      let url = '/api/article/';
+      if ( this.id ) {
+        article.id = this.id;
+        url+='update';
+      } else {
+        url+='create';
+      }
+      let res = await this.req$.post(url, article);
       this.$Message({
         text: res.msg,
         type: res.code === 0 ? 'success' : 'error'

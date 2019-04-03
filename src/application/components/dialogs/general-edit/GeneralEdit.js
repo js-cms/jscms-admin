@@ -19,9 +19,11 @@ export default class GeneralEdit {
     this.width = opts.width || 700;
     if (typeof opts.create === 'function') {
       this._create = opts.create;
+      this._create.isExternal = true;
     }
     if (typeof opts.update === 'function') {
       this._update = opts.update;
+      this._update.isExternal = true;
     }
   }
 
@@ -139,12 +141,20 @@ export default class GeneralEdit {
     }
     if (this._type === 'create') {
       if (typeof this._create === 'function') {
-        this._create.call(this, form);
+        if ( this._update.isExternal === true ) {
+          this._update.call(this.parent, this.formData, form);
+        } else {
+          this._update.call(this, this.formData, form);
+        }
         this.onClose();
       }
     } else if (this._type === 'update') {
       if (typeof this._update === 'function') {
-        this._update.call(this, form, index);
+        if ( this._update.isExternal === true ) {
+          this._update.call(this.parent, this.formData, form, index);
+        } else {
+          this._update.call(this, this.formData, form, index);
+        }
         this.onClose();
       }
     }

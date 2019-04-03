@@ -3,7 +3,10 @@
     <Modal v-model="isShow" :closeOnMask="false">
       <div slot="header">{{title}}</div>
       <div v-width="width" v-if="form">
-        <Form
+        <div v-width="'100%'" v-if="form!==''">
+          <jscms-form :form="form" :labelWidth="labelWidth" :parent="this"></jscms-form>
+        </div>
+        <!-- <Form
           :label-width="labelWidth"
           labelPosition="left"
           :model="form.fields"
@@ -25,7 +28,7 @@
               </FormItem>
             </template>
           </template>
-        </Form>
+        </Form> -->
       </div>
       <div slot="footer">
         <button
@@ -46,10 +49,14 @@
 </template>
 
 <script>
+import jscmsForm from '@/application/components/jscms-form/jscms-form.vue';
 import util from '@/application/common/util/index.js';
 
 export default {
   props: ['options'],
+  components: {
+    jscmsForm
+  },
   data() {
     return {
       isShow: false,
@@ -110,7 +117,6 @@ export default {
         }
       }
       labelWidth = labelWidth < 60 ? 85 : labelWidth + 30;
-      console.log(labelWidth);
       this.labelWidth = labelWidth;
     }
   }

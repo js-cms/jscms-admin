@@ -1,6 +1,6 @@
 <template>
   <div class="jscms-form">
-    <Form :label-width="100" :model="form.fields" ref="form" showErrorTip>
+    <Form :label-width="labelWidth || 100" :model="form.fields" ref="form" showErrorTip>
       <template v-for="(f, key, index) in form.fields">
         <template v-if="f.formField===true">
           <!-- 普通输入框 -->
@@ -51,7 +51,7 @@ import marked from 'marked';
 import Select from './Select';
 
 export default {
-  props: ['form', 'parent'],
+  props: ['form', 'labelWidth', 'parent'],
   data() {
     return {
       modelman: modelman,
@@ -71,7 +71,9 @@ export default {
         let item = fs[key];
         if (item.extra.comType === 'select') {
           if (item.extra.options) {
-            item.extra.options = new Select(item.extra.options);
+            if ( item.extra.options && typeof item.extra.options !== 'object') {
+              item.extra.options = new Select(item.extra.options);
+            }
           }
         }
       }

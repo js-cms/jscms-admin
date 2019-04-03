@@ -52,12 +52,12 @@ export default {
         generalEdit: new dialogGeneralEdit.GeneralEdit(this, {
           form: link,
           width: '450',
-          create: function(form) {
+          create: function(formData, form) {
             let json = form.to.json();
             this.data.list.push(json);
             this.saveData(this.data.list, '新建');
           },
-          update: function(form, index) {
+          update: function(formData, form, index) {
             let json = form.to.json();
             this.data.list[index] = json;
             console.log('index', index);
