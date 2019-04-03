@@ -4,6 +4,9 @@ import demoComponents from './demo-components';
 import webConfig from '@/application/routers/web-config/index.js';
 import content from '@/application/routers/content/index.js';
 import resource from '@/application/routers/resource/index.js';
+import page from '@/application/routers/page/index.js';
+import account from '@/application/routers/account/index.js';
+import log from '@/application/routers/log/index.js';
 
 Vue.use(VueRouter);
 
@@ -42,6 +45,9 @@ const initRouter = () => {
       ...webConfig,
       ...content,
       ...resource,
+      ...page,
+      ...account,
+      ...log,
       {
         path: '*',
         component: (resolve) => require(['components/error-pages/404'], resolve),

@@ -80,7 +80,7 @@ export default class GeneralEdit {
   /**
    * 默认新建方法
    */
-  _create(form) {
+  _create(formData, form) {
     let json = form.to.json({formField: true});
     crud(form.model.name, 'create', {
       data: json
@@ -103,7 +103,7 @@ export default class GeneralEdit {
   /**
    * 默认更新方法
    */
-  _update(form, index) {
+  _update(formData, form, index) {
     let json = form.to.json({formField: true});
     let id = this.formData._id;
     crud(form.model.name, 'update', {
