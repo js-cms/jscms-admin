@@ -39,6 +39,14 @@
           >
             <MarkdownEditor v-model="f.value" :readonly="false"/>
           </FormItem>
+          <!-- 代码编辑器 -->
+          <FormItem
+            v-if="f.extra.comType==='codeEdit'"
+            :label="f.displayName"
+            :key="index"
+          >
+             <CodeEditor v-model="f.value" :mode="f.extra.lang||''"  />
+          </FormItem>
         </template>
       </template>
     </Form>
@@ -46,12 +54,16 @@
 </template>
 
 <script>
+import CodeEditor from '@/components/common/code-editor';
 import modelman from 'modelman';
 import marked from 'marked';
 import Select from './Select';
 
 export default {
   props: ['form', 'labelWidth', 'parent'],
+  components: {
+    CodeEditor 
+  },
   data() {
     return {
       modelman: modelman,

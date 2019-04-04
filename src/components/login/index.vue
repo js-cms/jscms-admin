@@ -2,7 +2,7 @@
   <div class="login-vue">
     <div class="login-container">
       <div class="login-content">
-        <div class="login-title">管理系统</div>
+        <div class="login-title">JSCMS管理</div>
         <div class="login-name login-input">
           <input type="text" name="username" v-model="login.email" autocomplete="off"/>
           <span class="placeholder" :class="{fixed: login.email != '' && login.email != null}">用户名</span>

@@ -2,6 +2,7 @@
 .app-footer {
   text-align: center;
   padding: 10px 0 30px;
+  box-sizing: border-box;
   color: rgba(0,0,0,.45);
   a {
     color: rgba(0,0,0,.45);

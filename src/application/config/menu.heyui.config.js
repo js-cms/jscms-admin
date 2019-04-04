@@ -59,10 +59,6 @@ export default [
       {
         title: '图片管理',
         key: 'ResourceImagesList'
-      },
-      {
-        title: '文件管理',
-        key: 'ResourceFilesList'
       }
     ]
   },
@@ -71,7 +67,7 @@ export default [
     key: 'Page',
     icon: 'icon-paper-stack',
     children: [
-      { 
+      {
         title: '自定义页面',
         key: 'PageCustomList'
       }

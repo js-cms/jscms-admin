@@ -63,7 +63,7 @@ const initRouter = () => {
     if (to.meta && to.meta.title) {
       document.title = to.meta.title + ' - 管理应用';
     } else {
-      document.title = '管理系统';
+      document.title = 'JSCMS管理';
     }
     next();
   });

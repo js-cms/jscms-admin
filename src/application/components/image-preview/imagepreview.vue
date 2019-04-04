@@ -1,6 +1,14 @@
 <template>
   <div class="h-image-preview-list" :style="listStyles">
-    <div :style="itemStyles(data)" v-for="(data, index) of datas" :key="index" @click="click(index, data)" class="h-image-preview-item"></div>
+    <div
+      :style="itemStyles(data)"
+      v-for="(data, index) of datas"
+      :key="index"
+      @click="click(index, data)"
+      class="h-image-preview-item"
+    >
+      <i class="icon h-icon-error" @click.stop="$emit('close', index)"></i>
+    </div>
   </div>
 </template>
 <script>
@@ -17,7 +25,7 @@ export default {
     },
     datas: {
       type: [Array],
-      default: () => ([])
+      default: () => []
     },
     borderRadius: {
       type: Number,
@@ -55,5 +63,27 @@ export default {
 </script>
 
 <style lang="less" scoped>
-@import (less) "./imagepreview.less";
+@import (less) './imagepreview.less';
+
+.h-image-preview-item {
+  .icon {
+    position: relative;
+    display: block;
+    left: calc(100% - 12px);
+    top: -5px;
+    z-index: 10;
+    opacity: 0;
+    transition: all 0.3s;
+    &::before {
+      color: red;
+      border-radius: 50%;
+      background-color: #fff;
+    }
+  }
+  &:hover {
+    .icon {
+      opacity: 1;
+    }
+  }
+}
 </style>
