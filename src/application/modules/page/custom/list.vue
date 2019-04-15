@@ -32,7 +32,7 @@
 <script>
 import storejs from 'store';
 import util from '@/application/common/util/index.js';
-import page from './model/Article';
+import page from './model/Page';
 import Table from '@/application/components/jscms-table/Table';
 import dialogGeneralEdit from '@/application/components/dialogs/general-edit/index.js';
 import jscmsTable from '@/application/components/jscms-table/jscms-table.vue';
@@ -102,7 +102,8 @@ export default {
             iClass: 'h-icon-link',
             name: '前台查看文章',
             click: function(data, index) {
-              window.open(`${storejs.get('origin')}/${data.numberId}.html`);
+              let baseURL = storejs.get('origin');
+              window.open(`${baseURL}/page/${data.alias}.html`);
             }
           },
           fastEdit: {

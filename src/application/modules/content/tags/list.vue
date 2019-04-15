@@ -6,13 +6,15 @@
     <div class="h-panel-body">
       <div class="container">
         <template v-for="(i, idx) in data">
-          <span class="h-tag" v-if="i.classNum==0" :key="idx">{{i.name}}</span>
-          <span class="h-tag h-tag-primary" v-if="i.classNum==1" :key="idx">{{i.name}}</span>
-          <span class="h-tag h-tag-red" v-if="i.classNum==2" :key="idx">{{i.name}}</span>
-          <span class="h-tag h-tag-blue" v-if="i.classNum==3" :key="idx">{{i.name}}</span>
-          <span class="h-tag h-tag-green" v-if="i.classNum==4" :key="idx">{{i.name}}</span>
-          <span class="h-tag h-tag-yellow" v-if="i.classNum==5" :key="idx">{{i.name}}</span>
-          <span class="h-tag h-tag-gray" v-if="i.classNum==6" :key="idx">{{i.name}}</span>
+          <span :key="idx" @click="goWeb(i)">
+            <span class="h-tag" v-if="i.classNum==0" >{{i.name}}</span>
+            <span class="h-tag h-tag-primary" v-if="i.classNum==1">{{i.name}}</span>
+            <span class="h-tag h-tag-red" v-if="i.classNum==2">{{i.name}}</span>
+            <span class="h-tag h-tag-blue" v-if="i.classNum==3">{{i.name}}</span>
+            <span class="h-tag h-tag-green" v-if="i.classNum==4">{{i.name}}</span>
+            <span class="h-tag h-tag-yellow" v-if="i.classNum==5">{{i.name}}</span>
+            <span class="h-tag h-tag-gray" v-if="i.classNum==6">{{i.name}}</span>
+          </span>
         </template>
       </div>
     </div>
@@ -33,7 +35,6 @@ export default {
   },
 
   methods: {
-
     async fetchData() {
       let res = await req.get('/api/config?alias=tags');
       let info = res.data.info;
@@ -45,6 +46,11 @@ export default {
         });
       });
       this.data = data;
+    },
+
+    goWeb(item) {
+      let baseURL = storejs.get('origin');
+      window.open(baseURL + `/tags/${item.name}.html`)
     }
   }
 };
@@ -53,5 +59,9 @@ export default {
 <style lang="less" scoped>
 .container {
   min-height: 500px;
+
+  .h-tag {
+    cursor: pointer;
+  }
 }
 </style>
