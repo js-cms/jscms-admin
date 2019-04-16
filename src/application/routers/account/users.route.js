@@ -8,5 +8,15 @@ export default [
       icon: 'icon-paper'
     },
     component: (resolve) => require(['@/application/modules/account/users/list.vue'], resolve)
+  },
+  {
+    //编辑用户
+    path: '/account/users/edit',
+    name: 'AccountUsersEdit',
+    meta: {
+      title: '编辑用户',
+      icon: 'icon-paper'
+    },
+    component: (resolve) => require(['@/application/modules/account/users/edit.vue'], resolve)
   }
 ]

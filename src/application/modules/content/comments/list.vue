@@ -49,7 +49,6 @@ export default {
     this.fetchModel$('评论', 'comment', (model) => {
       this.model = model;
       this.init();
-      //this.fetchData();
     });
   },
   methods: {
@@ -64,15 +63,8 @@ export default {
             iClass: 'h-icon-link',
             name: '前台查看',
             click: function (data, index) {
-              let catAlias = data.alias;
-              if ( catAlias ) {
-                window.open(`${storejs.get('origin')}/${catAlias}.html`);
-              } else {
-                this.$Message({
-                  type: 'error',
-                  text: '没有这个分类。'
-                });
-              }
+              let baseURL = storejs.get('origin');
+              window.open(baseURL + '/' + data.articleId.numberId + ".html#comment");
             }
           },
           fastEdit: {

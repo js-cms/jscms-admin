@@ -16,7 +16,7 @@
             :index="index"
           ></com-objectid>
           <com-text
-            v-if="f.constructor === modelman.type.String || f.constructor === modelman.type.Number"
+            v-if="f.constructor === modelman.type.String || f.constructor === modelman.type.Number || f.constructor === modelman.type.Email || f.constructor === modelman.type.Boolean"
             :data="data"
             :field="f"
             :keyname="key"

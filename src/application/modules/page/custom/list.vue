@@ -100,7 +100,7 @@ export default {
           view: {
             btnClass: 'h-btn h-btn-s h-btn-text-primary',
             iClass: 'h-icon-link',
-            name: '前台查看文章',
+            name: '前台查看页面',
             click: function(data, index) {
               let baseURL = storejs.get('origin');
               window.open(`${baseURL}/page/${data.alias}.html`);

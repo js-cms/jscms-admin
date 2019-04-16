@@ -1,31 +1,19 @@
 <style lang="less">
-.h-dropdowncustom-group {
-  .h-dropdownmenu-item {
-    i {
-      position: relative;
-      top: -1px;
-    }
-  }
-}
-
 .app-header {
   color: rgba(49, 58, 70, 0.8);
-
   .h-autocomplete {
     line-height: 1.5;
     float: left;
     margin-top: 15px;
     margin-right: 20px;
     width: 120px;
-    &-show,
-    &-show:hover,
-    &-show.focusing {
+    &-show,&-show:hover, &-show.focusing {
       outline: none;
       box-shadow: none;
       border-color: transparent;
       border-radius: 0;
     }
-    &-show.focusing {
+    &-show.focusing{
       border-bottom: 1px solid #eee;
     }
   }
@@ -54,8 +42,7 @@
   .h-dropdownmenu {
     float: left;
   }
-
-  &-dropdown {
+  &-dropdown{
     float: right;
     margin-left: 10px;
     padding: 0 20px 0 15px;
@@ -63,8 +50,7 @@
       right: 20px;
     }
     cursor: pointer;
-    &:hover,
-    &.h-pop-trigger {
+    &:hover, &.h-pop-trigger {
       background: @hover-background-color;
     }
     &-dropdown {
@@ -73,24 +59,22 @@
         padding: 8px 20px;
       }
     }
-
   }
-
-  &-menus {
+  &-menus{
     display: inline-block;
     vertical-align: top;
-    > div {
+    >div {
       display: inline-block;
       font-size: 15px;
       padding: 0 25px;
       color: @dark-color;
-      &:hover {
+      &:hover{
         color: @primary-color;
       }
-      + div {
+      +div {
         margin-left: 5px;
       }
-      &.h-tab-selected {
+      &.h-tab-selected{
         color: @white-color;
         background-color: @primary-color;
       }
@@ -101,44 +85,15 @@
 
 <template>
   <div class="app-header">
-    <div style="width:100px;float:left;">
-      <Button
-        :icon="siderCollapsed ? 'icon-align-right':'icon-align-left'"
-        size="l"
-        noBorder
-        class="font20"
-        @click="siderCollapsed=!siderCollapsed"
-      ></Button>
-    </div>
+    <div style="width:100px;float:left;"><Button :icon="siderCollapsed ? 'icon-align-right':'icon-align-left'" size="l" noBorder class="font20" @click="siderCollapsed=!siderCollapsed"></Button></div>
     <div class="float-right app-header-info">
-      <AutoComplete
-        :showDropdownWhenNoResult="false"
-        v-model="searchText"
-        config="globalSearch"
-        placeholder="全局搜索.."
-      ></AutoComplete>
-      <div
-        class="app-header-icon-item"
-        v-tooltip
-        content="系统布局配置"
-        theme="white"
-        @click="showSettingModal"
-      >
+      <AutoComplete :showDropdownWhenNoResult="false" v-model="searchText" config="globalSearch" placeholder="全局搜索.."></AutoComplete>
+      <div class="app-header-icon-item" v-tooltip content="系统布局配置" theme="white" @click="showSettingModal">
         <i class="icon-content-left"></i>
       </div>
       <appHeaderMessage></appHeaderMessage>
-      <DropdownMenu
-        class="app-header-dropdown"
-        trigger="hover"
-        offset="0 5"
-        :width="150"
-        placement="bottom-end"
-        :datas="infoMenu"
-        @onclick="trigger"
-      >
-        <Avatar :src="userInfo.avatar" :width="30">
-          <span>{{userInfo.nickname}}</span>
-        </Avatar>
+      <DropdownMenu className="app-header-dropdown" trigger="hover" offset="0 5" :width="150" placement="bottom-end" :datas="infoMenu" @onclick="trigger">
+        <Avatar :src="userInfo.avatar" :width="30"><span>{{userInfo.nickname}}</span></Avatar>
       </DropdownMenu>
     </div>
   </div>
@@ -161,9 +116,9 @@ export default {
     return {
       searchText: '',
       infoMenu: [
-        { key: 'info', title: '个人信息', icon: 'icon-head' },
+        { key: 'info', title: '个人信息', icon: 'h-icon-user' },
         { key: 'changepass', title: '修改密码', icon: 'icon-unlock' },
-        { key: 'logout', title: '退出登录', icon: 'icon-outbox' }
+        { key: 'logout', title: '退出登录', icon: 'h-icon-outbox' }
       ],
       userInfo: userInfo || {}
     };
@@ -180,14 +135,15 @@ export default {
     }
   },
   methods: {
+    goGithub() {
+      window.open('https://github.com/heyui/heyui-admin');
+    },
     goBook() {
       window.open('https://heyui.github.io/heyui-admin-docs');
     },
-    async trigger(data) {
-      if (data === 'logout') {
-        await this.req$.get(`/api/logout?token=${storejs.get('token')}&userId=${storejs.get('uuid')}`);
-        storejs.remove('token');
-        storejs.remove('uuid');
+    trigger(data) {
+      if (data == 'logout') {
+        Utils.removeLocal('token');
         this.$router.replace({ name: 'Login' });
       } else if (data === 'changepass') {
 

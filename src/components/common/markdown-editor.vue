@@ -1,17 +1,16 @@
+
 <style lang="less">
   .markdown-editor-vue {
     position: relative;
     display: flex;
     border: 1px solid #EEE;
     border-radius: 5px;
-
     .markdown-show {
       overflow: auto;
       flex: 1;
       height: 500px;
       padding: 10px 20px;
     }
-
     .markdown-edit {
       border-right: 1px solid #EEE;
       width: 50%;
@@ -30,9 +29,7 @@
 </template>
 
 <script>
-import CodeEditor from './code-editor';
 import marked from 'marked';
-
 export default {
   props: {
     value: String,
@@ -46,9 +43,6 @@ export default {
       html: '',
       editValue: ''
     };
-  },
-  components: {
-    CodeEditor
   },
   watch: {
     'value': function (newVal, oldVal) {
