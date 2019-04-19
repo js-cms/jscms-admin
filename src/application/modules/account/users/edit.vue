@@ -4,7 +4,7 @@
       <div class="h-panel-bar">
         <span class="h-panel-title">{{`${id ? '编辑' : '新建'}${page.name}`}}</span>
         <span style="float: right">
-          <button class="h-btn h-btn-text-primary">密码密文生成</button>
+          <button class="h-btn h-btn-text-primary" @click="()=>{generatePassword.show=true}">密码密文生成</button>
           <button class="h-btn h-btn-primary" @click="submit">{{`${id ? '保存修改' : '确认新建'}`}}</button>
         </span>
       </div>
@@ -16,10 +16,25 @@
       </div>
     </div>
     <Modal v-model="generatePassword.show">
-      <div slot="header">Vue</div>
-      <div>这是使用vue调用的弹出框</div>
+      <div slot="header">密码密文生成</div>
+      <div v-width="generatePassword.width">
+        <Form ref="generatePassword" :labelPosition="'left'" :model="generatePassword" :labelWidth="90">
+          <FormItem label="密码明文" prop="password">
+            <input type="text" v-model="generatePassword.password">
+          </FormItem>
+          <FormItem label="密码密文" prop="ciphertext">
+            <div class="h-input-group">
+              <input type="text" v-model="generatePassword.ciphertext" placeholder="密码密文" /><Button color="primary" @click="()=>{     this.$Clipboard({
+                text: generatePassword.ciphertext,
+                showSuccessTip: 'Copy Success'
+              });}">复制</Button>
+            </div>
+          </FormItem>
+        </Form>
+      </div>
       <div slot="footer">
-        <button class="h-btn" @click="opened=false">取消</button>
+        <button class="h-btn" @click="generate()">生成</button>
+        <button class="h-btn" @click="generatePassword.show=false">关闭</button>
       </div>
     </Modal>
   </div>
@@ -27,6 +42,7 @@
 <script>
 import util from '@/application/common/util/index.js';
 import jscmsForm from '@/application/components/jscms-form/jscms-form.vue';
+import bcrypt from 'bcryptjs';
 
 export default {
   components: {
@@ -40,7 +56,10 @@ export default {
       },
       form: '',
       generatePassword: {
-        show: false
+        show: false,
+        width: 500,
+        password: '',
+        ciphertext: ''
       },
       mode: 'single'
     };
@@ -75,6 +94,10 @@ export default {
         return;
       }
       this.saveData(this.form.to.json({ formField: true }));
+    },
+
+    generate(password) {
+      this.generatePassword.ciphertext = bcrypt.hashSync(this.generatePassword.password, 10);
     },
 
     async saveData(page, callback) {
