@@ -1,7 +1,7 @@
 export default [
   {
     title: '统计面板',
-    key: 'Home',
+    key: 'AnalysisIndex',
     icon: 'icon-monitor',
     count: 1
   },

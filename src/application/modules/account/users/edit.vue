@@ -18,22 +18,33 @@
     <Modal v-model="generatePassword.show">
       <div slot="header">密码密文生成</div>
       <div v-width="generatePassword.width">
-        <Form ref="generatePassword" :labelPosition="'left'" :model="generatePassword" :labelWidth="90">
+        <Form
+          ref="generatePassword"
+          :labelPosition="'left'"
+          :model="generatePassword"
+          :labelWidth="90"
+        >
           <FormItem label="密码明文" prop="password">
-            <input type="text" v-model="generatePassword.password">
+            <div class="h-input-group">
+              <input type="text" v-model="generatePassword.password" placeholder="密码密文">
+              <Button color="primary" @click="generate">生成</Button>
+            </div>
           </FormItem>
           <FormItem label="密码密文" prop="ciphertext">
             <div class="h-input-group">
-              <input type="text" v-model="generatePassword.ciphertext" placeholder="密码密文" /><Button color="primary" @click="()=>{     this.$Clipboard({
+              <input type="text" v-model="generatePassword.ciphertext" placeholder="密码密文">
+              <Button
+                color="primary"
+                @click="()=>{this.$Clipboard({
                 text: generatePassword.ciphertext,
-                showSuccessTip: 'Copy Success'
-              });}">复制</Button>
+                showSuccessTip: '复制成功！'
+              });}"
+              >复制</Button>
             </div>
           </FormItem>
         </Form>
       </div>
       <div slot="footer">
-        <button class="h-btn" @click="generate()">生成</button>
         <button class="h-btn" @click="generatePassword.show=false">关闭</button>
       </div>
     </Modal>
@@ -96,7 +107,7 @@ export default {
       this.saveData(this.form.to.json({ formField: true }));
     },
 
-    generate(password) {
+    generate() {
       this.generatePassword.ciphertext = bcrypt.hashSync(this.generatePassword.password, 10);
     },
 

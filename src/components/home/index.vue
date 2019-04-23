@@ -36,7 +36,7 @@
       <Cell :xs='24' :sm='24' :md='24' :lg='16' :xl='16'>
         <div class="h-panel">
           <div class="h-panel-bar">
-            <div class="h-panel-title">数据走势</div>
+            <div class="h-panel-title">PV趋势</div>
           </div>
           <div class="home-part-body">
             <Chart :options="data1"></Chart>
@@ -46,8 +46,14 @@
       <Cell :xs='24' :sm='24' :md='24' :lg='8' :xl='8'>
         <div class="h-panel">
           <div class="h-panel-bar">
-            <div class="h-panel-title">订单统计</div>
-            <div class="h-panel-right"><span class="gray-color">总共达成</span><i class="h-split"></i><span class="font20 primary-color">200</span><i class="h-split"></i><span class="gray-color">W</span></div>
+            <div class="h-panel-title">访客数量</div>
+            <div class="h-panel-right">
+              <span class="gray-color">总访客数</span>
+              <i class="h-split"></i>
+              <span class="font20 primary-color">200</span>
+              <i class="h-split"></i>
+              <!-- <span class="gray-color">W</span> -->
+            </div>
           </div>
           <div class="h-panel-body progress-div home-part-body">
             <p><Progress :percent="99" color="green"><span slot="title">订单状态</span><span slot="text">4个</span></Progress></p>

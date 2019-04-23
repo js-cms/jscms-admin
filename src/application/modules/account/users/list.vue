@@ -12,7 +12,7 @@
                 color="primary"
                 @click="()=>{
                 $router.push({
-                  name: 'ContentArticlesEdit'
+                  name: 'AccountUsersEdit'
                 });
               }"
               >新增{{page.name}}</Button>
@@ -95,7 +95,7 @@ export default {
             name: '前台查看用户',
             click: function(data, index) {
               let baseURL = storejs.get('origin');
-              window.open(`${baseURL}/page/${data.alias}.html`);
+              window.open(`${baseURL}/author/${data.nickname}.html`);
             }
           },
           fastEdit: false

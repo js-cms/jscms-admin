@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
 import demoComponents from './demo-components';
+import analysis from '@/application/routers/analysis/index.js';
 import webConfig from '@/application/routers/web-config/index.js';
 import content from '@/application/routers/content/index.js';
 import resource from '@/application/routers/resource/index.js';
@@ -22,8 +23,7 @@ const initRouter = () => {
       children: [{
         path: '',
         name: 'Home',
-        component: (resolve) => require(['components/home/index'], resolve),
-        meta: { title: '首页', icon: 'icon-monitor' }
+        redirect: '/analysis'
       }, {
         path: '/system-error',
         name: 'SystemError',
@@ -42,6 +42,7 @@ const initRouter = () => {
         meta: { title: '页面找不到' }
       },
       ...demoComponents,
+      ...analysis,
       ...webConfig,
       ...content,
       ...resource,

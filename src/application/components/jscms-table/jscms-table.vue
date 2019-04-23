@@ -8,6 +8,13 @@
         v-if="f.tableField===true"
       >
         <template slot-scope="{data}">
+          <com-object
+            v-if="f.constructor === modelman.type.Object"
+            :data="data"
+            :field="f"
+            :keyname="key"
+            :index="index"
+          ></com-object>
           <com-objectid
             v-if="f.constructor === modelman.type.ObjectId"
             :data="data"
@@ -100,14 +107,37 @@
 <script>
 import modelman from 'modelman';
 import ComText from './components/text';
+import ComObject from './components/object';
 import ComObjectid from './components/objectid';
 import ComDate from './components/date';
 import crud from '@/application/common/curd/index.js';
+
+const fetchData = async function(reload = false) {
+  if (reload) {
+    this.list = [];
+    this.pagination.page = 1;
+  }
+  let res = await this.req$.get(`/api/model?name=${this.model.model.name.toLowerCase()}`);
+  if (res.code === 0) {
+    res = await crud(this.model.model.name, 'list', {
+      query: {},
+      pageSize: this.pagination.size,
+      pageNum: this.pagination.page
+    });
+    if (res.count && res.result) {
+      this.pagination.total = res.count;
+      this.list = res.result;
+    } else {
+      this.pagination.total = 0;
+    }
+  }
+};
 
 export default {
   props: ['data', 'parent'],
   components: {
     ComText,
+    ComObject,
     ComObjectid,
     ComDate
   },
@@ -142,40 +172,19 @@ export default {
   },
 
   methods: {
-
     parse() {
       if (this.data.auto === true && this.isInit) return;
       this.model = this.data.model;
       this.list = this.data.list;
       this.operation = this.data.operation;
       this.operationWidth = this.getOperationWidth();
+      this.fetchData = typeof this.data.fetchData === 'function' ? this.data.fetchData.bind(this) : fetchData.bind(this);
       if (this.data.auto === true && this.model) {
         this.isInit = true;
         this.fetchData();
         this.parent.reload = () => {
           return this.fetchData(true);
-        }
-      }
-    },
-
-    async fetchData(reload = false) {
-      if (reload) {
-        this.list = [];
-        this.pagination.page = 1;
-      }
-      let res = await this.req$.get(`/api/model?name=${this.model.model.name.toLowerCase()}`);
-      if (res.code === 0) {
-        res = await crud(this.model.model.name, 'list', {
-          query: {},
-          pageSize: this.pagination.size,
-          pageNum: this.pagination.page
-        });
-        if (res.count && res.result) {
-          this.pagination.total = res.count;
-          this.list = res.result;
-        } else {
-          this.pagination.total = 0;
-        }
+        };
       }
     },
 

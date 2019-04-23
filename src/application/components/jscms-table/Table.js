@@ -48,5 +48,6 @@ export default class Table {
     delete this.operation.delete;
     this.operation.edit = editObj;
     this.operation.delete = deleteObj;
+    this.fetchData = opts.fetchData;
   }
 }
