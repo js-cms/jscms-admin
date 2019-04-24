@@ -1,5 +1,5 @@
 <template>
-  <div class="code-editor-vue" ref="editor" :style="divStyle" :class="className"></div>
+  <div :id="id" class="code-editor-vue" :style="divStyle" :class="className"></div>
 </template>
 
 <script>
@@ -20,6 +20,11 @@ const editorOptions = [
 
 export default {
   props,
+  data: function() {
+    return {
+      id: 'editor_' + this.randomString()
+    }
+  },
   computed: {
     divStyle() {
       const { width, height, style } = this.$props;
@@ -100,7 +105,7 @@ export default {
       if (this.editor && this.editor.getValue() !== newVal) {
         this.silent = true;
         const pos = this.editor.session.selection.toJSON();
-        this.editor.setValue(newVal);
+        this.editor.setValue(newVal || '');
         this.editor.session.selection.fromJSON(pos);
         this.silent = false;
       }
@@ -137,8 +142,8 @@ export default {
       markers
     } = this.$props;
 
-    this.editor = ace.edit(this.$el);
-
+    this.editor = ace.edit(document.querySelector(`#${this.id}`));
+    
     if (onBeforeLoad) {
       onBeforeLoad(ace);
     }
@@ -231,6 +236,9 @@ export default {
     this.editor.resize();
   }, // Methods
   methods: {
+    randomString() {
+      return Math.random().toString(36).substr(2);
+    },
     debounce(fn, delay) {
       var timer = null;
       return function () {

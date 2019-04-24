@@ -2,7 +2,8 @@ import fly from 'flyio';
 import storejs from 'store';
 
 const env = 'dev';
-const lineApi = '/'
+const lineApi = '/';
+
 let _baseURL = env === 'dev' ? 'http://127.0.0.1:7011/' : lineApi;
 
 fly.interceptors.request.use((request) => {

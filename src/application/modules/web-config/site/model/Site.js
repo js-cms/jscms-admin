@@ -15,7 +15,8 @@ model.assign({
   favicon: { n: '站点图标地址', type: 'String', f: true, t: false, r: false }, //站点图标地址
   description: { n: '描述元信息', type: 'String', f: true, t: true, r: false, extra: {comType: 'textarea'}}, //首页描述元信息
   about: { n: '关于网站', type: 'String', f: true, t: true, r: false, extra: {comType: 'textarea'}}, //关于网站
-  footHTML: { n: '网站底部代码', type: 'String', f: true, t: false, r: false, extra: {comType: 'textarea'}} //网站底部代码
+  articleStatement: { n: '文章页声明', type: 'String', f: true, t: false, r: false, extra: {comType: 'codeEdit', lang: 'html', height: '200px'}}, //关于网站
+  footHTML: { n: '网站底部代码', type: 'String', f: true, t: false, r: false, extra: {comType: 'codeEdit', lang: 'html', height: '200px'}} //网站底部代码
 });
 
 export default model;

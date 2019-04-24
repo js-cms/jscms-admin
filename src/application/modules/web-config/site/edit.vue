@@ -3,30 +3,12 @@
     <div class="h-panel">
       <div class="h-panel-bar">
         <span class="h-panel-title">{{page.name}}</span>
+        <span style="float: right">
+          <Button color="primary" :loading="isLoading" @click="submit">保存修改</Button>
+        </span>
       </div>
-      <div class="h-panel-body" >
-        <Row>
-          <Cell width="12" >
-            <Form
-              :label-width="150"
-              :model="form.fields"
-              ref="form"
-              showErrorTip
-            >
-              <template v-for="(f, key, index) in form.fields" >
-                <FormItem :label="f.displayName" prop="input" v-if="!f.extra.comType" :key="index">
-                  <input :name="f.name" type="text" v-model="f.value" >
-                </FormItem>
-                <FormItem :label="f.displayName" prop="input" v-if="f.extra.comType==='textarea'" :key="index">
-                  <textarea :name="f.name" v-model="f.value" rows=4 ></textarea>
-                </FormItem>
-              </template>
-              <FormItem>
-                <Button color="primary" :loading="isLoading" @click="submit">保存修改</Button>
-              </FormItem>
-            </Form>
-          </Cell>
-        </Row>
+      <div class="h-panel-body">
+        <jscms-form :form="form" :parent="this" :labelWidth="130"></jscms-form>
         <Loading text="Loading" :loading="containerLoading"></Loading>
       </div>
     </div>
@@ -35,19 +17,23 @@
 <script>
 import site from './model/Site';
 import util from '@/application/common/util/index.js';
+import jscmsForm from '@/application/components/jscms-form/jscms-form';
 import { setTimeout } from 'timers';
 
 export default {
+  components: {
+    jscmsForm
+  },
   data() {
     return {
       page: {
         name: site.model.displayName
       },
       config: {
-        name: "",
-        alias: "",
+        name: '',
+        alias: '',
         info: {},
-        _id: ""
+        _id: ''
       },
       mode: 'single',
       form: site,
@@ -76,12 +62,12 @@ export default {
       this.config.info = info;
       let type = '保存';
       let res = await this.req$.post('/api/config', this.config);
-      if ( res.code === 0 ) {
+      if (res.code === 0) {
         this.$Message({
           text: type + '成功',
           type: 'success'
         });
-        typeof callback === 'function' ? callback() : void(0);
+        typeof callback === 'function' ? callback() : void 0;
       } else {
         this.$Message({
           text: type + '失败',
@@ -99,11 +85,10 @@ export default {
       let config = res.data;
       util.setData(this.config, config);
       this.form.setData(this.config.info);
-      setTimeout(()=>{
+      setTimeout(() => {
         this.containerLoading = false;
       }, 1000);
     }
-
   }
 };
 </script>

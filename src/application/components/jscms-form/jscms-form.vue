@@ -45,7 +45,7 @@
             :label="f.displayName"
             :key="index"
           >
-             <CodeEditor v-model="f.value" :mode="f.extra.lang||''"  />
+             <CodeEditor v-model="f.value" :height="f.extra.height" :mode="f.extra.lang||''"  />
           </FormItem>
         </template>
       </template>
@@ -66,13 +66,7 @@ export default {
   },
   data() {
     return {
-      modelman: modelman,
-      select: null,
-      param: [
-        { title: '选择1', key: 'a1', other: '其他值' },
-        { title: '选择2', key: 'a2' },
-        { title: '选择3', key: 'a3' }
-      ]
+      modelman: modelman
     };
   },
 

@@ -5,7 +5,7 @@ module.exports = {
   root: 'dist',
   webpack: {
     console: false,
-    publicPath: '/',
+    publicPath: '/management/',
     output: {
       './index.html': {
         entry: './src/main',
