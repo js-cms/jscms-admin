@@ -11,16 +11,17 @@
           </div>
         </div>
       </Cell>
-      <!-- <Cell :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
+      <Cell :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
         <div class="h-panel">
           <div class="h-panel-bar">
             <div class="h-panel-title">PV指数</div>
           </div>
           <div class="home-part-body">
-            <Chart :options="data1"></Chart>
+            <Chart :options="data.pv"></Chart>
           </div>
         </div>
       </Cell>
+      <!-- 
       <Cell :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
         <div class="h-panel">
           <div class="h-panel-bar">
@@ -48,6 +49,10 @@ export default {
         ip: {
           show: false,
           data: {}
+        },
+        pv: {
+          show: false,
+          data: {}
         }
       }
     };
@@ -55,6 +60,7 @@ export default {
   mounted() {
     this.parseDate();
     this.loadIp();
+    this.lodaPv();
   },
   methods: {
     parseDate() {
@@ -75,12 +81,14 @@ export default {
       let res = await this.req$.get('/api/analysis/ip');
       let ipData = {};
       let countIpData = [];
-      this.dateRange.forEach((data, index) => {
-        ipData[data] = [];
+      this.dateRange.forEach((date, index) => {
+        ipData[date] = [];
       });
       res.data.forEach((item) => {
         let date = moment(item.createTime).format('YYYY-MM-DD');
-        ipData[date].push(item.info.visitorIp);
+        if ( ipData[date] ) {
+          ipData[date].push(item.info.visitorIp);
+        }
       });
       for (const key in ipData) {
         countIpData.push(_.uniq(ipData[key]).length);
@@ -88,8 +96,40 @@ export default {
       let data = _.cloneDeep(dataTemplate);
       data.xAxis[0].data = _.cloneDeep(this.dateRange);
       data.series[0].data = countIpData;
+      data.legend.data[0] = '独立ip数';
+      data.series[0].name = '独立ip数';
+      data.yAxis[0].axisLabel.formatter = '{value} IP';
       this.data.ip = data;
       this.data.ip.show = true;
+    },
+
+    /**
+     * @desc 加载pv统计数据
+     */
+    async lodaPv() {
+      let res = await this.req$.get('/api/analysis/pv');
+      let pvData = {};
+      let countPvData = [];
+      this.dateRange.forEach((date, index) => {
+        pvData[date] = [];
+      });
+      res.data.forEach((item) => {
+        let date = moment(item.createTime).format('YYYY-MM-DD');
+        if ( pvData[date] ) {
+          pvData[date].push(item.info.visitorIp);
+        }
+      });
+      for (const key in pvData) {
+        countPvData.push(pvData[key].length);
+      }
+      let data = _.cloneDeep(dataTemplate);
+      data.xAxis[0].data = _.cloneDeep(this.dateRange);
+      data.series[0].data = countPvData;
+      data.legend.data[0] = 'pv数';
+      data.series[0].name = 'pv数';
+      data.yAxis[0].axisLabel.formatter = '{value} PV';
+      this.data.pv = data;
+      this.data.pv.show = true;
     }
   }
 };
