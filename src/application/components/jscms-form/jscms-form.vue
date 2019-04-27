@@ -21,7 +21,7 @@
             v-if="f.extra.comType==='textarea'"
             :key="index"
           >
-            <textarea :name="f.name" v-model="f.value" rows="6" :placeholder="f.placeholder"></textarea>
+            <textarea :name="f.name" v-model="f.value" :rows="f.extra.rows || 6" :placeholder="f.placeholder"></textarea>
           </FormItem>
           <!-- 下拉选择框 -->
           <FormItem

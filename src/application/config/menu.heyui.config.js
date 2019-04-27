@@ -25,6 +25,10 @@ export default [
       {
         title: '链接配置',
         key: 'WebConfigLinksList'
+      },
+      {
+        title: 'Robots配置',
+        key: 'WebConfigRobots'
       }
     ]
   },

@@ -57,25 +57,29 @@
               v-if="opkey==='delete'&&obj!==false"
               :content="`确定要删除该${model.model.displayName}项？`"
               @confirm="() => {
-                crud(model.model.name, 'delete', {
-                  query: {
-                    _id: data._id
-                  }
-                }).then((res) => {
-                  if (res.result.ok === 1) {
-                    parent.$Message({
-                      type: 'success',
-                      text: model.model.displayName + '删除成功'
-                    });
+                if ( typeof obj.click === 'function') {
+                  obj.click.call(parent, data, idx);
+                } else {
+                  crud(model.model.name, 'delete', {
+                    query: {
+                      _id: data._id
+                    }
+                  }).then((res) => {
+                    if (res.result.ok === 1) {
+                      parent.$Message({
+                        type: 'success',
+                        text: model.model.displayName + '删除成功'
+                      });
+                      parent.reload();
+                    } else {
+                      parent.$Message({
+                        type: 'error',
+                        text: model.model.displayName + '删除失败'
+                      });
+                    }
                     parent.reload();
-                  } else {
-                    parent.$Message({
-                      type: 'error',
-                      text: model.model.displayName + '删除失败'
-                    });
-                  }
-                  parent.reload();
-                });
+                  });
+                }
               //obj.click.call(parent, data, idx);
               }"
             >
@@ -110,7 +114,7 @@ import ComText from './components/text';
 import ComObject from './components/object';
 import ComObjectid from './components/objectid';
 import ComDate from './components/date';
-import crud from '@/application/common/curd/index.js';
+import crud from '@/application/common/crud/index.js';
 
 const fetchData = async function(reload = false) {
   if (reload) {

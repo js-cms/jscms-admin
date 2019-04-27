@@ -12,7 +12,7 @@
                 color="primary"
                 @click="()=>{
                 $router.push({
-                  name: 'ContentArticlesEdit'
+                  name: 'PageCustomEdit'
                 });
               }"
               >新增{{page.name}}</Button>
@@ -32,7 +32,6 @@
 <script>
 import storejs from 'store';
 import util from '@/application/common/util/index.js';
-import page from './model/Page';
 import Table from '@/application/components/jscms-table/Table';
 import dialogGeneralEdit from '@/application/components/dialogs/general-edit/index.js';
 import jscmsTable from '@/application/components/jscms-table/jscms-table.vue';
@@ -65,7 +64,7 @@ export default {
     async init() {
       let categoriesRes = await this.fetchCategory();
       let categories = categoriesRes.map(i => `${i._id}:${i.name}`);
-      page._iterator(f => {
+      this.model._iterator(f => {
         if (f.extra.comType === 'select') {
           if (f.extra.options === 'categories') {
             f.extra.options = categories.join(',');
@@ -73,7 +72,7 @@ export default {
         }
       });
       this.dialog.generalEdit = new dialogGeneralEdit.GeneralEdit(this, {
-        form: page,
+        form: this.model,
         width: '500',
         update: (formData, form, index) => {
           let json = form.to.json();

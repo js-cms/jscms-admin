@@ -98,6 +98,15 @@ export default {
               window.open(`${baseURL}/author/${data.nickname}.html`);
             }
           },
+          delete: {
+            click: function(data, index) {
+              req.post('/api/user/delete', {
+                id: data._id
+              }).then((res)=>{
+                console.log(res);
+              });
+            }
+          },
           fastEdit: false
         }
       });

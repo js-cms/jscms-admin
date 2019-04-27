@@ -10,7 +10,7 @@ const toBase64 = function(str) {
 /**
  * 增删改查封装
  */
-export default async function curd(modelName, method, params) {
+export default async function crud(modelName, method, params) {
   if ( method === 'one' ) {
     return req.get(`/api/crud/${modelName.toLowerCase()}/${method}?query=${toBase64(JSON.stringify(params.query || {}))}`);
   } else if (method === 'list') {

@@ -35,10 +35,7 @@ export default class Table {
       delete: {
         btnClass: 'h-btn h-btn-s h-btn-red',
         iClass: 'h-icon-trash',
-        name: '删除',
-        click: function (data, index) {
-          this.deleteData(data, index);
-        }
+        name: '删除'
       }
     }
     this.operation = _.merge(_operation, opts.operation);

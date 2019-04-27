@@ -2,6 +2,7 @@ import site from './site.route';
 import domains from './domains.route';
 import menus from './menus.route';
 import links from './links.route';
+import robots from './robots.route';
 
 /** 站点配置 */
 export default [
@@ -12,5 +13,7 @@ export default [
   /** 菜单配置 */
   ...menus,
   /** 链接配置 */
-  ...links
+  ...links,
+  /** robots配置 */
+  ...robots,
 ];
