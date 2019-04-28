@@ -143,11 +143,22 @@ export default {
     },
     trigger(data) {
       if (data == 'logout') {
-        Utils.removeLocal('token');
-        this.$router.replace({ name: 'Login' });
+        this.req$.get(`/api/logout?token=${storejs.get('token')}&userId=${storejs.get('uuid')}`).then((res) => {
+          if ( res.code === 0 ) {
+            this.$Message({
+              type: 'success',
+              text: res.msg, 
+              timeout: 3000
+            });
+            storejs.remove('token');
+            storejs.remove('uuid');
+            storejs.remove('userInfo');
+            this.$router.replace({ name: 'Login' });
+          }
+        });
       } else if (data === 'changepass') {
 
-      } else if (data === 'logout') {
+      } else if (data === 'info') {
         this.$router.push({ name: 'AccountBasic' });
       }
     },
