@@ -131,8 +131,15 @@ export default {
       let res = await this.req$.get('/api/user', {
         id: this.id
       });
-      this.form.setData(res.data);
-      typeof callback === 'function' ? callback() : void 0;
+      if ( res.code === 0 ) {
+        this.form.setData(res.data);
+        typeof callback === 'function' ? callback() : void 0;
+      } else {
+        this.$Message({
+          type: 'error',
+          text: res.msg
+        });
+      }
     }
   }
 };
