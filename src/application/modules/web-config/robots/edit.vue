@@ -31,7 +31,7 @@ export default {
       },
       config: {
         name: '',
-        alias: '',
+        alias: 'robots',
         info: {},
         _id: ''
       },
@@ -42,55 +42,46 @@ export default {
   },
 
   mounted() {
-    this.fetchData();
+    this.fetchConfig();
   },
 
   methods: {
     submit() {
+      this.isLoading = true;
       let validResult = this.form.validator.all();
       if (validResult.length > 0) {
         this.$Message({
           type: 'error',
-          text: res[0].displayName + '格式的格式不正确且不能为空'
+          text: res[0].displayName + '的格式不正确且不能为空'
         });
         return;
       }
       this.saveData(this.form.to.json().robots);
+      this.isLoading = false;
     },
 
     async saveData(info, callback) {
       this.config.info = info;
-      let type = '保存';
       let res = await this.req$.post('/api/config', this.config);
-      if (res.code === 0) {
-        this.$Message({
-          text: type + '成功',
-          type: 'success'
-        });
-        typeof callback === 'function' ? callback() : void 0;
-      } else {
-        this.$Message({
-          text: type + '失败',
-          type: 'error'
-        });
-      }
+      this.$Message({
+        text: res.msg,
+        type: res.code === 0 ? 'success' : 'error'
+      });
+      typeof callback === 'function' ? callback() : void 0;
     },
 
-    async fetchData(reload = false) {
+    async fetchConfig(reload = false) {
       this.containerLoading = true;
-      if (reload) {
-        this.data.pagination.page = 1;
-      }
-      let res = await this.req$.get('/api/config?alias=robots');
+      let res = await this.req$.get(`/api/config?alias=${this.config.alias}`);
       let config = res.data;
       util.setData(this.config, config);
+      this.config.id = this.config._id;
       this.form.setData({
         robots: this.config.info
       });
       setTimeout(() => {
         this.containerLoading = false;
-      }, 1000);
-      console.log(this.config);
+      }, 5000);
     }
   }
 };

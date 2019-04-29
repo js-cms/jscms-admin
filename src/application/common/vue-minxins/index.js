@@ -1,4 +1,5 @@
 import { Request } from '@/application/common/request/index.js';
+import storejs from 'store';
 import modelman from 'modelman';
 
 export default {
@@ -25,6 +26,13 @@ export default {
           callback(false);
         }
       }
+    },
+
+    logout$ () {
+      storejs.remove('token');
+      storejs.remove('uuid');
+      storejs.remove('userInfo');
+      this.$router.replace({ name: 'Login' });
     },
 
     log(...argv) {

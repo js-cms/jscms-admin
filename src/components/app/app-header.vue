@@ -96,9 +96,11 @@
         <Avatar :src="userInfo.avatar" :width="30"><span>{{userInfo.nickname}}</span></Avatar>
       </DropdownMenu>
     </div>
+    <dialog-change-pass :show="dialogChangePass.show" @close="()=>{dialogChangePass.show=false}"></dialog-change-pass>
   </div>
 </template>
 <script>
+import dialogChangePass from '@/application/components/dialogs/change-pass';
 import { mapState } from 'vuex';
 import appHeaderMessage from './modules/app-header-message';
 import storejs from 'store';
@@ -107,10 +109,14 @@ let origin = storejs.get('origin');
 
 export default {
   components: {
-    appHeaderMessage
+    appHeaderMessage,
+    dialogChangePass
   },
   data() {
     return {
+      dialogChangePass: {
+        show: false
+      },
       searchText: '',
       infoMenu: [
         { key: 'info', title: '个人信息', icon: 'h-icon-user' },
@@ -147,14 +153,11 @@ export default {
               text: res.msg, 
               timeout: 3000
             });
-            storejs.remove('token');
-            storejs.remove('uuid');
-            storejs.remove('userInfo');
-            this.$router.replace({ name: 'Login' });
+            this.logout$();
           }
         });
       } else if (data === 'changepass') {
-
+        this.dialogChangePass.show = true;
       } else if (data === 'info') {
         this.$router.push({ name: 'AccountBasic' });
       }

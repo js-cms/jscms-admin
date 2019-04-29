@@ -25,7 +25,7 @@
         ></Radio>
       </FormItem>
       <FormItem label="生日" prop="birthday">
-        <DatePicker v-model="acc.birthday" format="timestamp" type="date"></DatePicker>
+        <DatePicker v-model="acc.birthday" type="date"></DatePicker>
       </FormItem>
       <FormItem label="qq号" prop="qq">
         <input type="text" v-model="acc.qq">
@@ -87,18 +87,14 @@ export default {
       user.birthday = moment(user.birthday).valueOf();
       delete user._id;
       delete user.__v;
+      this.saveloading = true;
       let res = await this.req$.post('/api/user/updateme', user);
       this.$Message({
         type: res.code === 0 ? 'success' : 'error',
         text: res.msg,
         timeout: 3000
-      }); 
-      console.log(res);
-      // this.saveloading = true;
-      // setTimeout(() => {
-      //   this.saveloading = false;
-      //   //store.dispatch('updateAccount', Utils.copy(this.acc));
-      // }, 1000);
+      });
+      this.saveloading = false;
     },
     reset() {
       this.$refs.form.reset();

@@ -8,7 +8,10 @@
         <Row :space-x="19" :space-y="5">
           <Cell style="float: right">
             <div>
-              <Button color="primary" @click="dialog.generalEdit.create({title: '新增' + page.name})">新增{{page.name}}</Button>
+              <Button
+                color="primary"
+                @click="dialog.generalEdit.create({title: '新增' + page.name})"
+              >新增{{page.name}}</Button>
             </div>
           </Cell>
         </Row>
@@ -21,6 +24,8 @@
   </div>
 </template>
 <script>
+import _ from 'lodash';
+
 import util from '@/application/common/util/index.js';
 import domain from './model/Domain';
 import Table from '@/application/components/jscms-table/Table';
@@ -39,10 +44,10 @@ export default {
         name: domain.model.displayName
       },
       config: {
-        name: "",
-        alias: "",
+        name: '',
+        alias: 'domains',
         info: {},
-        _id: ""
+        _id: ''
       },
       data: new Table({
         auto: false,
@@ -55,61 +60,45 @@ export default {
           create: function(formData, form) {
             let json = form.to.json();
             this.data.list.push(json);
-            this.saveData(this.data.list, '新建');
+            this.saveData(this.data.list);
           },
           update: function(formData, form, index) {
             let json = form.to.json();
             this.data.list[index] = json;
-            console.log('index', index);
-            console.log(this.data.list);
-            this.saveData(this.data.list, '更新');
+            this.saveData(this.data.list);
           }
         })
       }
     };
   },
   mounted() {
-    this.fetchData();
+    this.fetchConfig();
   },
   methods: {
-    async fetchData(reload = false) {
-      if (reload) {
-        this.data.pagination.page = 1;
-      }
-      let res = await req.get('/api/config?alias=domains');
+    async fetchConfig() {
+      let res = await req.get(`/api/config?alias=${this.config.alias}`);
       let config = res.data;
       util.setData(this.config, config);
+      this.config.id = this.config._id;
       this.data.list = res.data.info;
-      this.data.pagination.total = 100;
+      this.data.pagination.total = 1000;
     },
 
     async deleteData(data, index) {
       this.data.list.splice(index, 1);
-      this.saveData(this.data.list, '删除');
+      this.saveData(this.data.list);
     },
 
-    async saveData(info, type, callback) {
-      this.config.info = info;
-      let res = await req.post('/api/config', this.config);
-      if ( res.code === 0 ) {
-        this.$Message({
-          text: type + '成功',
-          type: 'success'
-        });
-        this.reload();
-        typeof callback === 'function' ? callback() : void(0);
-      } else {
-        this.$Message({
-          text: type + '失败',
-          type: 'error'
-        });
-      }
-    },
-
-    reload() {
-      this.fetchData(true);
+    async saveData(info) {
+      let params = _.cloneDeep(this.config);
+      params.info = info;
+      let res = await req.post('/api/config', params);
+      this.$Message({
+        text: res.msg,
+        type: res.code === 0 ? 'success' : 'error'
+      });
+      if (res.code === 0) this.fetchConfig();
     }
-    
   }
 };
 </script>

@@ -141,10 +141,10 @@ export default class GeneralEdit {
     }
     if (this._type === 'create') {
       if (typeof this._create === 'function') {
-        if ( this._update.isExternal === true ) {
-          this._update.call(this.parent, this.formData, form);
+        if ( this._create.isExternal === true ) {
+          this._create.call(this.parent, this.formData, form);
         } else {
-          this._update.call(this, this.formData, form);
+          this._create.call(this, this.formData, form);
         }
         this.onClose();
       }
