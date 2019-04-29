@@ -29,7 +29,7 @@
     "hey-global": "0.0.1",
     "hey-log": "0.0.8",
     "hey-utils": "^0.4.0",
-    "heyui": "^1.17.2",
+    "heyui": "^1.19.1",
     "js-model": "^1.4.2",
     "lodash": "^4.17.11",
     "lodash.debounce": "^4.0.8",

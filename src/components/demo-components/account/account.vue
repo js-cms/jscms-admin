@@ -23,6 +23,13 @@
 import AccountInfoEdit from './modules/account-info-edit';
 import AccountInfoShow from './modules/account-info-show';
 import { mapState } from 'vuex';
+import storejs from 'store';
+import moment from 'moment';
+
+const birthday = function(data) {
+  data.birthday = moment(data.birthday).format('YYYY-MM-DD');
+  return data;
+}
 
 export default {
   components: {
@@ -31,6 +38,7 @@ export default {
   },
   data() {
     return {
+      account: birthday(storejs.get('userInfo')),
       tabs: {
         info: '基本设置'
       },
@@ -44,11 +52,6 @@ export default {
     init() {
 
     }
-  },
-  computed: {
-    ...mapState({
-      account: 'User'
-    })
   }
 };
 </script>

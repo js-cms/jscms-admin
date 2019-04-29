@@ -104,9 +104,6 @@ import appHeaderMessage from './modules/app-header-message';
 import storejs from 'store';
 let userInfo = storejs.get('userInfo');
 let origin = storejs.get('origin');
-if (userInfo) {
-  userInfo.avatar = userInfo.avatar.indexOf('http') === -1 ? origin + userInfo.avatar : userInfo.avatar;
-}
 
 export default {
   components: {

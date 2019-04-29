@@ -10,31 +10,42 @@
       <FormItem label="头像" prop="avatar">
         <Qiniu :options="options" type="image" data-type="url" v-model="acc.avatar"></Qiniu>
       </FormItem>
-      <FormItem label="姓名" prop="name">
-        <input type="text" v-model="acc.name"/>
-      </FormItem>
-      <FormItem label="描述" prop="desc">
-        <textarea v-autosize v-model="acc.desc"/>
-      </FormItem>
       <FormItem label="邮箱" prop="email">
-        <input type="text" v-model="acc.email"/>
+        <input type="text" v-model="acc.email">
       </FormItem>
-      <FormItem label="公司" prop="org">
-        <input type="text" v-model="acc.org"/>
+      <FormItem label="昵称" prop="nickname">
+        <input type="text" v-model="acc.nickname">
       </FormItem>
-      <FormItem label="部门" prop="dept">
-        <input type="text" v-model="acc.dept"/>
+      <FormItem label="性别" prop="sex">
+        <Radio
+          v-model="acc.sex"
+          :datas="[{ name: '男', code: 1 }, { name: '女', code: 2}]"
+          keyName="code"
+          titleName="name"
+        ></Radio>
       </FormItem>
-      <FormItem label="职位" prop="title">
-        <input type="text" v-model="acc.title"/>
+      <FormItem label="生日" prop="birthday">
+        <DatePicker v-model="acc.birthday" format="timestamp" type="date"></DatePicker>
+      </FormItem>
+      <FormItem label="qq号" prop="qq">
+        <input type="text" v-model="acc.qq">
+      </FormItem>
+      <FormItem label="微信号" prop="wx">
+        <input type="text" v-model="acc.wx">
       </FormItem>
       <FormItem label="地址" prop="location">
-        <input type="text" v-model="acc.location"/>
+        <input type="text" v-model="acc.location">
+      </FormItem>
+      <FormItem label="工作" prop="work">
+        <input type="text" v-model="acc.work">
+      </FormItem>
+      <FormItem label="关于" prop="desc">
+        <textarea v-autosize v-model="acc.about"/>
       </FormItem>
       <FormItem label="标签" prop="tags">
         <TagInput v-model="acc.tags"></TagInput>
       </FormItem>
-      <FormItem label="" prop="location">
+      <FormItem label>
         <Button color="primary" @click="save" :loading="saveloading">保存</Button>
         <Button @click="reset">重置</Button>
       </FormItem>
@@ -43,6 +54,7 @@
 </template>
 <script>
 import store from 'js/vuex/store';
+import moment from 'moment';
 
 export default {
   props: {
@@ -58,9 +70,7 @@ export default {
       options: {
         max_file_size: '1mb',
         filters: {
-          mime_types: [
-            { title: 'Image files', extensions: 'jpg,gif,png' }
-          ]
+          mime_types: [{ title: 'Image files', extensions: 'jpg,gif,png' }]
         }
       },
       saveloading: false
@@ -70,24 +80,31 @@ export default {
     this.init();
   },
   methods: {
-    init() {
-
-    },
-    save() {
+    init() {},
+    async save() {
       if (!this.$refs.form.valid().result) return;
-      this.saveloading = true;
-      setTimeout(() => {
-        this.saveloading = false;
-        store.dispatch('updateAccount', Utils.copy(this.acc));
-      }, 1000);
+      let user = Utils.copy(this.acc);
+      user.birthday = moment(user.birthday).valueOf();
+      delete user._id;
+      delete user.__v;
+      let res = await this.req$.post('/api/user/updateme', user);
+      this.$Message({
+        type: res.code === 0 ? 'success' : 'error',
+        text: res.msg,
+        timeout: 3000
+      }); 
+      console.log(res);
+      // this.saveloading = true;
+      // setTimeout(() => {
+      //   this.saveloading = false;
+      //   //store.dispatch('updateAccount', Utils.copy(this.acc));
+      // }, 1000);
     },
     reset() {
       this.$refs.form.reset();
       this.acc = Utils.copy(this.account);
     }
   },
-  computed: {
-
-  }
+  computed: {}
 };
 </script>

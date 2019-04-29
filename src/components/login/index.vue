@@ -23,6 +23,7 @@
 <script>
 import Login from './ModelLogin';
 import storejs from 'store';
+const origin = storejs.get('origin');
 
 export default {
   data() {
@@ -40,9 +41,13 @@ export default {
           text: res.msg, 
           timeout: 3000
         });
+        let userInfo = res.data.userInfo;
+        if (userInfo) {
+          userInfo.avatar = userInfo.avatar.indexOf('http') === -1 ? origin + userInfo.avatar : userInfo.avatar;
+        }
         storejs.set('token', res.data.token);
-        storejs.set('uuid', res.data.userInfo._id);
-        storejs.set('userInfo', res.data.userInfo);
+        storejs.set('uuid', userInfo._id);
+        storejs.set('userInfo', userInfo);
         this.$router.push({
           name: 'Home'
         });

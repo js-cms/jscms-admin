@@ -22,6 +22,10 @@
   }
   .account-detail-desc {
     margin-top: 40px;
+    i {
+      position: relative;
+      top: -1px;
+    }
     p {
       margin-bottom: 10px;
       > span {
@@ -57,7 +61,7 @@
       <p class="account-desc"><pre>{{account.desc}}</pre></p>
       <div class="account-detail-desc">
         <p><i class="icon-mail"></i><span>{{account.email}}</span></p>
-        <p><i class="icon-briefcase"></i><span>{{account.org}} · {{account.dept}} · {{account.title}}</span></p>
+        <p><i class="icon-briefcase"></i><span>{{account.work}}</span></p>
         <p><i class="icon-location-2"></i><span>{{account.location}}</span></p>
       </div>
       <div class="divider"></div>
@@ -71,6 +75,11 @@
   </div>
 </template>
 <script>
+const birthday = function(data) {
+  data.birthday = moment(data.birthday).format('YYYY-MM-DD');
+  return data;
+}
+
 export default {
   props: {
     account: Object
