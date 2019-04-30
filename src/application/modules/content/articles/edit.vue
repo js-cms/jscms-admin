@@ -8,10 +8,136 @@
         </span>
       </div>
       <div class="h-panel-body">
-        <div v-width="'100%'" v-if="form!==''">
-          <jscms-form :form="form" :parent="this"></jscms-form>
-        </div>
         <Loading text="Loading" :loading="containerLoading"></Loading>
+        <!-- 选填信息 -->
+        <div v-width="'100%'" v-if="form">
+          <Row :space="16">
+            <Cell width="12">
+              <div v-width="'100%'">
+                <div class="h-panel">
+                  <div class="h-panel-bar">
+                    <span class="h-panel-title">开启独立元信息</span>
+                    <span class="h-panel-right">
+                      <Checkbox v-model="form.fields.isIndepMeta.value">勾选开启独立元信息</Checkbox>
+                    </span>
+                  </div>
+                  <div class="h-panel-body" v-show="form.fields.isIndepMeta.value">
+                    <Form :label-width="110">
+                      <FormItem label="元信息标题">
+                        <input
+                          type="text"
+                          v-model="form.fields.indepMetaTitle.value"
+                          placeholder="请输入元信息标题"
+                        >
+                      </FormItem>
+                      <FormItem label="元信息关键字">
+                        <input
+                          type="text"
+                          v-model="form.fields.indepMetaKeywords.value"
+                          placeholder="请输入元信息关键字"
+                        >
+                      </FormItem>
+                      <FormItem label="元信息描述">
+                        <textarea
+                          :name="form.fields.indepMetaDescription.name"
+                          v-model="form.fields.indepMetaDescription.value"
+                          :rows="6"
+                          :placeholder="form.fields.indepMetaDescription.placeholder"
+                        ></textarea>
+                      </FormItem>
+                    </Form>
+                  </div>
+                </div>
+              </div>
+            </Cell>
+            <Cell width="12">
+              <div v-width="'100%'">
+                <div class="h-panel">
+                  <div class="h-panel-bar">
+                    <span class="h-panel-title">开启独立发布者</span>
+                    <span class="h-panel-right">
+                      <Checkbox v-model="form.fields.isIndepUser.value">勾选开启独立发布者</Checkbox>
+                    </span>
+                  </div>
+                  <div class="h-panel-body" v-show="form.fields.isIndepUser.value">
+                    <Form :label-width="110">
+                      <FormItem label="发布者头像">
+                        <Qiniu :options="options" type="image" data-type="url" v-model="form.fields.indepUserAvatar.value"></Qiniu>
+                      </FormItem>
+                      <FormItem label="发布者昵称">
+                        <input
+                          type="text"
+                          v-model="form.fields.indepUserNickname.value"
+                          placeholder="请输入发布者昵称"
+                        >
+                      </FormItem>
+                      <FormItem label="发布者简介">
+                        <textarea
+                          :name="form.fields.indepUserAbout.name"
+                          v-model="form.fields.indepUserAbout.value"
+                          :rows="6"
+                          :placeholder="form.fields.indepUserAbout.placeholder"
+                        ></textarea>
+                      </FormItem>
+                    </Form>
+                  </div>
+                </div>
+              </div>
+            </Cell>
+          </Row>
+          <!-- <jscms-form :form="form" :parent="this"></jscms-form> -->
+        </div>
+
+        <!-- 主要信息 -->
+        <div class="main-block-warp" v-if="form">
+          <div class="h-panel">
+            <div class="h-panel-bar">
+              <span class="h-panel-title">主要信息</span>
+            </div>
+            <div class="h-panel-body">
+              <Form :label-width="110">
+                <FormItem label="文章的标题">
+                  <input type="text" v-model="form.fields.title.value" placeholder="请输入文章的标题">
+                </FormItem>
+                <FormItem label="所属分类">
+                  <Select v-model="form.fields.categoryId.value" :datas="options.category.options"></Select>
+                </FormItem>
+                <FormItem label="文章类型">
+                  <Select v-model="form.fields.type.value" :datas="options.type.options"></Select>
+                </FormItem>
+              </Form>
+            </div>
+          </div>
+        </div>
+
+        <!-- 内容信息 -->
+        <div class="main-block-warp" v-if="form">
+          <div class="h-panel">
+            <div class="h-panel-bar">
+              <span class="h-panel-title">编辑文章内容</span>
+            </div>
+            <div class="h-panel-body" style="padding: 0px;">
+              <Tabs
+                :datas="{0: 'Markdown', 1: '纯html代码', 2: '富文本编辑器'}"
+                v-model="form.fields.contentType.value"
+              ></Tabs>
+              <div class="editor-warp">
+                <!-- markddown 编辑器 -->
+                <div class="editor-markdown" v-show="form.fields.contentType.value==0">
+                  <MarkdownEditor v-model="form.fields.mdContent.value" :readonly="false"/>
+                </div>
+                <!-- 纯html代码编辑器 -->
+                <div class="editor-html" v-show="form.fields.contentType.value==1">
+                  <CodeEditor v-model="form.fields.htmlContent.value" mode="html"/>
+                </div>
+                <!-- 富文本编辑器 -->
+                <div class="editor-richtext" v-show="form.fields.contentType.value==2">
+                  <RichTextEditor v-model="form.fields.richContent.value"></RichTextEditor>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -19,6 +145,7 @@
 <script>
 import util from '@/application/common/util/index.js';
 import jscmsForm from '@/application/components/jscms-form/jscms-form.vue';
+import Select from '@/application/components/jscms-form/Select.js';
 
 export default {
   components: {
@@ -27,11 +154,14 @@ export default {
   data() {
     return {
       id: this.$route.query.id,
+      selected: 0,
       page: {
         name: ''
       },
       form: '',
-      mode: 'single'
+      options: {
+        category: []
+      }
     };
   },
 
@@ -46,8 +176,8 @@ export default {
         let categoriesRes = await this.fetchCategory();
         let categories = categoriesRes.map(i => `${i._id}:${i.name}`);
         model._iterator(f => {
-          if (f.extra.comType==='select') {
-            if(f.extra.options === 'categories') {
+          if (f.extra.comType === 'select') {
+            if (f.extra.options === 'categories') {
               f.extra.options = categories.join(',');
             }
           }
@@ -56,11 +186,18 @@ export default {
         if (this.id) {
           this.fetchData(() => {
             this.containerLoading = false;
+            this.parseOptions();
           });
         } else {
           this.containerLoading = false;
-        } 
+          this.parseOptions();
+        }
       });
+    },
+
+    parseOptions() {
+      this.options.category = new Select(this.form.fields.categoryId.extra.options);
+      this.options.type = new Select(this.form.fields.type.extra.options);
     },
 
     submit() {
@@ -77,11 +214,11 @@ export default {
 
     async saveData(article, callback) {
       let url = '/api/article/';
-      if ( this.id ) {
+      if (this.id) {
         article.id = this.id;
-        url+='update';
+        url += 'update';
       } else {
-        url+='create';
+        url += 'create';
       }
       let res = await this.req$.post(url, article);
       this.$Message({
@@ -116,5 +253,14 @@ export default {
 
 .form-btns {
   padding-left: 100px;
+}
+
+.main-block-warp {
+  width: 100%;
+  margin-top: 20px;
+
+  .editor-warp {
+    padding: 20px;
+  }
 }
 </style>

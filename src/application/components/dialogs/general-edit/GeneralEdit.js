@@ -86,13 +86,13 @@ export default class GeneralEdit {
       data: json
     }).then((res) => {
       if ( res.result.length ) {
-        this.$Message({
+        this.parent.$Message({
           type: 'success',
           text: form.model.displayName + '创建成功'
         });
-        this.reload();
+        this.parent.reload();
       } else {
-        this.$Message({
+        this.parent.$Message({
           type: 'error',
           text: form.model.displayName + '创建失败'
         });

@@ -49,7 +49,6 @@ export default {
     this.fetchModel$('分类', 'category', (model) => {
       this.model = model;
       this.init();
-      //this.fetchData();
     });
   },
   methods: {
