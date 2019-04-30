@@ -62,7 +62,14 @@
                   <div class="h-panel-body" v-show="form.fields.isIndepUser.value">
                     <Form :label-width="110">
                       <FormItem label="发布者头像">
-                        <Qiniu :options="options" type="image" data-type="url" v-model="form.fields.indepUserAvatar.value"></Qiniu>
+                        <upload-avatar
+                          buttonName="上传图片"
+                          :action="uploadAction"
+                          :extraData="uploadData"
+                          :imageUrl="form.fields.indepUserAvatar.value"
+                          @complete="uploadComplete"
+                        ></upload-avatar>
+                        <!-- <Qiniu :options="options" type="image" data-type="url" v-model="form.fields.indepUserAvatar.value"></Qiniu> -->
                       </FormItem>
                       <FormItem label="发布者昵称">
                         <input
@@ -96,6 +103,9 @@
             </div>
             <div class="h-panel-body">
               <Form :label-width="110">
+                <FormItem label="文章的封面">
+                  <input type="text" v-model="form.fields.poster.value" placeholder="请输入文章的封面">
+                </FormItem>
                 <FormItem label="文章的标题">
                   <input type="text" v-model="form.fields.title.value" placeholder="请输入文章的标题">
                 </FormItem>
@@ -104,6 +114,15 @@
                 </FormItem>
                 <FormItem label="文章类型">
                   <Select v-model="form.fields.type.value" :datas="options.type.options"></Select>
+                </FormItem>
+                <FormItem label="置顶方式">
+                  <Select v-model="form.fields.topType.value" :datas="options.topType.options"></Select>
+                </FormItem>
+                <FormItem label="文章关键字">
+                  <TagInput v-model="form.fields.keywords.value" :limit="20" :wordlimit="20" placeholder="输入标签，回车键确认"></TagInput>
+                </FormItem>
+                <FormItem label="文章摘要">
+                  <textarea :name="form.fields.description.name" v-model="form.fields.description.value" :rows="form.fields.description.extra.rows || 6" :placeholder="form.fields.description.placeholder"></textarea>
                 </FormItem>
               </Form>
             </div>
@@ -143,17 +162,25 @@
   </div>
 </template>
 <script>
+import storejs from 'store';
+
 import util from '@/application/common/util/index.js';
 import jscmsForm from '@/application/components/jscms-form/jscms-form.vue';
 import Select from '@/application/components/jscms-form/Select.js';
+import uploadAvatar from '@/application/components/upload-avatar';
 
 export default {
   components: {
-    jscmsForm
+    jscmsForm,
+    uploadAvatar
   },
   data() {
     return {
       id: this.$route.query.id,
+      uploadAction: storejs.get('origin') + '/api/resource/uploader',
+      uploadData: {
+        token: storejs.get('token')
+      },
       selected: 0,
       page: {
         name: ''
@@ -198,6 +225,7 @@ export default {
     parseOptions() {
       this.options.category = new Select(this.form.fields.categoryId.extra.options);
       this.options.type = new Select(this.form.fields.type.extra.options);
+      this.options.topType = new Select(this.form.fields.topType.extra.options);
     },
 
     submit() {
@@ -239,6 +267,18 @@ export default {
     async fetchCategory(callback) {
       let res = await this.req$.get('/api/category/list');
       return res.data;
+    },
+
+    /**
+     * 图片上传成功回调
+     */
+    uploadComplete(type, res) {
+      if (type === 'success') {
+        this.$Message[res.code === 0 ? 'success' : 'error'](res.msg);
+        this.form.fields.indepUserAvatar.value = res.data.imageUrl;
+      } else {
+        this.$Message.error('未知错误');
+      }
     }
   }
 };

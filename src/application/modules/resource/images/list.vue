@@ -76,8 +76,7 @@
 import storejs from 'store';
 
 import ImagePreview from '@/application/components/image-preview';
-import uploadButton from '@/application/components/upload-button/button.vue';
-import { setTimeout } from 'timers';
+import uploadButton from '@/application/components/upload-button';
 
 const link = 'https://lokeshdhakar.com/projects/lightbox2/images/';
 export default {
