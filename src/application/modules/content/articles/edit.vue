@@ -67,9 +67,15 @@
                           :action="uploadAction"
                           :extraData="uploadData"
                           :imageUrl="form.fields.indepUserAvatar.value"
-                          @complete="uploadComplete"
+                          @complete="(type, res) => {
+                            if (type === 'success') {
+                              $Message[res.code === 0 ? 'success' : 'error'](res.msg);
+                              form.fields.indepUserAvatar.value = res.data.imageUrl;
+                            } else {
+                              $Message.error('未知错误');
+                            }
+                          }"
                         ></upload-avatar>
-                        <!-- <Qiniu :options="options" type="image" data-type="url" v-model="form.fields.indepUserAvatar.value"></Qiniu> -->
                       </FormItem>
                       <FormItem label="发布者昵称">
                         <input
@@ -92,7 +98,6 @@
               </div>
             </Cell>
           </Row>
-          <!-- <jscms-form :form="form" :parent="this"></jscms-form> -->
         </div>
 
         <!-- 主要信息 -->
@@ -104,7 +109,22 @@
             <div class="h-panel-body">
               <Form :label-width="110">
                 <FormItem label="文章的封面">
-                  <input type="text" v-model="form.fields.poster.value" placeholder="请输入文章的封面">
+                  <upload-avatar
+                    buttonName="上传图片"
+                    :action="uploadAction"
+                    :extraData="uploadData"
+                    :imageUrl="form.fields.poster.value"
+                    :height="198"
+                    :width="300"
+                    @complete="(type, res) => {
+                      if (type === 'success') {
+                        $Message[res.code === 0 ? 'success' : 'error'](res.msg);
+                        form.fields.poster.value = res.data.imageUrl;
+                      } else {
+                        $Message.error('未知错误');
+                      }
+                    }"
+                  ></upload-avatar>
                 </FormItem>
                 <FormItem label="文章的标题">
                   <input type="text" v-model="form.fields.title.value" placeholder="请输入文章的标题">
@@ -119,10 +139,20 @@
                   <Select v-model="form.fields.topType.value" :datas="options.topType.options"></Select>
                 </FormItem>
                 <FormItem label="文章关键字">
-                  <TagInput v-model="form.fields.keywords.value" :limit="20" :wordlimit="20" placeholder="输入标签，回车键确认"></TagInput>
+                  <TagInput
+                    v-model="form.fields.keywords.value"
+                    :limit="20"
+                    :wordlimit="20"
+                    placeholder="输入标签，回车键确认"
+                  ></TagInput>
                 </FormItem>
                 <FormItem label="文章摘要">
-                  <textarea :name="form.fields.description.name" v-model="form.fields.description.value" :rows="form.fields.description.extra.rows || 6" :placeholder="form.fields.description.placeholder"></textarea>
+                  <textarea
+                    :name="form.fields.description.name"
+                    v-model="form.fields.description.value"
+                    :rows="form.fields.description.extra.rows || 6"
+                    :placeholder="form.fields.description.placeholder"
+                  ></textarea>
                 </FormItem>
               </Form>
             </div>
@@ -210,14 +240,13 @@ export default {
           }
         });
         this.form = model;
+        this.parseOptions();
         if (this.id) {
           this.fetchData(() => {
             this.containerLoading = false;
-            this.parseOptions();
           });
         } else {
           this.containerLoading = false;
-          this.parseOptions();
         }
       });
     },
@@ -229,7 +258,8 @@ export default {
     },
 
     submit() {
-      let validResult = this.form.validator.all();
+      let validResult = this.form.validator.all({ formField: true });
+      console.log('validResult', validResult);
       if (validResult.length > 0) {
         this.$Message({
           type: 'error',
@@ -237,7 +267,35 @@ export default {
         });
         return;
       }
-      this.saveData(this.form.to.json({ formField: true }));
+      let params = this.form.to.json({ formField: true });
+      let checkRes = this.otherCheck(params);
+      if (checkRes) {
+        this.$Message({
+          type: 'error',
+          text: checkRes
+        });
+      } else {
+        this.saveData(params);
+      }
+    },
+
+    otherCheck(params) {
+      if ( params.contentType === 0 ) {
+        if ( !params.mdContent ) {
+          return '你选择的编辑器是‘markdown编辑器’，请填写内容。';
+        }
+      }
+      if ( params.contentType === 1 ) {
+        if ( !params.htmlContent ) {
+          return '你选择的编辑器是‘纯html编辑器’，请填写内容。';
+        }
+      }
+      if ( params.contentType === 2 ) {
+        if ( !params.richContent ) {
+          return '你选择的编辑器是‘富文本编辑器’，请填写内容。';
+        }
+      }
+      return false;
     },
 
     async saveData(article, callback) {
@@ -260,25 +318,21 @@ export default {
       let res = await this.req$.get('/api/article', {
         id: this.id
       });
-      this.form.setData(res.data);
-      typeof callback === 'function' ? callback() : void 0;
+      this.$Message({
+        text: res.msg,
+        type: res.code === 0 ? 'success' : 'error'
+      });
+      if ( res.code === 0 ) {
+        let data = res.data;
+        data.id = data._id;
+        this.form.setData(res.data);
+        typeof callback === 'function' ? callback() : void 0;
+      }
     },
 
     async fetchCategory(callback) {
       let res = await this.req$.get('/api/category/list');
       return res.data;
-    },
-
-    /**
-     * 图片上传成功回调
-     */
-    uploadComplete(type, res) {
-      if (type === 'success') {
-        this.$Message[res.code === 0 ? 'success' : 'error'](res.msg);
-        this.form.fields.indepUserAvatar.value = res.data.imageUrl;
-      } else {
-        this.$Message.error('未知错误');
-      }
     }
   }
 };

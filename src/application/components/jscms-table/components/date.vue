@@ -1,6 +1,6 @@
 <template>
 <div class="com-date">
-  {{data[keyname] ? moment(data[keyname]).format("YYYY-MM-DD HH:mm:ss") : '无'}}
+  {{data[keyname] ? moment(data[keyname]).format("YYYY-MM-DD HH:mm") : '无'}}
 </div>
 </template>
 <script>

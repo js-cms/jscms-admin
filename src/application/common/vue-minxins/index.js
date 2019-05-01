@@ -16,14 +16,21 @@ export default {
         name: modelName[0].toUpperCase() + modelName.substr(1),
         displayName: displayName
       });
-      if (res.data.model) {
-        model.assign(res.data.model);
-        if (typeof callback === "function") {
-          callback(model);
-        }
+      if ( res.code > 0 ) {
+        this.$Message({
+          text: res.msg,
+          type: 'error'
+        });
       } else {
-        if (typeof callback === "function") {
-          callback(false);
+        if (res.data.model) {
+          model.assign(res.data.model);
+          if (typeof callback === "function") {
+            callback(model);
+          }
+        } else {
+          if (typeof callback === "function") {
+            callback(false);
+          }
         }
       }
     },

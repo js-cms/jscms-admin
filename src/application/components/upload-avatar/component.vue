@@ -1,10 +1,10 @@
 <template>
-  <div class="upload-avatar">
+  <div class="upload-avatar" @click="activeUpload" :style="style">
     <div class="cross" @click="activeUpload" v-show="!imgUrl">
       <div class="across"></div>
       <div class="upright"></div>
     </div>
-    <img class="preview" :src="imgUrl" v-show="imgUrl" title="重新上传" />
+    <img class="preview" @click="activeUpload" :src="imgUrl" v-show="imgUrl" title="重新上传" />
     <input id="uploadInput" type="file" @change="handleFileChange">
   </div>
 </template>
@@ -16,6 +16,14 @@ export default {
   props: {
     imageUrl: {
       type: String
+    },
+    height: {
+      type: Number,
+      default: 70
+    },
+    width: {
+      type: Number,
+      default: 70
     },
     buttonName: {
       type: String,
@@ -50,13 +58,21 @@ export default {
     return {
       uploadLoading: false,
       file: "",
-      imgUrl: ""
+      imgUrl: "",
+      style: {
+        height: this.height + 'px',
+        width: this.width + 'px'
+      }
     };
   },
   watch: {
     imageUrl(val) {
-      this.imgUrl = val;
+      if (val) {
+        this.imgUrl = val;
+      }
     }
+  },
+  mounted() {
   },
   methods: {
     handleFileChange(e) {
@@ -120,12 +136,12 @@ export default {
     },
 
     removeFile() {
-      document.getElementById('uploadInput').value = '';
+      this.$el.querySelector('#uploadInput').value = '';
     },
 
     activeUpload() {
       if ( this.uploadLoading === false ) {
-        document.getElementById('uploadInput').click();
+        this.$el.querySelector('#uploadInput').click();
       }
     }
   }
@@ -177,6 +193,7 @@ export default {
     height: 100%;
     width: 100%;
     object-fit: cover;
+    border-radius: 4px;
   }
 
   input {
