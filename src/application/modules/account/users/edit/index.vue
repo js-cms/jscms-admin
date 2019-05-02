@@ -1,20 +1,18 @@
 <template>
-  <div class="app-form frame-page basic-form-vue">
-    <div class="h-panel">
-      <div class="h-panel-bar">
-        <span class="h-panel-title">{{`${id ? '编辑' : '新建'}${page.name}`}}</span>
-        <span style="float: right">
-          <button class="h-btn h-btn-text-primary" @click="()=>{generatePassword.show=true}">密码密文生成</button>
-          <button class="h-btn h-btn-primary" @click="submit">{{`${id ? '保存修改' : '确认新建'}`}}</button>
-        </span>
-      </div>
-      <div class="h-panel-body">
-        <div v-width="'100%'" v-if="form!==''">
-          <jscms-form :form="form" :labelWidth="120" :parent="this"></jscms-form>
+  <div class="account-vue frame-page">
+    <Row :space="30">
+      <Cell :xs="24" :sm="24" :md="7" :lg="7" :xl="7" v-if="isShowForm">
+        <account-show :account="showData"></account-show>
+      </Cell>
+      <Cell :xs="24" :sm="24" :md="17" :lg="17" :xl="17" v-if="isShowForm">
+        <div class="h-panel">
+          <div class="h-panel-tabs-bar">
+            <Tabs v-model="tab" :datas="tabs"></Tabs>
+          </div>
+          <account-edit v-if="tab == 'info'" :account="form"></account-edit>
         </div>
-        <Loading text="Loading" :loading="containerLoading"></Loading>
-      </div>
-    </div>
+      </Cell>
+    </Row>
     <Modal v-model="generatePassword.show">
       <div slot="header">密码密文生成</div>
       <div v-width="generatePassword.width">
@@ -51,13 +49,25 @@
   </div>
 </template>
 <script>
-import util from '@/application/common/util/index.js';
-import jscmsForm from '@/application/components/jscms-form/jscms-form.vue';
 import bcrypt from 'bcryptjs';
+import moment from 'moment';
+import storejs from 'store';
+
+import util from '@/application/common/util/index.js';
+import accountShow from './show.vue';
+import accountEdit from './edit.vue';
+
+const pre = function(data) {
+  let origin = storejs.get('origin');
+  data.birthday = moment(data.birthday || 0).format('YYYY-MM-DD');
+  data.avatar = data.avatar.indexOf('http') === -1 ? origin + data.avatar : data.avatar;
+  return data;
+}
 
 export default {
   components: {
-    jscmsForm
+    accountShow,
+    accountEdit
   },
   data() {
     return {
@@ -65,6 +75,8 @@ export default {
       page: {
         name: ''
       },
+      isShowForm: false,
+      showData: {},
       form: '',
       generatePassword: {
         show: false,
@@ -72,7 +84,10 @@ export default {
         password: '',
         ciphertext: ''
       },
-      mode: 'single'
+      tabs: {
+        info: '基本设置'
+      },
+      tab: 'info'
     };
   },
 
@@ -91,48 +106,25 @@ export default {
           });
         } else {
           this.containerLoading = false;
+          let data = pre(this.form.to.json());
+          this.form.setData(data);
+          this.isShowForm = true;
         }
       });
-    },
-
-    submit() {
-      let validResult = this.form.validator.all();
-      if (validResult.length > 0) {
-        this.$Message({
-          type: 'error',
-          text: validResult[0].displayName + '格式不正确且不能为空'
-        });
-        return;
-      }
-      this.saveData(this.form.to.json({ formField: true }));
     },
 
     generate() {
       this.generatePassword.ciphertext = bcrypt.hashSync(this.generatePassword.password, 10);
     },
 
-    async saveData(page, callback) {
-      let url = '/api/user/';
-      if (this.id) {
-        page.id = this.id;
-        url += 'update';
-      } else {
-        url += 'create';
-      }
-      let res = await this.req$.post(url, page);
-      this.$Message({
-        text: res.msg,
-        type: res.code === 0 ? 'success' : 'error'
-      });
-      typeof callback === 'function' ? callback() : void 0;
-    },
-
     async fetchData(callback) {
       let res = await this.req$.get('/api/user', {
         id: this.id
       });
-      if ( res.code === 0 ) {
-        this.form.setData(res.data);
+      if (res.code === 0) {
+        this.form.setData(pre(res.data));
+        this.showData = this.form.to.json();
+        this.isShowForm = true;
         typeof callback === 'function' ? callback() : void 0;
       } else {
         this.$Message({

@@ -1,7 +1,7 @@
 <template>
   <div class="upload-button">
     <input id="uploadInput" type="file" @change="handleFileChange">
-    <button style="z-index: 100" @click="activeUpload" class="h-btn h-btn-primary">
+    <button style="z-index: 100" @click.stop="activeUpload" class="h-btn h-btn-primary">
       <i class="h-icon-loading" v-if="uploadLoading===true"></i>
       <i class="h-icon-upload" v-if="uploadLoading===false"></i>
       <span>{{buttonName}}</span>

@@ -8,7 +8,10 @@
         <Row :space-x="19" :space-y="5">
           <Cell style="float: right">
             <div>
-              <Button color="primary" @click="dialog.generalEdit.create({title: '新增' + page.name})">新增{{page.name}}</Button>
+              <Button
+                color="primary"
+                @click="dialog.generalEdit.create({title: '新增' + page.name})"
+              >新增{{page.name}}</Button>
             </div>
           </Cell>
         </Row>
@@ -22,6 +25,7 @@
 </template>
 <script>
 import storejs from 'store';
+import _ from 'lodash';
 import util from '@/application/common/util/index.js';
 import Table from '@/application/components/jscms-table/Table';
 import dialogGeneralEdit from '@/application/components/dialogs/general-edit/index.js';
@@ -46,7 +50,7 @@ export default {
     };
   },
   mounted() {
-    this.fetchModel$('评论', 'comment', (model) => {
+    this.fetchModel$('评论', 'comment', model => {
       this.model = model;
       this.init();
     });
@@ -62,16 +66,16 @@ export default {
             btnClass: 'h-btn h-btn-s h-btn-text-primary',
             iClass: 'h-icon-link',
             name: '前台查看',
-            click: function (data, index) {
+            click: function(data, index) {
               let baseURL = storejs.get('origin');
-              window.open(baseURL + '/' + data.articleId.numberId + ".html#comment");
+              window.open(baseURL + '/' + data.articleId.numberId + '.html#comment');
             }
           },
           fastEdit: {
             btnClass: 'h-btn h-btn-s h-btn-text-primary',
             iClass: 'h-icon-edit',
             name: '快速编辑',
-            click: function (data, index) {
+            click: function(data, index) {
               this.dialog.generalEdit.update({
                 title: '快速编辑' + this.page.name,
                 width: '600',
@@ -85,55 +89,40 @@ export default {
       this.dialog = {
         generalEdit: new dialogGeneralEdit.GeneralEdit(this, {
           form: this.model,
-          width: '500'
+          width: '500',
+          create: async function(formData, form) {
+            let json = form.to.json({ formField: true });
+            await this.saveData(json, 1);
+            this.fetchData(true);
+          },
+          update: async function(formData, form, index) {
+            let json = form.to.json({ formField: true });
+            json.id = formData._id;
+            await this.saveData(json, 2);
+            this.fetchData(true);
+          }
         })
-      }
+      };
     },
 
-    async fetchData(reload = false) {
+    async saveData(params, type) {
+      let res = await req.post(`/api/comment/${type === 1 ? 'create' : 'update'}`, params);
+      this.$Message({
+        text: res.msg,
+        type: res.code === 0 ? 'success' : 'error'
+      });
+    },
+
+    async fetchData(reload) {
       if (reload) {
         this.data.pagination.page = 1;
       }
-      let res = await req.get(`/api/category/list?pageSize=${10}&pageNumber=${0}`);
-      let list = res.data;
+      let res = await req.get(`/api/comment/list?pageSize=${10}&pageNumber=${0}`);
+      let list = res.data.list;
+      let total = res.data.total;
       this.data.list = list;
-      this.data.pagination.total = 100;
-    },
-
-    // async deleteData(data, index) {
-    //   let res = await req.post('/api/category/delete', {
-    //     id: data._id
-    //   });
-    //   if ( res.code === 0 ) {
-    //     this.$Message({
-    //       text: res.msg,
-    //       type: 'success'
-    //     });
-    //     this.reload();
-    //     typeof callback === 'function' ? callback() : void(0);
-    //   } else {
-    //     this.$Message({
-    //       text: res.msg,
-    //       type: 'error'
-    //     });
-    //   }
-    // },
-
-    // async saveData(category, type, callback) {
-    //   let url = `/api/category/${type === 1 ? 'create' : 'update'}`;
-    //   let res = await req.post(url, category);
-    //   this.$Message({
-    //     text: res.msg,
-    //     type: res.code === 0 ? 'success' : 'error'
-    //   });
-    //   this.reload();
-    //   typeof callback === 'function' ? callback() : void(0);
-    // },
-
-    reload() {
-      this.fetchData(true);
+      this.data.pagination.total = total;
     }
-    
   }
 };
 </script>

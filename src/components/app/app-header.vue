@@ -159,7 +159,12 @@ export default {
       } else if (data === 'changepass') {
         this.dialogChangePass.show = true;
       } else if (data === 'info') {
-        this.$router.push({ name: 'AccountBasic' });
+        this.$router.push({
+          name: 'AccountUsersEdit', 
+          query: {
+            id: storejs.get('uuid')
+          }
+        });
       }
     },
     showSettingModal() {

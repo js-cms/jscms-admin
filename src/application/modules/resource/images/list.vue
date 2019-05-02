@@ -2,7 +2,9 @@
   <div class="frame-page images-page">
     <div class="h-panel">
       <div class="h-panel-bar">
-        <span class="h-panel-title">图片管理</span>
+        <span class="h-panel-title">
+          图片管理
+        </span>
         <span style="float: right">
           <upload-button
             buttonName="上传图片"
@@ -11,6 +13,15 @@
             @complete="uploadComplete"
           ></upload-button>
         </span>
+      </div>
+      <div class="h-panel-bar">
+        <div class="h-input-group" v-width="500">
+          <input type="text" placeholder="输入文件名进行模糊搜索" v-model="params.keyword"/>
+          <Button color="primary" @click="()=>{
+            params.pageNumber = 0;
+            fetchData();
+          }">确定搜索</Button>
+        </div>
       </div>
       <div class="h-panel-body">
         <ImagePreview
@@ -95,7 +106,8 @@ export default {
       params: {
         type: 1,
         pageSize: 30,
-        pageNumber: 0
+        pageNumber: 0,
+        keyword: ''
       },
       panel: {
         show: false,
@@ -130,9 +142,9 @@ export default {
      * 拉取图片资源列表
      */
     async fetchData(callback) {
-      let { type, pageSize, pageNumber } = this.params;
+      let { type, pageSize, pageNumber, keyword } = this.params;
       this.containerLoading = true;
-      let res = await this.req$.get(`/api/resource/list?type=${type}&pageSize=${pageSize}&pageNumber=${pageNumber}`);
+      let res = await this.req$.get(`/api/resource/list?type=${type}&keyword=${keyword}&pageSize=${pageSize}&pageNumber=${pageNumber}`);
       let list = res.data.list;
       if (res.code === 0) {
         if ( pageNumber === 0 ) {

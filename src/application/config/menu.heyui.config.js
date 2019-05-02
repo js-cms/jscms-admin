@@ -94,6 +94,9 @@ export default [
     icon: 'icon-book',
     children: [
       {
+        title: '后台日志',
+        key: 'LogAdminList'
+      }, {
         title: '搜索记录',
         key: 'LogSearchList'
       }, {

@@ -1,10 +1,10 @@
 <template>
-  <div class="upload-avatar" @click="activeUpload" :style="style">
-    <div class="cross" @click="activeUpload" v-show="!imgUrl">
+  <div class="upload-avatar" @click.stop="activeUpload" :style="style">
+    <div class="cross" @click.stop="activeUpload" v-show="!imgUrl">
       <div class="across"></div>
       <div class="upright"></div>
     </div>
-    <img class="preview" @click="activeUpload" :src="imgUrl" v-show="imgUrl" title="重新上传" />
+    <img class="preview" @click.stop="activeUpload" :src="imgUrl" v-show="imgUrl" title="重新上传" />
     <input id="uploadInput" type="file" @change="handleFileChange">
   </div>
 </template>
@@ -64,6 +64,9 @@ export default {
         width: this.width + 'px'
       }
     };
+  },
+  created() {
+    this.imgUrl = this.imageUrl;
   },
   watch: {
     imageUrl(val) {

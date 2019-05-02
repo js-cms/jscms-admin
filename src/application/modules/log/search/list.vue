@@ -47,8 +47,8 @@ export default {
             this.data.pagination.page = 1;
           }
           let res = await req.get(`/api/log/list?type=2&pageSize=${this.pagination.size}&pageNumber=${this.pagination.page}`);
-          if (res.count && res.data) {
-            let _list = res.data;
+          if ( res.code === 0 ) {
+            let _list = res.data.list;
             let list = [];
             _list.forEach((item, index) => {
               list.push({
@@ -58,8 +58,7 @@ export default {
                 visitorReferer: item.info.visitorReferer,
                 visitorUserAgent: item.info.visitorUserAgent,
                 headers: item.info.headers,
-                createTime: item.updateTime,
-                updateTime: item.updateTime
+                createTime: item.updateTime
               });
             });
             this.list = list;

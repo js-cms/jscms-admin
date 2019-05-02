@@ -62,6 +62,7 @@ export default {
 
   .h-tag {
     cursor: pointer;
+    margin-bottom: 5px;
   }
 }
 </style>

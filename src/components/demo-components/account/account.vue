@@ -1,7 +1,3 @@
-<style lang='less'>
-.account-vue {
-}
-</style>
 <template>
   <div class="account-vue frame-page">
     <Row :space="30">

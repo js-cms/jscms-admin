@@ -11,8 +11,7 @@ model.assign({
   searcherIp: { n: '搜索者ip', type: 'Stirng', f: false, t: true }, //搜索者ip
   searcherReferer: { n: 'Referer', type: 'Stirng', f: false, t: true }, //Referer
   searcherUserAgent: { n: 'UserAgent', type: 'Stirng', f: false, t: true }, //UserAgent
-  createTime: { n: '创建时间', type: 'Timestamp', f: true, t: true, r: true }, //创建时间
-  updateTime: { n: '更新时间', type: 'Timestamp', f: true, t: true, r: true } //更新时间
+  createTime: { n: '创建时间', type: 'Timestamp', f: true, t: true, r: true } //创建时间
 });
 
 export default model;

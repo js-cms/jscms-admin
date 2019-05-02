@@ -165,7 +165,22 @@ export default {
   watch: {
     data: {
       handler: function() {
+        console.log('data change.');
         this.parse();
+      },
+      deep: true
+    },
+
+    'data.list': {
+      handler: function(val) {
+        this.list = val;
+      },
+      deep: true
+    },
+
+    'data.pagination': {
+      handler: function(val) {
+        this.pagination = val;
       },
       deep: true
     }

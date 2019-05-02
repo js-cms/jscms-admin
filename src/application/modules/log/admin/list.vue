@@ -15,7 +15,7 @@
 <script>
 import storejs from 'store';
 import util from '@/application/common/util/index.js';
-import access from './model/Access';
+import admin from './model/Admin';
 import Table from '@/application/components/jscms-table/Table';
 import jscmsTable from '@/application/components/jscms-table/jscms-table.vue';
 import { req } from '@/application/common/request/index.js';
@@ -26,15 +26,15 @@ export default {
   },
   data() {
     return {
-      model: access,
+      model: admin,
       page: {
-        name: '访问记录'
+        name: '后台操作日志'
       },
       data: {}
     };
   },
   mounted() { 
-    this.model = access;
+    this.model = admin;
     this.init();
   },
   methods: {
@@ -46,24 +46,25 @@ export default {
           if (reload) {
             this.data.pagination.page = 1;
           }
-          let res = await req.get(`/api/log/list?type=1&pageSize=${this.pagination.size}&pageNumber=${this.pagination.page}`);
+          let res = await req.get(`/api/log/list?type=3&pageSize=${this.pagination.size}&pageNumber=${this.pagination.page}`);
           if ( res.code === 0 ) {
             let _list = res.data.list;
             let list = [];
             _list.forEach((item, index) => {
               list.push({
+                opName: item.info.opName,
                 method: item.info.method,
                 params: item.info.params,
                 fullUrl: item.info.fullUrl,
-                visitorIp: item.info.visitorIp,
-                visitorReferer: item.info.visitorReferer,
-                visitorUserAgent: item.info.visitorUserAgent,
-                headers: item.info.headers,
+                opIp: item.info.opIp,
+                opReferer: item.info.opReferer,
+                opUserAgent: item.info.opUserAgent,
+                opHeaders: item.info.opHeaders,
                 createTime: item.updateTime
               });
             });
             this.list = list;
-            this.pagination.total = res.count;
+            this.pagination.total = res.data.total;
           } else {
             this.pagination.total = 0;
           }

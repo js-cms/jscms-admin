@@ -10,7 +10,7 @@ export default {
     }
   },
   methods: {
-    async fetchModel$(displayName, modelName, callback) {
+    async fetchModel$(displayName, modelName, callback, pretreatment) {
       let res = await this.req$.get(`/api/model?name=${modelName}`);
       let model = new modelman.Model({
         name: modelName[0].toUpperCase() + modelName.substr(1),
@@ -23,6 +23,9 @@ export default {
         });
       } else {
         if (res.data.model) {
+          if(typeof pretreatment === 'function') {
+            pretreatment(res.data.model);
+          }
           model.assign(res.data.model);
           if (typeof callback === "function") {
             callback(model);

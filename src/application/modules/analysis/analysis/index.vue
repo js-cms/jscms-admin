@@ -7,31 +7,30 @@
             <div class="h-panel-title">独立IP指数</div>
           </div>
           <div class="home-part-body">
-            <Chart :options="data.ip"></Chart>
+            <Chart :options="data.ip.data"></Chart>
           </div>
         </div>
       </Cell>
       <Cell :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
-        <div class="h-panel">
+        <div class="h-panel" v-if="data.pv.show">
           <div class="h-panel-bar">
             <div class="h-panel-title">PV指数</div>
           </div>
           <div class="home-part-body">
-            <Chart :options="data.pv"></Chart>
+            <Chart :options="data.pv.data"></Chart>
           </div>
         </div>
       </Cell>
-      <!-- 
       <Cell :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
-        <div class="h-panel">
+        <div class="h-panel" v-if="data.search.show">
           <div class="h-panel-bar">
             <div class="h-panel-title">站内搜索指数</div>
           </div>
           <div class="home-part-body">
-            <Chart :options="data1"></Chart>
+            <Chart :options="data.search.data"></Chart>
           </div>
         </div>
-      </Cell> -->
+      </Cell>
     </Row>
   </div>
 </template>
@@ -53,6 +52,10 @@ export default {
         pv: {
           show: false,
           data: {}
+        },
+        search: {
+          show: false,
+          data: {}
         }
       }
     };
@@ -60,7 +63,8 @@ export default {
   mounted() {
     this.parseDate();
     this.loadIp();
-    this.lodaPv();
+    this.loadPv();
+    this.loadSearch();
   },
   methods: {
     parseDate() {
@@ -99,14 +103,14 @@ export default {
       data.legend.data[0] = '独立ip数';
       data.series[0].name = '独立ip数';
       data.yAxis[0].axisLabel.formatter = '{value} IP';
-      this.data.ip = data;
+      this.data.ip.data = data;
       this.data.ip.show = true;
     },
 
     /**
      * @desc 加载pv统计数据
      */
-    async lodaPv() {
+    async loadPv() {
       let res = await this.req$.get('/api/analysis/pv');
       let pvData = {};
       let countPvData = [];
@@ -128,8 +132,38 @@ export default {
       data.legend.data[0] = 'pv数';
       data.series[0].name = 'pv数';
       data.yAxis[0].axisLabel.formatter = '{value} PV';
-      this.data.pv = data;
+      this.data.pv.data = data;
       this.data.pv.show = true;
+    },
+
+    /**
+     * @desc 加载搜索统计数据
+     */
+    async loadSearch() {
+      let res = await this.req$.get('/api/analysis/search');
+      console.log(res);
+      let searchData = {};
+      let countSearchData = [];
+      this.dateRange.forEach((date, index) => {
+        searchData[date] = [];
+      });
+      res.data.forEach((item) => {
+        let date = moment(item.createTime).format('YYYY-MM-DD');
+        if ( searchData[date] ) {
+          searchData[date].push(item.info.searcherIp);
+        }
+      });
+      for (const key in searchData) {
+        countSearchData.push(searchData[key].length);
+      }
+      let data = _.cloneDeep(dataTemplate);
+      data.xAxis[0].data = _.cloneDeep(this.dateRange);
+      data.series[0].data = countSearchData;
+      data.legend.data[0] = '搜索数';
+      data.series[0].name = '搜索数';
+      data.yAxis[0].axisLabel.formatter = '{value} 次';
+      this.data.search.data = data;
+      this.data.search.show = true;
     }
   }
 };

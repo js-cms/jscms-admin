@@ -66,6 +66,8 @@ export default {
 @import (less) './imagepreview.less';
 
 .h-image-preview-item {
+  overflow: inherit;
+  
   .icon {
     position: relative;
     display: block;
@@ -74,6 +76,7 @@ export default {
     z-index: 10;
     opacity: 0;
     transition: all 0.3s;
+
     &::before {
       color: red;
       border-radius: 50%;

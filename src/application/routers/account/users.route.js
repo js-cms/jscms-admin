@@ -17,6 +17,6 @@ export default [
       title: '编辑用户',
       icon: 'icon-paper'
     },
-    component: (resolve) => require(['@/application/modules/account/users/edit.vue'], resolve)
+    component: (resolve) => require(['@/application/modules/account/users/edit/index.vue'], resolve)
   }
 ]

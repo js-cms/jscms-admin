@@ -81,7 +81,7 @@ export default {
       });
       setTimeout(() => {
         this.containerLoading = false;
-      }, 5000);
+      });
     }
   }
 };

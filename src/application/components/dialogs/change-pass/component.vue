@@ -64,7 +64,6 @@ export default {
     };
   },
   mounted() {
-    console.log(model);
   },
   methods: {
     async confirm() {
