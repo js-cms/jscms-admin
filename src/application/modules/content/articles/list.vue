@@ -2,24 +2,29 @@
   <div class="table-basic-vue frame-page h-panel">
     <div class="h-panel-bar">
       <span class="h-panel-title">{{page.name}}列表</span>
+      <span style="float: right">
+        <Button
+          color="primary"
+          @click="()=>{
+          $router.push({
+            name: 'ContentArticlesEdit'
+          });
+        }"
+        >新建{{page.name}}</Button>
+      </span>
+    </div>
+    <div class="h-panel-bar">
+      <div class="filter-item" v-width="200">
+        <Select v-model="params.categoryId" :datas="categories.options" placeholder="筛选文章分类"></Select>
+      </div>
+      <div class="filter-item">
+        <div class="h-input-group" v-width="400">
+          <input type="text" placeholder="输入关键词进行模糊搜索" v-model="params.keyword">
+          <Button color="primary" @click="search()">模糊搜索</Button>
+        </div>
+      </div>
     </div>
     <div class="h-panel-body">
-      <div class="common-filter-bar">
-        <Row :space-x="19" :space-y="5">
-          <Cell style="float: right">
-            <div>
-              <Button
-                color="primary"
-                @click="()=>{
-                $router.push({
-                  name: 'ContentArticlesEdit'
-                });
-              }"
-              >新增{{page.name}}</Button>
-            </div>
-          </Cell>
-        </Row>
-      </div>
       <div class="table">
         <jscms-table :data="data" :parent="this"></jscms-table>
       </div>
@@ -37,6 +42,7 @@ import Table from '@/application/components/jscms-table/Table';
 import dialogGeneralEdit from '@/application/components/dialogs/general-edit/index.js';
 import jscmsTable from '@/application/components/jscms-table/jscms-table.vue';
 import { req } from '@/application/common/request/index.js';
+import Select from '@/application/components/jscms-form/Select';
 
 export default {
   components: {
@@ -46,14 +52,24 @@ export default {
   data() {
     return {
       model: {},
+      categories: [],
       page: {
         name: ''
       },
       data: {},
       dialog: {
         generalEdit: ''
+      },
+      params: {
+        categoryId: '',
+        keyword: ''
       }
     };
+  },
+  watch: {
+    'params.categoryId': function() {
+      this.search();
+    }
   },
   mounted() {
     this.fetchModel$('文章', 'article', model => {
@@ -65,6 +81,8 @@ export default {
     async init() {
       let categoriesRes = await this.fetchCategory();
       let categories = categoriesRes.map(i => `${i._id}:${i.name}`);
+      this.categories = new Select(categories.join(','), true);
+
       article._iterator(f => {
         if (f.extra.comType === 'select') {
           if (f.extra.options === 'categories') {
@@ -117,23 +135,45 @@ export default {
               });
             }
           }
+        },
+        async fetchData() {
+          this.data.pagination.size = 10;
+          let { keyword, categoryId } = this.$parent.params;
+
+          let res = await this.req$.get(
+            `
+          /api/article/list?
+          pageSize=${this.data.pagination.size}
+          &pageNumber=${this.data.pagination.page}
+          &keyword=${keyword}
+          &categoryId=${categoryId}`
+              .replace(/\ +/g, '')
+              .replace(/[\r\n]/g, '')
+          );
+
+          this.data.list = res.data.list;
+          this.data.pagination.total = res.data.total;
         }
       });
     },
 
     async updateData(article, callback) {
-      let res = await req.post('/api/article/update', article);     
+      let res = await req.post('/api/article/update', article);
       this.$Message({
         text: res.msg,
         type: res.code === 0 ? 'success' : '失败'
       });
       this.reload();
-      typeof callback === 'function' ? callback() : void 0; 
+      typeof callback === 'function' ? callback() : void 0;
     },
 
     async fetchCategory() {
-      let res = await this.req$.get('/api/category/list');
+      let res = await this.req$.get(`/api/category/list`);
       return res.data;
+    },
+
+    search() {
+      this.$children[3].fetchData();
     }
   }
 };

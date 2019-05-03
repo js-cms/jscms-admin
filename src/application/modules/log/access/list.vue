@@ -3,9 +3,12 @@
     <div class="h-panel-bar">
       <span class="h-panel-title">{{page.name}}列表</span>
     </div>
-    <div class="h-panel-body">
-      <div class="common-filter-bar">
+    <div class="h-panel-bar">
+      <div class="filter-item" v-width="200">
+        <Select v-model="params.method" :datas="[{ title: 'GET', key: 'GET' }, {title: 'POST', key: 'POST'}]" placeholder="筛选请求方法"></Select>
       </div>
+    </div>
+    <div class="h-panel-body">
       <div class="table">
         <jscms-table :data="data" :parent="this"></jscms-table>
       </div>
@@ -30,8 +33,16 @@ export default {
       page: {
         name: '访问记录'
       },
+      params: {
+        method: ''
+      },
       data: {}
     };
+  },
+  watch: {
+    'params.method': function() {
+      this.search();
+    }
   },
   mounted() { 
     this.model = access;
@@ -46,7 +57,15 @@ export default {
           if (reload) {
             this.data.pagination.page = 1;
           }
-          let res = await req.get(`/api/log/list?type=1&pageSize=${this.pagination.size}&pageNumber=${this.pagination.page}`);
+          let res = await req.get(`
+          /api/log/list?
+          type=1
+          &pageSize=${this.pagination.size}
+          &pageNumber=${this.pagination.page}
+          &method=${this.$parent.params.method}`
+            .replace(/\ +/g, '')
+            .replace(/[\r\n]/g, '')
+          );
           if ( res.code === 0 ) {
             let _list = res.data.list;
             let list = [];
@@ -74,6 +93,10 @@ export default {
           fastEdit: false
         }
       });
+    },
+
+    search() {
+      this.$children[1].fetchData();
     }
   }
 };

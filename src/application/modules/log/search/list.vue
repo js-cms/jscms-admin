@@ -4,8 +4,6 @@
       <span class="h-panel-title">{{page.name}}列表</span>
     </div>
     <div class="h-panel-body">
-      <div class="common-filter-bar">
-      </div>
       <div class="table">
         <jscms-table :data="data" :parent="this"></jscms-table>
       </div>

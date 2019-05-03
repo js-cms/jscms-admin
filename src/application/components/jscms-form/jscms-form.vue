@@ -1,7 +1,7 @@
 <template>
-  <div class="jscms-form">
-    <Form :label-width="labelWidth || 100" :model="form.fields" ref="form" showErrorTip>
-      <template v-for="(f, key, index) in form.fields">
+  <div class="jscms-form" >
+    <Form :label-width="labelWidth || 100" :model="formData.fields" ref="form" showErrorTip>
+      <template v-for="(f, key, index) in formData.fields">
         <template v-if="f.formField===true">
           <!-- 普通输入框 -->
           <FormItem :label="f.displayName" v-if="!f.extra.comType" :key="index">
@@ -31,6 +31,14 @@
           >
             <div v-width="300"><Select v-model="f.value" :datas="f.extra.options.options"></Select></div>
           </FormItem>
+          <!-- 单选框 -->
+          <FormItem
+            v-if="f.extra.comType==='radio'"
+            :label="f.displayName"
+            :key="index"
+          >
+            <Radio v-model="f.value" :datas="f.extra.options.options" keyName="val" titleName="name"></Radio>
+          </FormItem>
           <!-- markdown编辑器 -->
           <FormItem
             v-if="f.extra.comType==='markdown'"
@@ -58,6 +66,9 @@ import CodeEditor from '@/components/common/code-editor';
 import modelman from 'modelman';
 import marked from 'marked';
 import Select from './Select';
+import Radio from './Radio';
+import { setTimeout } from 'timers';
+import _ from 'lodash';
 
 export default {
   props: ['form', 'labelWidth', 'parent'],
@@ -66,12 +77,30 @@ export default {
   },
   data() {
     return {
+      isShow: false,
+      formData: {},
       modelman: modelman
     };
   },
 
+  watch: {
+    formData: {
+      handler() {
+
+      },
+      deep: true
+    }
+  },
+
+  created() {
+    this.formData = this.form;
+    // let data = this.form.to.json();
+    // console.log(data);
+    // this.formData = _.cloneDeep(this.form);
+  },
+
   mounted() {
-    let fs = this.form.fields;
+    let fs = this.formData.fields;
     for (const key in fs) {
       if (fs.hasOwnProperty(key)) {
         let item = fs[key];
@@ -81,20 +110,21 @@ export default {
               item.extra.options = new Select(item.extra.options);
             }
           }
+        } else if (item.extra.comType === 'radio') {
+          if (item.extra.options) {
+            if (item.extra.options && typeof item.extra.options !== 'object') {
+              item.extra.options = new Radio(item.extra.options);
+            }
+          }
         }
       }
     }
+    setTimeout(() => {
+      this.isShow = true;
+    });
   },
 
   methods: {
-    parse() {
-      
-    },
-
-    submit() {
-      console.log(this.form);
-    },
-
     change() {
       this.$emit('input', this.editValue);
     }

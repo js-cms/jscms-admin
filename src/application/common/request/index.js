@@ -18,7 +18,7 @@ function Req(vueInstance) {
   //拦截请求
   fly.interceptors.response.use(
     (response) => {
-      //如果是403则退回登陆页面。
+      //如果是403则退回登录页面。
       if (response.data.code === 403) {
         storejs.remove('token');
         storejs.remove('uuid');

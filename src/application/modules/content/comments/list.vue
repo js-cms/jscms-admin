@@ -2,20 +2,22 @@
   <div class="table-basic-vue frame-page h-panel">
     <div class="h-panel-bar">
       <span class="h-panel-title">{{page.name}}列表</span>
+      <span style="float: right;">
+        <Button
+          color="primary"
+          @click="dialog.generalEdit.create({title: '新增' + page.name})"
+        >新增{{page.name}}</Button>
+      </span>
+    </div>
+    <div class="h-panel-bar">
+      <div class="filter-item">
+        <div class="h-input-group" v-width="400">
+          <input type="text" placeholder="输入关键词进行模糊搜索" v-model="params.keyword">
+          <Button color="primary" @click="search()">模糊搜索</Button>
+        </div>
+      </div>
     </div>
     <div class="h-panel-body">
-      <div class="common-filter-bar">
-        <Row :space-x="19" :space-y="5">
-          <Cell style="float: right">
-            <div>
-              <Button
-                color="primary"
-                @click="dialog.generalEdit.create({title: '新增' + page.name})"
-              >新增{{page.name}}</Button>
-            </div>
-          </Cell>
-        </Row>
-      </div>
       <div class="table">
         <jscms-table :data="data" :parent="this"></jscms-table>
       </div>
@@ -46,6 +48,9 @@ export default {
       data: {},
       dialog: {
         generalEdit: {}
+      },
+      params: {
+        keyword: ''
       }
     };
   },
@@ -84,6 +89,23 @@ export default {
               });
             }
           }
+        },
+        async fetchData() {
+          this.data.pagination.size = 10;
+          let { keyword } = this.$parent.params;
+
+          let res = await this.req$.get(
+            `
+          /api/comment/list?
+          pageSize=${this.data.pagination.size}
+          &pageNumber=${this.data.pagination.page}
+          &keyword=${keyword}`
+              .replace(/\ +/g, '')
+              .replace(/[\r\n]/g, '')
+          );
+
+          this.data.list = res.data.list;
+          this.data.pagination.total = res.data.total;
         }
       });
       this.dialog = {
@@ -122,6 +144,11 @@ export default {
       let total = res.data.total;
       this.data.list = list;
       this.data.pagination.total = total;
+    },
+
+    async search() {
+      this.$children[2].fetchData();
+      // search
     }
   }
 };

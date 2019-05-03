@@ -9,7 +9,7 @@ export default class Select {
       });
     });
     if ( hasAll === true ) {
-      this.options.shift({
+      this.options.unshift({
         title: '全部',
         key: ''
       });

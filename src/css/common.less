@@ -193,6 +193,22 @@
   }
 }
 
+.h-panel-bar {
+
+  &:after {
+    content: "";    
+    display: block;        
+    height: 0;        
+    clear: both;        
+    visibility: hidden;   
+  }
+
+  .filter-item {
+    float: left;
+    margin-right: 10px;
+  }
+}
+
 ::-webkit-scrollbar {
   width: 12px;
   height: 12px;

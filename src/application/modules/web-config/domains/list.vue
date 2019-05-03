@@ -2,20 +2,14 @@
   <div class="table-basic-vue frame-page h-panel">
     <div class="h-panel-bar">
       <span class="h-panel-title">{{page.name}}列表</span>
+      <span style="float: right;">
+        <Button
+          color="primary"
+          @click="dialog.generalEdit.create({title: '新增' + page.name})"
+        >新增{{page.name}}</Button>
+      </span>
     </div>
     <div class="h-panel-body">
-      <div class="common-filter-bar">
-        <Row :space-x="19" :space-y="5">
-          <Cell style="float: right">
-            <div>
-              <Button
-                color="primary"
-                @click="dialog.generalEdit.create({title: '新增' + page.name})"
-              >新增{{page.name}}</Button>
-            </div>
-          </Cell>
-        </Row>
-      </div>
       <div class="table">
         <jscms-table :data="data" :parent="this"></jscms-table>
       </div>
@@ -82,6 +76,7 @@ export default {
       this.config.id = this.config._id;
       this.data.list = res.data.info;
       this.data.pagination.total = 1000;
+      this.data.pagination.size = 1000;
     },
 
     async deleteData(data, index) {

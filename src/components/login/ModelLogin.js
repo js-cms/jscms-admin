@@ -1,4 +1,5 @@
 export default new Model({
   email: '',
-  password: ''
+  password: '',
+  vercode: ''
 });

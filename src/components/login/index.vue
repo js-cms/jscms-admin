@@ -11,6 +11,13 @@
           <input type="password" name="password" v-model="login.password" @keyup.enter="submit" autocomplete="off"/>
           <span class="placeholder" :class="{fixed: login.password != '' && login.password != null}">密码</span>
         </div>
+        <div class="login-name login-input" v-if="vercode.show">
+          <input type="text" name="vercode" v-model="login.vercode" autocomplete="off"/>
+          <span class="placeholder" :class="{fixed: login.vercode != '' && login.vercode != null}">验证码</span>
+        </div>
+        <div class="login-vercode login-input" v-if="vercode.show">
+          <img :src="vercode.src" alt="">
+        </div>
         <div class="buttonDiv">
           <Button :loading="loading" block color="primary" size="l" @click="submit">登录</Button>
         </div>
@@ -21,20 +28,35 @@
 </template>
 
 <script>
+import _ from 'lodash';
 import Login from './ModelLogin';
 import storejs from 'store';
+import uuid from 'uuid';
+
 const origin = storejs.get('origin');
+const randomUID = uuid.v4();
 
 export default {
   data() {
     return {
+      randomUID: randomUID,
       login: Login.parse({}),
-      loading: false
+      loading: false,
+      vercode: {
+        show: false,
+        src: origin + `/api/captcha/create?uid=${randomUID}`
+      }
     };
+  },
+  created() {
+    this.checkVercode();
   },
   methods: {
     async submit() {
-      let res = await this.req$.post("/api/login", this.login);
+      let params = _.cloneDeep(this.login);
+      let vercode = params.vercode;
+      delete params.vercode;
+      let res = await this.req$.post(`/api/login?uid=${randomUID}&vercode=${vercode}`, params);
       if (res.code === 0) {
         this.$Message({
           type: 'success',
@@ -66,6 +88,11 @@ export default {
           });
         }
       }
+    },
+
+    async checkVercode() {
+      let res = await this.req$.get('http://127.0.0.1:7011/api/captcha/is');
+      this.vercode.show = res.data.boolLoginVercode;
     }
   }
 };
@@ -101,6 +128,11 @@ export default {
       >div {
         margin: 30px 0;
         &.login-input {
+
+          &.login-vercode {
+            margin: 0px;
+          }
+
           position: relative;
           .placeholder {
             position: absolute;

@@ -165,7 +165,6 @@ export default {
   watch: {
     data: {
       handler: function() {
-        console.log('data change.');
         this.parse();
       },
       deep: true
@@ -217,9 +216,7 @@ export default {
       }
       let res = width * index * 0.9;
       return res < 100 ? 100 : res;
-    },
-
-    reload() {}
+    }
   }
 };
 </script>

@@ -3,9 +3,12 @@
     <div class="h-panel-bar">
       <span class="h-panel-title">{{page.name}}列表</span>
     </div>
-    <div class="h-panel-body">
-      <div class="common-filter-bar">
+    <div class="h-panel-bar">
+      <div class="filter-item" v-width="200">
+        <Select v-model="params.opName" :datas="[{ title: '其他操作', key: '其他操作' }, { title: '登录', key: '登录' }, { title: '登出', key: '登出' }]" placeholder="筛选操作名称"></Select>
       </div>
+    </div>
+    <div class="h-panel-body">
       <div class="table">
         <jscms-table :data="data" :parent="this"></jscms-table>
       </div>
@@ -30,8 +33,16 @@ export default {
       page: {
         name: '后台操作日志'
       },
-      data: {}
+      data: {},
+      params: {
+        opName: ''
+      }
     };
+  },
+  watch: {
+    'params.opName': function() {
+      this.search();
+    }
   },
   mounted() { 
     this.model = admin;
@@ -46,7 +57,15 @@ export default {
           if (reload) {
             this.data.pagination.page = 1;
           }
-          let res = await req.get(`/api/log/list?type=3&pageSize=${this.pagination.size}&pageNumber=${this.pagination.page}`);
+          let res = await req.get(`
+          /api/log/list?
+          type=3
+          &pageSize=${this.pagination.size}
+          &pageNumber=${this.pagination.page}
+          &opName=${this.$parent.params.opName}`
+            .replace(/\ +/g, '')
+            .replace(/[\r\n]/g, '')
+          );
           if ( res.code === 0 ) {
             let _list = res.data.list;
             let list = [];
@@ -75,6 +94,11 @@ export default {
           fastEdit: false
         }
       });
+    },
+
+    search() {
+      console.log(this.$children);
+      this.$children[1].fetchData();
     }
   }
 };
