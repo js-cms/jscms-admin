@@ -45,7 +45,15 @@ export default {
       },
       data: new Table({
         auto: false,
-        model: domain
+        model: domain,
+        operation: {
+          delete: {
+            click: function(item, index) {
+              this.data.list.splice(index, 1);
+              this.saveData(this.data.list);
+            }
+          }
+        }
       }),
       dialog: {
         generalEdit: new dialogGeneralEdit.GeneralEdit(this, {
@@ -93,6 +101,10 @@ export default {
         type: res.code === 0 ? 'success' : 'error'
       });
       if (res.code === 0) this.fetchConfig();
+    },
+
+    reload() {
+      this.fetchConfig();
     }
   }
 };

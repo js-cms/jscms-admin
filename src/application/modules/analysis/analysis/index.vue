@@ -38,7 +38,6 @@
 import dataTemplate from './dataTemplate';
 import moment from 'moment';
 import _ from 'lodash';
-import { parse } from 'path';
 
 export default {
   data() {

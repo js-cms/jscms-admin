@@ -58,7 +58,7 @@
               :content="`确定要删除该${model.model.displayName}项？`"
               @confirm="() => {
                 if ( typeof obj.click === 'function') {
-                  obj.click.call(parent, data, idx);
+                  defaultDeleteClick(obj, data, idx);
                 } else {
                   crud(model.model.name, 'delete', {
                     query: {
@@ -196,6 +196,7 @@ export default {
       this.list = this.data.list;
       this.operation = this.data.operation;
       this.operationWidth = this.getOperationWidth();
+      this.pagination = this.data.pagination;
       this.fetchData = typeof this.data.fetchData === 'function' ? this.data.fetchData.bind(this) : fetchData.bind(this);
       if (this.data.auto === true && this.model) {
         this.isInit = true;
@@ -216,6 +217,10 @@ export default {
       }
       let res = width * index * 0.9;
       return res < 100 ? 100 : res;
+    },
+
+    defaultDeleteClick(obj, data, idx) {
+      obj.click.call(this.parent, data, idx);
     }
   }
 };

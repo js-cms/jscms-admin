@@ -45,7 +45,15 @@ export default {
       },
       data: new Table({
         auto: false,
-        model: link
+        model: link,
+        operation: {
+          delete: {
+            click: function(item, index) {
+              this.data.list.splice(index, 1);
+              this.saveData(this.data.list);
+            }
+          }
+        }
       }),
       dialog: {
         generalEdit: new dialogGeneralEdit.GeneralEdit(this, {

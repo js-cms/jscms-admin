@@ -9,13 +9,15 @@ export default new Vuex.Store({
     msgCount: {
       messages: 2
     },
-    siderCollapsed: false
+    siderCollapsed: false,
+    todayPv: 0
   },
   mutations: {
     updateAccount(state, data) {
       state.User = data;
     },
     updateSiderCollapse(state, isShow) {
+      console.log('updateSiderCollapse');
       setTimeout(() => {
         G.trigger('page_resize');
       }, 600)
@@ -23,6 +25,9 @@ export default new Vuex.Store({
     },
     updateMsgCount(state, data) {
       state.msgCount = data;
+    },
+    updateTodayPv(state, data) {
+      state.todayPv = data;
     }
   },
   actions: {
@@ -34,6 +39,9 @@ export default new Vuex.Store({
     },
     updateMsgCount(context, data) {
       context.commit('updateMsgCount', data);
+    },
+    updateTodayPv(context, data) {
+      context.commit('updateTodayPv', data);
     }
   },
   getters: {
@@ -45,6 +53,9 @@ export default new Vuex.Store({
     },
     msgCount: state => {
       return state.msgCount;
+    },
+    updateTodayPv: state => {
+      return state.todayPv;
     }
   }
 });

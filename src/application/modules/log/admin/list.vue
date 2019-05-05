@@ -92,6 +92,11 @@ export default {
           edit: false,
           view: false,
           fastEdit: false
+        },
+        pagination: {
+          page: 1,
+          size: 20,
+          total: 0
         }
       });
     },

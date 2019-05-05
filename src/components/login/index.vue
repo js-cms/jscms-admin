@@ -12,11 +12,11 @@
           <span class="placeholder" :class="{fixed: login.password != '' && login.password != null}">密码</span>
         </div>
         <div class="login-name login-input" v-if="vercode.show">
-          <input type="text" name="vercode" v-model="login.vercode" autocomplete="off"/>
+          <input type="text" name="vercode" v-model="login.vercode" @keyup.enter="submit" autocomplete="off"/>
           <span class="placeholder" :class="{fixed: login.vercode != '' && login.vercode != null}">验证码</span>
         </div>
         <div class="login-vercode login-input" v-if="vercode.show">
-          <img :src="vercode.src" alt="">
+          <img v-tooltip="true" :content="'点击刷新验证码'" title="点击刷新验证码" :src="vercode.src" @click="()=>{vercode.src+=`&t=?${new Date().getTime()}`}" alt="">
         </div>
         <div class="buttonDiv">
           <Button :loading="loading" block color="primary" size="l" @click="submit">登录</Button>
@@ -131,6 +131,7 @@ export default {
 
           &.login-vercode {
             margin: 0px;
+            cursor: pointer;
           }
 
           position: relative;
