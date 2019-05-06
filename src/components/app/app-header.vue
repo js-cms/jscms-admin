@@ -88,39 +88,15 @@
 
 <template>
   <div class="app-header">
-    <div style="width:100px;float:left;">
-      <Button
-        :icon="siderCollapsed ? 'icon-align-right':'icon-align-left'"
-        size="l"
-        noBorder
-        class="font20"
-        @click="siderCollapsed=!siderCollapsed"
-      ></Button>
-    </div>
+    <div style="width:100px;float:left;"><Button :icon="siderCollapsed ? 'icon-align-right':'icon-align-left'" size="l" noBorder class="font20" @click="siderCollapsed=!siderCollapsed"></Button></div>
     <div class="float-right app-header-info">
       <!-- <AutoComplete :showDropdownWhenNoResult="false" v-model="searchText" config="globalSearch" placeholder="全局搜索.."></AutoComplete> -->
-      <div
-        class="app-header-icon-item"
-        v-tooltip
-        content="系统布局配置"
-        theme="white"
-        @click="showSettingModal"
-      >
+      <div class="app-header-icon-item" v-tooltip content="系统布局配置" theme="white" @click="showSettingModal">
         <i class="icon-content-left"></i>
       </div>
       <!-- <appHeaderMessage></appHeaderMessage> -->
-      <DropdownMenu
-        class="app-header-dropdown"
-        trigger="hover"
-        offset="0 5"
-        :width="150"
-        placement="bottom-end"
-        :datas="infoMenu"
-        @onclick="trigger"
-      >
-        <Avatar :src="userInfo.avatar" :width="30">
-          <span>{{userInfo.nickname}}</span>
-        </Avatar>
+      <DropdownMenu className="app-header-dropdown" trigger="hover" offset="0 5" :width="150" placement="bottom-end" :datas="infoMenu" @onclick="trigger">
+        <Avatar :src="userInfo.avatar" :width="30"><span>{{userInfo.nickname}}</span></Avatar>
       </DropdownMenu>
     </div>
     <dialog-change-pass :show="dialogChangePass.show" @close="()=>{dialogChangePass.show=false}"></dialog-change-pass>

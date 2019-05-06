@@ -55,6 +55,7 @@ export default {
         model: this.model,
         fetchData: async function(reload) {
           if (reload) {
+            this.list = [];
             this.data.pagination.page = 1;
           }
           let res = await req.get(`
@@ -71,6 +72,7 @@ export default {
             let list = [];
             _list.forEach((item, index) => {
               list.push({
+                id: item._id,
                 opName: item.info.opName,
                 method: item.info.method,
                 params: item.info.params,
@@ -91,7 +93,23 @@ export default {
         operation: {
           edit: false,
           view: false,
-          fastEdit: false
+          fastEdit: false,
+          delete: {
+            click: function(data, index) {
+              req.post('/api/log/delete', {
+                id: data.id
+              })
+              .then((res) => {
+                this.$Message({
+                  text: res.msg,
+                  type: res.code === 0 ? 'success' : 'error'
+                });
+                if (res.code === 0) {
+                  this.$children[1].fetchData(true);
+                }
+              });
+            }
+          }
         },
         pagination: {
           page: 1,
@@ -102,7 +120,6 @@ export default {
     },
 
     search() {
-      console.log(this.$children);
       this.$children[1].fetchData();
     }
   }

@@ -119,7 +119,7 @@ export default {
       let res = await req.post('/api/page/update', page);     
       this.$Message({
         text: res.msg,
-        type: res.code === 0 ? 'success' : '失败'
+        type: res.code === 0 ? 'success' : 'error'
       });
       this.reload();
       typeof callback === 'function' ? callback() : void 0; 

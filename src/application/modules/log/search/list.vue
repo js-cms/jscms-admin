@@ -42,6 +42,7 @@ export default {
         model: this.model,
         fetchData: async function(reload) {
           if (reload) {
+            this.list = [];
             this.data.pagination.page = 1;
           }
           let res = await req.get(`/api/log/list?type=2&pageSize=${this.pagination.size}&pageNumber=${this.pagination.page}`);
@@ -50,6 +51,7 @@ export default {
             let list = [];
             _list.forEach((item, index) => {
               list.push({
+                id: item._id,
                 params: item.info.params,
                 fullUrl: item.info.fullUrl,
                 visitorIp: item.info.visitorIp,
@@ -68,7 +70,23 @@ export default {
         operation: {
           edit: false,
           view: false,
-          fastEdit: false
+          fastEdit: false,
+          delete: {
+            click: function(data, index) {
+              req.post('/api/log/delete', {
+                id: data.id
+              })
+              .then((res) => {
+                this.$Message({
+                  text: res.msg,
+                  type: res.code === 0 ? 'success' : 'error'
+                });
+                if (res.code === 0) {
+                  this.$children[0].fetchData(true);
+                }
+              });
+            }
+          }
         },
         pagination: {
           page: 1,

@@ -94,10 +94,14 @@ export default {
           },
           delete: {
             click: function(data, index) {
-              req.post('/api/user/delete', {
+              req.post(`/api/user/delete`, {
                 id: data._id
-              }).then((res)=>{
-                console.log(res);
+              })
+              .then((res) => {
+                this.$Message({
+                  text: res.msg,
+                  type: res.code === 0 ? 'success' : 'error'
+                });
               });
             }
           },
@@ -110,7 +114,7 @@ export default {
       let res = await req.post('/api/user/update', page);     
       this.$Message({
         text: res.msg,
-        type: res.code === 0 ? 'success' : '失败'
+        type: res.code === 0 ? 'success' : 'error'
       });
       this.reload();
       typeof callback === 'function' ? callback() : void 0; 
