@@ -110,14 +110,14 @@ export default {
       if (reload) {
         this.data.pagination.page = 1;
       }
-      let res = await req.get(`/api/category/list?pageSize=${10}&pageNumber=${0}`);
+      let res = await req.get(`/api/back/category/list?pageSize=${10}&pageNumber=${0}`);
       let list = res.data;
       this.data.list = list;
       this.data.pagination.total = 100;
     },
 
     // async deleteData(data, index) {
-    //   let res = await req.post('/api/category/delete', {
+    //   let res = await req.post('/api/back/category/delete', {
     //     id: data._id
     //   });
     //   if ( res.code === 0 ) {
@@ -136,7 +136,7 @@ export default {
     // },
 
     // async saveData(category, type, callback) {
-    //   let url = `/api/category/${type === 1 ? 'create' : 'update'}`;
+    //   let url = `/api/back/category/${type === 1 ? 'create' : 'update'}`;
     //   let res = await req.post(url, category);
     //   this.$Message({
     //     text: res.msg,

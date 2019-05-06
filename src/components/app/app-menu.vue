@@ -83,7 +83,7 @@ export default {
   },
   methods: {
     async loadPv() {
-      let res = await this.req$.get('/api/analysis/pv');
+      let res = await this.req$.get('/api/back/analysis/pv');
       let today = moment(new Date().getTime()).format('YYYY-MM-DD');
       let count = 0;
       res.data.forEach(item => {

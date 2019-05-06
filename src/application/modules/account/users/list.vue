@@ -94,7 +94,7 @@ export default {
           },
           delete: {
             click: function(data, index) {
-              req.post(`/api/user/delete`, {
+              req.post(`/api/back/user/delete`, {
                 id: data._id
               })
               .then((res) => {
@@ -111,7 +111,7 @@ export default {
     },
 
     async updateData(page, callback) {
-      let res = await req.post('/api/user/update', page);     
+      let res = await req.post('/api/back/user/update', page);     
       this.$Message({
         text: res.msg,
         type: res.code === 0 ? 'success' : 'error'

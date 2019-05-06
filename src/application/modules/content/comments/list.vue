@@ -96,7 +96,7 @@ export default {
 
           let res = await this.req$.get(
             `
-          /api/comment/list?
+          /api/back/comment/list?
           pageSize=${this.data.pagination.size}
           &pageNumber=${this.data.pagination.page}
           &keyword=${keyword}`
@@ -128,7 +128,7 @@ export default {
     },
 
     async saveData(params, type) {
-      let res = await req.post(`/api/comment/${type === 1 ? 'create' : 'update'}`, params);
+      let res = await req.post(`/api/back/comment/${type === 1 ? 'create' : 'update'}`, params);
       this.$Message({
         text: res.msg,
         type: res.code === 0 ? 'success' : 'error'
@@ -139,7 +139,7 @@ export default {
       if (reload) {
         this.data.pagination.page = 1;
       }
-      let res = await req.get(`/api/comment/list?pageSize=${10}&pageNumber=${0}`);
+      let res = await req.get(`/api/back/comment/list?pageSize=${10}&pageNumber=${0}`);
       let list = res.data.list;
       let total = res.data.total;
       this.data.list = list;

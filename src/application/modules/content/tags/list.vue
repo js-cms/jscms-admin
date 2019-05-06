@@ -36,7 +36,7 @@ export default {
 
   methods: {
     async fetchData() {
-      let res = await req.get('/api/config?alias=tags');
+      let res = await req.get('/api/back/config?alias=tags');
       let info = res.data.info;
       let data = [];
       info.forEach(i => {

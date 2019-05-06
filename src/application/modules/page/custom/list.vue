@@ -116,7 +116,7 @@ export default {
     },
 
     async updateData(page, callback) {
-      let res = await req.post('/api/page/update', page);     
+      let res = await req.post('/api/back/page/update', page);     
       this.$Message({
         text: res.msg,
         type: res.code === 0 ? 'success' : 'error'
@@ -126,7 +126,7 @@ export default {
     },
 
     async fetchCategory() {
-      let res = await this.req$.get('/api/category/list');
+      let res = await this.req$.get('/api/back/category/list');
       return res.data;
     }
   }

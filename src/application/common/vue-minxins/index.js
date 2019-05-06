@@ -11,7 +11,7 @@ export default {
   },
   methods: {
     async fetchModel$(displayName, modelName, callback, pretreatment) {
-      let res = await this.req$.get(`/api/model?name=${modelName}`);
+      let res = await this.req$.get(`/api/back/model?name=${modelName}`);
       let model = new modelman.Model({
         name: modelName[0].toUpperCase() + modelName.substr(1),
         displayName: displayName

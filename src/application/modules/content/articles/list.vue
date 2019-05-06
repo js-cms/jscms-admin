@@ -142,7 +142,7 @@ export default {
 
           let res = await this.req$.get(
             `
-          /api/article/list?
+          /api/back/article/list?
           pageSize=${this.data.pagination.size}
           &pageNumber=${this.data.pagination.page}
           &keyword=${keyword}
@@ -158,7 +158,7 @@ export default {
     },
 
     async updateData(article, callback) {
-      let res = await req.post('/api/article/update', article);
+      let res = await req.post('/api/back/article/update', article);
       this.$Message({
         text: res.msg,
         type: res.code === 0 ? 'success' : 'error'
@@ -168,7 +168,7 @@ export default {
     },
 
     async fetchCategory() {
-      let res = await this.req$.get(`/api/category/list`);
+      let res = await this.req$.get(`/api/back/category/list`);
       return res.data;
     },
 

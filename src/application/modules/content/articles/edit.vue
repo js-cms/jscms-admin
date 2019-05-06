@@ -207,7 +207,7 @@ export default {
   data() {
     return {
       id: this.$route.query.id,
-      uploadAction: storejs.get('origin') + '/api/resource/uploader',
+      uploadAction: storejs.get('origin') + '/api/back/resource/uploader',
       uploadData: {
         token: storejs.get('token')
       },
@@ -299,7 +299,7 @@ export default {
     },
 
     async saveData(article, callback) {
-      let url = '/api/article/';
+      let url = '/api/back/article/';
       if (this.id) {
         article.id = this.id;
         url += 'update';
@@ -315,7 +315,7 @@ export default {
     },
 
     async fetchData(callback) {
-      let res = await this.req$.get('/api/article', {
+      let res = await this.req$.get('/api/back/article', {
         id: this.id
       });
       this.$Message({
@@ -331,7 +331,7 @@ export default {
     },
 
     async fetchCategory(callback) {
-      let res = await this.req$.get('/api/category/list');
+      let res = await this.req$.get('/api/back/category/list');
       return res.data;
     }
   }

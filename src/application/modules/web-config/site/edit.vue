@@ -63,7 +63,7 @@ export default {
     async saveData(info, callback) {
       this.config.info = info;
       let type = '保存';
-      let res = await this.req$.post('/api/config', this.config);
+      let res = await this.req$.post('/api/back/config', this.config);
       this.$Message({
         text: res.msg,
         type: res.code === 0 ? 'success' : 'error'
@@ -73,7 +73,7 @@ export default {
 
     async fetchConfig() {
       this.containerLoading = true;
-      let res = await this.req$.get('/api/config?alias=site');
+      let res = await this.req$.get('/api/back/config?alias=site');
       let config = res.data;
       util.setData(this.config, config);
       this.config.id = this.config._id;

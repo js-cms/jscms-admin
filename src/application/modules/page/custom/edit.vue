@@ -67,7 +67,7 @@ export default {
     },
 
     async saveData(page, callback) {
-      let url = '/api/page/';
+      let url = '/api/back/page/';
       if ( this.id ) {
         page.id = this.id;
         url+='update';
@@ -83,7 +83,7 @@ export default {
     },
 
     async fetchData(callback) {
-      let res = await this.req$.get('/api/page', {
+      let res = await this.req$.get('/api/back/page', {
         id: this.id
       });
       this.form.setData(res.data);

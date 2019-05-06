@@ -45,7 +45,7 @@ export default {
             this.list = [];
             this.data.pagination.page = 1;
           }
-          let res = await req.get(`/api/log/list?type=2&pageSize=${this.pagination.size}&pageNumber=${this.pagination.page}`);
+          let res = await req.get(`/api/back/log/list?type=2&pageSize=${this.pagination.size}&pageNumber=${this.pagination.page}`);
           if ( res.code === 0 ) {
             let _list = res.data.list;
             let list = [];
@@ -73,7 +73,7 @@ export default {
           fastEdit: false,
           delete: {
             click: function(data, index) {
-              req.post('/api/log/delete', {
+              req.post('/api/back/log/delete', {
                 id: data.id
               })
               .then((res) => {

@@ -12,9 +12,9 @@ const toBase64 = function(str) {
  */
 export default async function crud(modelName, method, params) {
   if ( method === 'one' ) {
-    return req.get(`/api/crud/${modelName.toLowerCase()}/${method}?query=${toBase64(JSON.stringify(params.query || {}))}`);
+    return req.get(`/api/back/crud/${modelName.toLowerCase()}/${method}?query=${toBase64(JSON.stringify(params.query || {}))}`);
   } else if (method === 'list') {
-    return req.get(`/api/crud/${modelName.toLowerCase()}/${method}?query=${toBase64(JSON.stringify(params.query || {}))}&pageSize=${params.pageSize}&pageNum=${params.pageNum}`);
+    return req.get(`/api/back/crud/${modelName.toLowerCase()}/${method}?query=${toBase64(JSON.stringify(params.query || {}))}&pageSize=${params.pageSize}&pageNum=${params.pageNum}`);
   } else {
     let _params = {};
     if ( params.query ) {
@@ -23,6 +23,6 @@ export default async function crud(modelName, method, params) {
     if ( params.data ) {
       _params.data = toBase64(JSON.stringify(params.data));
     }
-    return req.post(`/api/crud/${modelName.toLowerCase()}/${method}`, _params);
+    return req.post(`/api/back/crud/${modelName.toLowerCase()}/${method}`, _params);
   }
 }

@@ -118,7 +118,7 @@ export default {
     },
 
     async fetchData(callback) {
-      let res = await this.req$.get('/api/user', {
+      let res = await this.req$.get('/api/back/user', {
         id: this.id
       });
       if (res.code === 0) {

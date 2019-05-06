@@ -81,7 +81,7 @@ export default {
      * @description 加载ip统计数据
      */
     async loadIp() {
-      let res = await this.req$.get('/api/analysis/ip');
+      let res = await this.req$.get('/api/back/analysis/ip');
       let ipData = {};
       let countIpData = [];
       this.dateRange.forEach((date, index) => {
@@ -110,7 +110,7 @@ export default {
      * @desc 加载pv统计数据
      */
     async loadPv() {
-      let res = await this.req$.get('/api/analysis/pv');
+      let res = await this.req$.get('/api/back/analysis/pv');
       let pvData = {};
       let countPvData = [];
       this.dateRange.forEach((date, index) => {
@@ -139,7 +139,7 @@ export default {
      * @desc 加载搜索统计数据
      */
     async loadSearch() {
-      let res = await this.req$.get('/api/analysis/search');
+      let res = await this.req$.get('/api/back/analysis/search');
       console.log(res);
       let searchData = {};
       let countSearchData = [];

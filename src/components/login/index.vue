@@ -44,7 +44,7 @@ export default {
       loading: false,
       vercode: {
         show: false,
-        src: origin + `/api/captcha/create?uid=${randomUID}`
+        src: origin + `/api/front/captcha/create?uid=${randomUID}`
       }
     };
   },
@@ -56,7 +56,7 @@ export default {
       let params = _.cloneDeep(this.login);
       let vercode = params.vercode;
       delete params.vercode;
-      let res = await this.req$.post(`/api/login?uid=${randomUID}&vercode=${vercode}`, params);
+      let res = await this.req$.post(`/api/back/login?uid=${randomUID}&vercode=${vercode}`, params);
       if (res.code === 0) {
         this.$Message({
           type: 'success',
@@ -91,7 +91,7 @@ export default {
     },
 
     async checkVercode() {
-      let res = await this.req$.get('http://127.0.0.1:7011/api/captcha/is');
+      let res = await this.req$.get('http://127.0.0.1:7011/api/front/captcha/is');
       this.vercode.show = res.data.boolLoginVercode;
     }
   }

@@ -75,7 +75,7 @@ export default {
         });
         return;
       }
-      let res = await this.req$.post('/api/user/password', this.passForm.to.json());
+      let res = await this.req$.post('/api/back/user/password', this.passForm.to.json());
       if ( res.code === 0 ) {
         this.$Message({
           text: res.msg,

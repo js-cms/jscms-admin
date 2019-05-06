@@ -78,7 +78,7 @@ export default {
   },
   methods: {
     async fetchConfig() {
-      let res = await req.get(`/api/config?alias=${this.config.alias}`);
+      let res = await req.get(`/api/back/config?alias=${this.config.alias}`);
       let config = res.data;
       util.setData(this.config, config);
       this.config.id = this.config._id;
@@ -95,7 +95,7 @@ export default {
     async saveData(info) {
       let params = _.cloneDeep(this.config);
       params.info = info;
-      let res = await req.post('/api/config', params);
+      let res = await req.post('/api/back/config', params);
       this.$Message({
         text: res.msg,
         type: res.code === 0 ? 'success' : 'error'

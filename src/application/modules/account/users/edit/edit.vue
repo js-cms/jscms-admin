@@ -33,7 +33,7 @@
         </div>
       </FormItem>
       <FormItem label="权限">
-        <TagInput v-model="account.fields.power.value"></TagInput>
+        <TagInput v-model="account.fields.powers.value"></TagInput>
       </FormItem>
       <FormItem label="积分">
         <NumberInput v-model="account.fields.score.value"></NumberInput>
@@ -101,7 +101,7 @@ export default {
   data() {
     return {
       id: this.$route.query.id,
-      uploadAction: storejs.get('origin') + '/api/resource/uploader',
+      uploadAction: storejs.get('origin') + '/api/back/resource/uploader',
       defaultData: {},
       uploadData: {
         token: storejs.get('token')
@@ -131,7 +131,7 @@ export default {
 
     async saveData(user, callback) {
       this.saveloading = true;
-      let url = '/api/user/';
+      let url = '/api/back/user/';
       user.birthday = moment(user.birthday).valueOf();
       if (this.id) {
         user.id = this.id;

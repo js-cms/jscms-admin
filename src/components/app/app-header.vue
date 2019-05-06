@@ -149,7 +149,7 @@ export default {
     },
     trigger(data) {
       if (data == 'logout') {
-        this.req$.get(`/api/logout?token=${storejs.get('token')}&userId=${storejs.get('uuid')}`).then(res => {
+        this.req$.get(`/api/back/logout?token=${storejs.get('token')}&userId=${storejs.get('uuid')}`).then(res => {
           if (res.code === 0) {
             this.$Message({
               type: 'success',

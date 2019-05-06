@@ -121,7 +121,7 @@ const fetchData = async function(reload = false) {
     this.list = [];
     this.pagination.page = 1;
   }
-  let res = await this.req$.get(`/api/model?name=${this.model.model.name.toLowerCase()}`);
+  let res = await this.req$.get(`/api/back/model?name=${this.model.model.name.toLowerCase()}`);
   if (res.code === 0) {
     res = await crud(this.model.model.name, 'list', {
       query: {},

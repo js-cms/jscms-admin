@@ -18,7 +18,7 @@
       <div>
         <p class="account-detail-tags-title">权限</p>
         <p>
-          <TagInput v-model="account.power" style="width: 100%" :readonly="true"></TagInput>
+          <TagInput v-model="account.powers" style="width: 100%" :readonly="true"></TagInput>
         </p>
       </div>
       <div>

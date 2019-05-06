@@ -98,7 +98,7 @@ export default {
   data() {
     return {
       datas: [],
-      uploadAction: storejs.get('origin') + '/api/resource/uploader',
+      uploadAction: storejs.get('origin') + '/api/back/resource/uploader',
       uploadData: {
         token: storejs.get('token')
       },
@@ -144,7 +144,7 @@ export default {
     async fetchData(callback) {
       let { type, pageSize, pageNumber, keyword } = this.params;
       this.containerLoading = true;
-      let res = await this.req$.get(`/api/resource/list?type=${type}&keyword=${keyword}&pageSize=${pageSize}&pageNumber=${pageNumber}`);
+      let res = await this.req$.get(`/api/back/resource/list?type=${type}&keyword=${keyword}&pageSize=${pageSize}&pageNumber=${pageNumber}`);
       let list = res.data.list;
       if (res.code === 0) {
         if ( pageNumber === 0 ) {
@@ -170,7 +170,7 @@ export default {
       this.$Confirm('确定删除？', '提醒')
         .then(() => {
           this.req$
-            .post('/api/resource/delete', {
+            .post('/api/back/resource/delete', {
               id: this.datas[index]._id,
               filename: this.datas[index].filename
             })
