@@ -15,6 +15,10 @@ export default [
         key: 'WebConfigSite'
       },
       {
+        title: '网站公告',
+        key: 'WebConfigNoticesList'
+      },
+      {
         title: '域名配置',
         key: 'WebConfigDomainsList'
       },

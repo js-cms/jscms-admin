@@ -21,7 +21,7 @@
 import _ from 'lodash';
 
 import util from '@/application/common/util/index.js';
-import menu from './model/Menu';
+import notice from './model/Notices';
 import Table from '@/application/components/jscms-table/Table';
 import dialogGeneralEdit from '@/application/components/dialogs/general-edit/index.js';
 import jscmsTable from '@/application/components/jscms-table/jscms-table.vue';
@@ -35,17 +35,20 @@ export default {
   data() {
     return {
       page: {
-        name: menu.model.displayName
+        name: notice.model.displayName
       },
       config: {
         name: '',
-        alias: 'menus',
-        info: {},
+        alias: 'notices',
+        info: {
+          showId: '',
+          data: []
+        },
         _id: ''
       },
       data: new Table({
         auto: false,
-        model: menu,
+        model: notice,
         operation: {
           delete: {
             click: function(item, index) {
@@ -57,7 +60,7 @@ export default {
       }),
       dialog: {
         generalEdit: new dialogGeneralEdit.GeneralEdit(this, {
-          form: menu,
+          form: notice,
           width: '450',
           create: function(formData, form) {
             let json = form.to.json();
@@ -82,7 +85,7 @@ export default {
       let config = res.data;
       util.setData(this.config, config);
       this.config.id = this.config._id;
-      this.data.list = res.data.info;
+      this.data.list = res.data.info.data;
       this.data.pagination.total = 1000;
       this.data.pagination.size = 1000;
     },

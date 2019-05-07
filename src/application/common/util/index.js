@@ -8,7 +8,6 @@ let util = {}
 util.setData = function (target, source) {
   for (const key in target) {
     if (target.hasOwnProperty(key)) {
-      const element = target[key];
       const sourceVal = source[key];
       if (sourceVal) {
         target[key] = sourceVal;
