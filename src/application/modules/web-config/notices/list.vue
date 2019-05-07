@@ -21,7 +21,7 @@
 import _ from 'lodash';
 
 import util from '@/application/common/util/index.js';
-import notice from './model/Notices';
+import notice from './model/Notice';
 import Table from '@/application/components/jscms-table/Table';
 import dialogGeneralEdit from '@/application/components/dialogs/general-edit/index.js';
 import jscmsTable from '@/application/components/jscms-table/jscms-table.vue';
