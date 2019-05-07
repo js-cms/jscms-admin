@@ -63,12 +63,16 @@ export default {
           form: notice,
           width: '450',
           create: function(formData, form) {
-            let json = form.to.json();
+            let json = form.to.json({ formField: true });
+            json.id = String(this.data.list.length || 0);
+            json.createTime = new Date().getTime();
+            json.updateTime = new Date().getTime();
             this.data.list.push(json);
             this.saveData(this.data.list);
           },
           update: function(formData, form, index) {
             let json = form.to.json();
+            json.updateTime = new Date().getTime();
             this.data.list[index] = json;
             this.saveData(this.data.list);
           }
@@ -81,11 +85,19 @@ export default {
   },
   methods: {
     async fetchConfig() {
+      this.data.list = [];
       let res = await req.get(`/api/back/config?alias=${this.config.alias}`);
       let config = res.data;
       util.setData(this.config, config);
       this.config.id = this.config._id;
-      this.data.list = res.data.info.data;
+      let data = [];
+      let showId = '';
+      if (res.data.info.data) data = res.data.info.data;
+      if (res.data.info.showId) showId = res.data.info.showId;
+      this.config.info.data = data || [];
+      this.config.info.showId = showId;
+      this.unshiftShow(data);
+      this.data.list = data;
       this.data.pagination.total = 1000;
       this.data.pagination.size = 1000;
     },
@@ -97,13 +109,47 @@ export default {
 
     async saveData(info) {
       let params = _.cloneDeep(this.config);
-      params.info = info;
+      let { item, index } = this.getShow(info);
+      params.info.showId = item.id || '';
+      this.clearShow(info, index);
+      params.info.data = info;
       let res = await req.post('/api/back/config', params);
       this.$Message({
         text: res.msg,
         type: res.code === 0 ? 'success' : 'error'
       });
       if (res.code === 0) this.fetchConfig();
+    },
+
+    getShow(data) {
+      let item = {};
+      let index = '';
+      data.forEach((i, idx) => {
+        if (i.isShow) {
+          item = i;
+          index = idx;
+        }
+      });
+      return {
+        item,
+        index
+      }
+    },
+
+    unshiftShow(data) {
+      let { item, index } = this.getShow(data);
+      if (index) {
+        data.splice(index, 1);
+        data.unshift(item);
+      }
+    },
+
+    clearShow(data, showIndex) {
+      data.forEach((i, idx) => {
+        if (String(idx) != showIndex) {
+          i.isShow = false;
+        }
+      });
     }
   }
 };

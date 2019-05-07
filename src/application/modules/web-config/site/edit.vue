@@ -56,7 +56,7 @@ export default {
         });
         return;
       }
-      this.saveData(this.form.to.json());
+      this.saveData(this.form.to.json({ formField: true }));
       this.isLoading = false;
     },
 

@@ -158,7 +158,7 @@ export default {
     },
 
     async updateData(article, callback) {
-      let res = await req.post('/api/back/article/update', article);
+      let res = await req.post('/api/back/article/fastUpdate', article);
       this.$Message({
         text: res.msg,
         type: res.code === 0 ? 'success' : 'error'

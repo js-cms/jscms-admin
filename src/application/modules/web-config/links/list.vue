@@ -60,12 +60,12 @@ export default {
           form: link,
           width: '450',
           create: function(formData, form) {
-            let json = form.to.json();
+            let json = form.to.json({ formField: true });
             this.data.list.push(json);
             this.saveData(this.data.list);
           },
           update: function(formData, form, index) {
-            let json = form.to.json();
+            let json = form.to.json({ formField: true });
             this.data.list[index] = json;
             this.saveData(this.data.list);
           }
