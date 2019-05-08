@@ -91,6 +91,9 @@
     <div style="width:100px;float:left;"><Button :icon="siderCollapsed ? 'icon-align-right':'icon-align-left'" size="l" noBorder class="font20" @click="siderCollapsed=!siderCollapsed"></Button></div>
     <div class="float-right app-header-info">
       <!-- <AutoComplete :showDropdownWhenNoResult="false" v-model="searchText" config="globalSearch" placeholder="全局搜索.."></AutoComplete> -->
+      <div class="app-header-icon-item" v-tooltip content="前台首页" theme="white" @click="goHome">
+        <i class="icon-open"></i>
+      </div>
       <div class="app-header-icon-item" v-tooltip content="系统布局配置" theme="white" @click="showSettingModal">
         <i class="icon-content-left"></i>
       </div>
@@ -141,6 +144,9 @@ export default {
     }
   },
   methods: {
+    goHome() {
+      window.open(origin);
+    },
     goGithub() {
       window.open('https://github.com/heyui/heyui-admin');
     },
