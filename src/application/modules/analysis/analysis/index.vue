@@ -1,33 +1,49 @@
 <template>
   <div class="app-home-vue frame-page">
     <Row :space="30">
-      <Cell  :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
-        <div class="h-panel" v-if="data.ip.show">
-          <div class="h-panel-bar">
-            <div class="h-panel-title">独立IP指数</div>
-          </div>
-          <div class="home-part-body">
-            <Chart :options="data.ip.data"></Chart>
-          </div>
-        </div>
+      <Cell :xs='24' :sm='24' :md='24' :lg='16' :xl='16'>
+        <Row :space="30">
+          <Cell :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
+            <div class="h-panel" v-if="data.ip.show">
+              <div class="h-panel-bar">
+                <div class="h-panel-title">独立IP指数</div>
+              </div>
+              <div class="home-part-body">
+                <Chart :options="data.ip.data"></Chart>
+              </div>
+            </div>
+          </Cell>
+          <Cell :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
+            <div class="h-panel" v-if="data.pv.show">
+              <div class="h-panel-bar">
+                <div class="h-panel-title">PV指数</div>
+              </div>
+              <div class="home-part-body">
+                <Chart :options="data.pv.data"></Chart>
+              </div>
+            </div>
+          </Cell>
+          <Cell :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
+            <div class="h-panel" v-if="data.search.show">
+              <div class="h-panel-bar">
+                <div class="h-panel-title">站内搜索指数</div>
+              </div>
+              <div class="home-part-body">
+                <Chart :options="data.search.data"></Chart>
+              </div>
+            </div>
+          </Cell>
+        </Row>
       </Cell>
-      <Cell :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
-        <div class="h-panel" v-if="data.pv.show">
+      <Cell :xs='24' :sm='24' :md='24' :lg='8' :xl='8'>
+        <div class="h-panel">
           <div class="h-panel-bar">
-            <div class="h-panel-title">PV指数</div>
+            <div class="h-panel-title">站内搜索关键词统计</div>
           </div>
-          <div class="home-part-body">
-            <Chart :options="data.pv.data"></Chart>
-          </div>
-        </div>
-      </Cell>
-      <Cell :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
-        <div class="h-panel" v-if="data.search.show">
-          <div class="h-panel-bar">
-            <div class="h-panel-title">站内搜索指数</div>
-          </div>
-          <div class="home-part-body">
-            <Chart :options="data.search.data"></Chart>
+          <div class="keywords-body">
+            <span class="item" v-for="(item, index) in keywords" :key="index">
+              <Badge :count="item.total" :show-zero="true"><Button size="s" @click="goSearchPage(item.keyword)">{{item.keyword}}</Button></Badge>
+            </span>
           </div>
         </div>
       </Cell>
@@ -35,14 +51,17 @@
   </div>
 </template>
 <script>
-import dataTemplate from './dataTemplate';
+import storejs from 'store';
 import moment from 'moment';
+
+import dataTemplate from './dataTemplate';
 import _ from 'lodash';
 
 export default {
   data() {
     return {
       dateRange: [],
+      keywords: [],
       data: {
         ip: {
           show: false,
@@ -64,6 +83,7 @@ export default {
     this.loadIp();
     this.loadPv();
     this.loadSearch();
+    this.loadSearchKeywods();
   },
   methods: {
     parseDate() {
@@ -75,6 +95,33 @@ export default {
         );
       });
       this.dateRange.push(moment().format('YYYY-MM-DD'));
+    },
+
+    async goSearchPage(keyword) {
+      window.open(`${storejs.get('origin')}/s?s=${keyword}`);
+    },
+
+    /**
+     * 加载搜索关键词
+     */
+    async loadSearchKeywods() {
+      let res = await this.req$.get('/api/back/config?alias=searchKeywordsCount');
+      if (!res.data.info || !res.data.info.keywords) return;
+      let keywordsObject = res.data.info.keywords;
+      let keywords = [];
+      for (const keyword in keywordsObject) {
+        if (keywordsObject.hasOwnProperty(keyword)) {
+          const total = keywordsObject[keyword];
+          keywords.push({
+            keyword,
+            total
+          })
+        }
+      };
+      keywords = keywords.sort((item1, item2) => {
+        return item2.total - item1.total;
+      });
+      this.keywords = keywords;
     },
 
     /**
@@ -140,7 +187,6 @@ export default {
      */
     async loadSearch() {
       let res = await this.req$.get('/api/back/analysis/search');
-      console.log(res);
       let searchData = {};
       let countSearchData = [];
       this.dateRange.forEach((date, index) => {
@@ -196,6 +242,17 @@ export default {
       &-text {
         width: 40px;
       }
+    }
+  }
+
+  .keywords-body {
+    padding: 15px;
+
+    .item {
+      padding: 5px;
+      padding-right: 20px;
+      padding-bottom: 10px;
+      display: inline-block;
     }
   }
 }
