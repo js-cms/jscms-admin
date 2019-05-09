@@ -168,8 +168,8 @@ export default {
     },
 
     async fetchCategory() {
-      let res = await this.req$.get(`/api/back/category/list`);
-      return res.data;
+      let res = await this.req$.get(`/api/back/category/all`); 
+      return res.data.list;
     },
 
     search() {

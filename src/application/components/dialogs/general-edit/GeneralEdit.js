@@ -1,9 +1,9 @@
 import _ from 'lodash';
-import crud from '@/application/common/crud/index.js.js';
+import crud from '@/application/common/crud/index.js';
 
 /**
-  * @description GeneralEdit 通用表单弹窗。
-  */
+ * @description GeneralEdit 通用表单弹窗。
+ */
 export default class GeneralEdit {
 
   /**
@@ -47,7 +47,9 @@ export default class GeneralEdit {
    */
   create(data = {}) {
     this._show(data, 'create');
-    this.form.reset({formField: true});
+    this.form.reset({
+      formField: true
+    });
   }
 
   /**
@@ -81,11 +83,13 @@ export default class GeneralEdit {
    * 默认新建方法
    */
   _create(formData, form) {
-    let json = form.to.json({formField: true});
+    let json = form.to.json({
+      formField: true
+    });
     crud(form.model.name, 'create', {
       data: json
     }).then((res) => {
-      if ( res.result.length ) {
+      if (res.result.length) {
         this.parent.$Message({
           type: 'success',
           text: form.model.displayName + '创建成功'
@@ -104,7 +108,9 @@ export default class GeneralEdit {
    * 默认更新方法
    */
   _update(formData, form, index) {
-    let json = form.to.json({formField: true});
+    let json = form.to.json({
+      formField: true
+    });
     let id = this.formData._id;
     crud(form.model.name, 'update', {
       query: {
@@ -112,7 +118,7 @@ export default class GeneralEdit {
       },
       data: json
     }).then((res) => {
-      if ( res.result.length || res.result.ok === 1) {
+      if (res.result.length || res.result.ok === 1) {
         this.parent.$Message({
           type: 'success',
           text: form.model.displayName + '修改成功'
@@ -141,7 +147,7 @@ export default class GeneralEdit {
     }
     if (this._type === 'create') {
       if (typeof this._create === 'function') {
-        if ( this._create.isExternal === true ) {
+        if (this._create.isExternal === true) {
           this._create.call(this.parent, this.formData, form);
         } else {
           this._create.call(this, this.formData, form);
@@ -150,7 +156,7 @@ export default class GeneralEdit {
       }
     } else if (this._type === 'update') {
       if (typeof this._update === 'function') {
-        if ( this._update.isExternal === true ) {
+        if (this._update.isExternal === true) {
           this._update.call(this.parent, this.formData, form, index);
         } else {
           this._update.call(this, this.formData, form, index);

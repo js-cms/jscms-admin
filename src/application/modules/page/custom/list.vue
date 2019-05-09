@@ -56,15 +56,6 @@ export default {
   },
   methods: {
     async init() {
-      let categoriesRes = await this.fetchCategory();
-      let categories = categoriesRes.map(i => `${i._id}:${i.name}`);
-      this.model._iterator(f => {
-        if (f.extra.comType === 'select') {
-          if (f.extra.options === 'categories') {
-            f.extra.options = categories.join(',');
-          }
-        }
-      });
       this.dialog.generalEdit = new dialogGeneralEdit.GeneralEdit(this, {
         form: this.model,
         width: '500',
@@ -123,11 +114,6 @@ export default {
       });
       this.reload();
       typeof callback === 'function' ? callback() : void 0; 
-    },
-
-    async fetchCategory() {
-      let res = await this.req$.get('/api/back/category/list');
-      return res.data;
     }
   }
 };

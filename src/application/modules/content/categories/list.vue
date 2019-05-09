@@ -5,8 +5,12 @@
       <span style="float: right">
         <Button
           color="primary"
-          @click="dialog.generalEdit.create({title: '新增' + page.name})"
-        >新增{{page.name}}</Button>
+          @click="()=>{
+          $router.push({
+            name: 'ContentCategoriesEdit'
+          });
+        }"
+        >新建{{page.name}}</Button>
       </span>
     </div>
     <div class="h-panel-body">
@@ -14,16 +18,20 @@
         <jscms-table :data="data" :parent="this"></jscms-table>
       </div>
     </div>
-    <dialog-general-edit :options="dialog.generalEdit"></dialog-general-edit>
+    <div v-if="dialog.generalEdit">
+      <dialog-general-edit :options="dialog.generalEdit"></dialog-general-edit>
+    </div>
   </div>
 </template>
 <script>
 import storejs from 'store';
 import util from '@/application/common/util/index.js';
+import category from './model/Category';
 import Table from '@/application/components/jscms-table/Table';
 import dialogGeneralEdit from '@/application/components/dialogs/general-edit/index.js';
 import jscmsTable from '@/application/components/jscms-table/jscms-table.vue';
 import { req } from '@/application/common/request/index.js';
+import Select from '@/application/components/jscms-form/Select';
 
 export default {
   components: {
@@ -38,9 +46,15 @@ export default {
       },
       data: {},
       dialog: {
-        generalEdit: {}
-      }
+        generalEdit: ''
+      },
+      params: {}
     };
+  },
+  watch: {
+    'params.categoryId': function() {
+      this.search();
+    }
   },
   mounted() {
     this.fetchModel$('分类', 'category', model => {
@@ -49,26 +63,37 @@ export default {
     });
   },
   methods: {
-    init() {
+    async init() {
+      this.dialog.generalEdit = new dialogGeneralEdit.GeneralEdit(this, {
+        form: category,
+        width: '500',
+        update: (formData, form, index) => {
+          let json = form.to.json();
+          let id = formData._id;
+          json.id = id;
+          this.updateData(json);
+        }
+      });
       this.page.name = this.model.model.displayName;
       this.data = new Table({
         model: this.model,
         operation: {
-          edit: false,
+          edit: {
+            click: function(data, index) {
+              this.$router.push({
+                name: 'ContentCategoriesEdit',
+                query: {
+                  id: data._id
+                }
+              });
+            }
+          },
           view: {
             btnClass: 'h-btn h-btn-s h-btn-text-primary',
             iClass: 'h-icon-link',
-            name: '前台查看',
+            name: '前台查看分类',
             click: function(data, index) {
-              let catAlias = data.alias;
-              if (catAlias) {
-                window.open(`${storejs.get('origin')}/${catAlias}.html`);
-              } else {
-                this.$Message({
-                  type: 'error',
-                  text: '没有这个分类。'
-                });
-              }
+              window.open(`${storejs.get('origin')}/${data.alias}.html`);
             }
           },
           fastEdit: {
@@ -78,76 +103,37 @@ export default {
             click: function(data, index) {
               this.dialog.generalEdit.update({
                 title: '快速编辑' + this.page.name,
-                width: '600',
                 index: index,
                 formData: data
               });
             }
           }
+        },
+        async fetchData() {
+          this.data.pagination.size = 10;
+          let { keyword, categoryId } = this.$parent.params;
+          let res = await this.req$.get(
+            `
+          /api/back/category/list?
+          pageSize=${this.data.pagination.size}
+          &pageNumber=${this.data.pagination.page}`
+              .replace(/\ +/g, '')
+              .replace(/[\r\n]/g, '')
+          );
+          this.data.list = res.data.list;
+          this.data.pagination.total = res.data.total;
         }
       });
-      this.dialog = {
-        generalEdit: new dialogGeneralEdit.GeneralEdit(this, {
-          form: this.model,
-          width: '450'
-          // create: function(form) {
-          //   let json = form.to.json();
-          //   this.saveData(json, 1);
-          // },
-          // update: function(form, index) {
-          //   let json = form.to.json();
-          //   let id = this.data.list[index]._id;
-          //   let category = Object.assign(json, {
-          //     _id: id
-          //   });
-          //   this.saveData(category, 2);
-          // }
-        })
-      };
     },
 
-    async fetchData(reload = false) {
-      if (reload) {
-        this.data.pagination.page = 1;
-      }
-      let res = await req.get(`/api/back/category/list?pageSize=${10}&pageNumber=${0}`);
-      let list = res.data;
-      this.data.list = list;
-      this.data.pagination.total = 100;
-    },
-
-    // async deleteData(data, index) {
-    //   let res = await req.post('/api/back/category/delete', {
-    //     id: data._id
-    //   });
-    //   if ( res.code === 0 ) {
-    //     this.$Message({
-    //       text: res.msg,
-    //       type: 'success'
-    //     });
-    //     this.reload();
-    //     typeof callback === 'function' ? callback() : void(0);
-    //   } else {
-    //     this.$Message({
-    //       text: res.msg,
-    //       type: 'error'
-    //     });
-    //   }
-    // },
-
-    // async saveData(category, type, callback) {
-    //   let url = `/api/back/category/${type === 1 ? 'create' : 'update'}`;
-    //   let res = await req.post(url, category);
-    //   this.$Message({
-    //     text: res.msg,
-    //     type: res.code === 0 ? 'success' : 'error'
-    //   });
-    //   this.reload();
-    //   typeof callback === 'function' ? callback() : void(0);
-    // },
-
-    reload() {
-      this.fetchData(true);
+    async updateData(category, callback) {
+      let res = await req.post('/api/back/category/fastUpdate', category);
+      this.$Message({
+        text: res.msg,
+        type: res.code === 0 ? 'success' : 'error'
+      });
+      this.reload();
+      typeof callback === 'function' ? callback() : void 0;
     }
   }
 };

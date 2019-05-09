@@ -14,7 +14,6 @@ export default class Table {
     this.model = opts.model || {};
     this.list = opts.list || [];
     this.auto = opts.auto === false ? opts.auto : true;
-    console.log('opts.pagination', opts.pagination);
     this.pagination = opts.pagination || {
       page: 1,
       size: 10,

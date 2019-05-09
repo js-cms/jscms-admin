@@ -202,14 +202,12 @@
 import storejs from 'store';
 
 import util from '@/application/common/util/index.js';
-import jscmsForm from '@/application/components/jscms-form/jscms-form.vue';
 import Select from '@/application/components/jscms-form/Select.js';
 import uploadAvatar from '@/application/components/upload-avatar';
 import dialogDraftArticle from '@/application/components/dialogs/draft-article/index.js';
 
 export default {
   components: {
-    jscmsForm,
     uploadAvatar,
     dialogDraftArticle: dialogDraftArticle.component
   },
@@ -242,15 +240,7 @@ export default {
     async init() {
       this.fetchModel$('文章', 'article', async model => {
         this.page.name = model.model.displayName;
-        let categoriesRes = await this.fetchCategory();
-        let categories = categoriesRes.map(i => `${i._id}:${i.name}`);
-        model._iterator(f => {
-          if (f.extra.comType === 'select') {
-            if (f.extra.options === 'categories') {
-              f.extra.options = categories.join(',');
-            }
-          }
-        });
+        await this.mixinCategory(model);
         this.form = model;
         this.parseOptions();
         if (this.id) {
@@ -263,12 +253,33 @@ export default {
       });
     },
 
+    /**
+     * 处理分类数据
+     */
+    async mixinCategory(model) {
+      let categoriesRes = await this.fetchCategory();
+      let categories = categoriesRes.map(i => `${i._id}:${i.name}`);
+      model._iterator(f => {
+        if (f.extra.comType === 'select') {
+          if (f.extra.options === 'categories') {
+            f.extra.options = categories.join(',');
+          }
+        }
+      });
+    },
+
+    /**
+     * 解析选项
+     */
     parseOptions() {
       this.options.category = new Select(this.form.fields.categoryId.extra.options);
       this.options.type = new Select(this.form.fields.type.extra.options);
       this.options.topType = new Select(this.form.fields.topType.extra.options);
     },
 
+    /**
+     * 提交数据
+     */
     submit() {
       let validResult = this.form.validator.all({ formField: true });
       console.log('validResult', validResult);
@@ -291,25 +302,31 @@ export default {
       }
     },
 
+    /**
+     * 其他校验
+     */
     otherCheck(params) {
-      if ( params.contentType === 0 ) {
-        if ( !params.mdContent ) {
+      if (params.contentType === 0) {
+        if (!params.mdContent) {
           return '你选择的编辑器是‘markdown编辑器’，请填写内容。';
         }
       }
-      if ( params.contentType === 1 ) {
-        if ( !params.htmlContent ) {
+      if (params.contentType === 1) {
+        if (!params.htmlContent) {
           return '你选择的编辑器是‘纯html编辑器’，请填写内容。';
         }
       }
-      if ( params.contentType === 2 ) {
-        if ( !params.richContent ) {
+      if (params.contentType === 2) {
+        if (!params.richContent) {
           return '你选择的编辑器是‘富文本编辑器’，请填写内容。';
         }
       }
       return false;
     },
 
+    /**
+     * 保存数据
+     */
     async saveData(article, callback) {
       let url = '/api/back/article/';
       if (this.id) {
@@ -326,6 +343,9 @@ export default {
       typeof callback === 'function' ? callback() : void 0;
     },
 
+    /**
+     * 抓取数据
+     */
     async fetchData(callback) {
       let res = await this.req$.get('/api/back/article', {
         id: this.id
@@ -334,7 +354,7 @@ export default {
         text: res.msg,
         type: res.code === 0 ? 'success' : 'error'
       });
-      if ( res.code === 0 ) {
+      if (res.code === 0) {
         let data = res.data;
         data.id = data._id;
         this.form.setData(res.data);
@@ -343,8 +363,8 @@ export default {
     },
 
     async fetchCategory(callback) {
-      let res = await this.req$.get('/api/back/category/list');
-      return res.data;
+      let res = await this.req$.get('/api/back/category/all');
+      return res.data.list;
     }
   }
 };

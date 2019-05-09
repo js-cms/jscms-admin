@@ -8,5 +8,15 @@ export default [
       icon: 'icon-paper'
     },
     component: (resolve) => require(['@/application/modules/content/categories/list.vue'], resolve)
+  },
+  {
+    //分类编辑
+    path: '/content/categories/edit',
+    name: 'ContentCategoriesEdit',
+    meta: {
+      title: '分类编辑',
+      icon: 'icon-paper'
+    },
+    component: (resolve) => require(['@/application/modules/content/categories/edit.vue'], resolve)
   }
-];
+]
