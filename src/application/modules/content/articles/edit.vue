@@ -4,6 +4,8 @@
       <div class="h-panel-bar">
         <span class="h-panel-title">{{`${id ? '编辑' : '新建'}${page.name}`}}</span>
         <span style="float: right">
+          <button class="h-btn" @click="dialog.draftArticle.show()">导入草稿</button>
+          <button class="h-btn" @click="submit">保存草稿</button>
           <button class="h-btn h-btn-primary" @click="submit">{{`${id ? '保存修改' : '确认新建'}`}}</button>
         </span>
       </div>
@@ -189,6 +191,11 @@
         </div>
       </div>
     </div>
+
+    <!-- 草稿箱 -->
+    <div v-if="dialog.draftArticle">
+      <dialog-draft-article :options="dialog.draftArticle"></dialog-draft-article>
+    </div>
   </div>
 </template>
 <script>
@@ -198,16 +205,21 @@ import util from '@/application/common/util/index.js';
 import jscmsForm from '@/application/components/jscms-form/jscms-form.vue';
 import Select from '@/application/components/jscms-form/Select.js';
 import uploadAvatar from '@/application/components/upload-avatar';
+import dialogDraftArticle from '@/application/components/dialogs/draft-article/index.js';
 
 export default {
   components: {
     jscmsForm,
-    uploadAvatar
+    uploadAvatar,
+    dialogDraftArticle: dialogDraftArticle.component
   },
   data() {
     return {
       id: this.$route.query.id,
       uploadAction: storejs.get('origin') + '/api/back/resource/uploader',
+      dialog: {
+        draftArticle: new dialogDraftArticle.DraftArticle(this)
+      },
       uploadData: {
         token: storejs.get('token')
       },

@@ -2,9 +2,9 @@
   <div class="dialog">
     <Modal v-model="isShow" :closeOnMask="false">
       <div slot="header">{{title}}</div>
-      <div v-width="width" v-if="form">
-        <div v-width="'100%'" v-if="form!==''">
-          <jscms-form :form="form" :labelWidth="labelWidth" :parent="this"></jscms-form>
+      <div v-width="width">
+        <div v-width="'100%'">
+          test
         </div>
       </div>
       <div slot="footer">
@@ -19,7 +19,7 @@
           @click="() => {
           options.onConfirm.call(options.me, form, index);
         }"
-        >确定</Button>
+        >导入</Button>
       </div>
     </Modal>
   </div>
@@ -37,11 +37,8 @@ export default {
   data() {
     return {
       isShow: false,
-      title: '编辑',
-      width: 700,
-      labelWidth: 60,
-      index: 0,
-      form: ''
+      title: '文章草稿箱',
+      width: 700
     };
   },
 
@@ -58,12 +55,6 @@ export default {
 
   methods: {
     onShow() {
-      this.form = '';
-      this.title = this.options.title || '编辑';
-      this.form = this.options.form || '';
-      this.width = this.options.width || 700;
-      this.index = this.options.index;
-      this.getLabelWidth();
     },
 
     handlerEvent(handlerName) {
@@ -78,23 +69,6 @@ export default {
           this.options.onClose.call(this.options.me);
           break;
       }
-    },
-
-    getLabelWidth() {
-      let labelWidth = 0;
-      for (const key in this.form.fields) {
-        if (this.form.fields.hasOwnProperty(key)) {
-          const element = this.form.fields[key];
-          if (element.formField === true) {
-            let width = util.textSize('13px', element.displayName).width;
-            if (width > labelWidth) {
-              labelWidth = width;
-            }
-          }
-        }
-      }
-      labelWidth = labelWidth < 60 ? 85 : labelWidth + 30;
-      this.labelWidth = labelWidth;
     }
   }
 };

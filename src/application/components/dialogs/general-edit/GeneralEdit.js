@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import crud from '@/application/common/crud/index.js';
+import crud from '@/application/common/crud/index.js.js';
 
 /**
   * @description GeneralEdit 通用表单弹窗。
