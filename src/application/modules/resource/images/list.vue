@@ -1,6 +1,6 @@
 <template>
   <div class="frame-page images-page">
-    <div class="h-panel">
+    <div class="h-panel" :class="{'noborder': isDialog}">
       <div class="h-panel-bar">
         <span class="h-panel-title">
           图片管理
@@ -91,6 +91,7 @@ import uploadButton from '@/application/components/upload-button';
 
 const link = 'https://lokeshdhakar.com/projects/lightbox2/images/';
 export default {
+  props: [ 'isDialog' ],
   components: {
     ImagePreview,
     uploadButton
@@ -239,5 +240,9 @@ export default {
 .load-more {
   text-align: center;
   padding: 40px;
+}
+
+.noborder {
+  border: none;
 }
 </style>

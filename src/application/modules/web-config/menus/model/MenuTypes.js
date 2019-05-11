@@ -1,0 +1,1 @@
+export default 'category:文章分类,link:自定义链接';

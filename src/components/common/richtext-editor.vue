@@ -8,6 +8,8 @@
 
 <script>
 import WangEditor from 'wangeditor';
+import storejs from 'store';
+
 import '../../css/richtext-editor.less';
 
 export default {
@@ -26,15 +28,10 @@ export default {
       default: true // 是否开启本地存储
     }
   },
-  methods: {
-    setHtml(val) {
-      this.editor.txt.html(val);
-    }
-  },
   mounted() {
     this.editor = new WangEditor(this.$el);
+    this.uploadConfig();
     // 开启图片复制
-    this.editor.customConfig.uploadImgShowBase64 = true;
     this.editor.customConfig.onchange = (html) => {
       let text = this.editor.txt.text();
       if (this.cache) localStorage.editorCache = html;
@@ -44,6 +41,20 @@ export default {
     this.editor.create();
     let html = this.value || localStorage.editorCache;
     if (html) this.editor.txt.html(html);
+  },
+  methods: {
+    setHtml(val) {
+      this.editor.txt.html(val);
+    },
+
+    uploadConfig() {
+      let origin = storejs.get('origin');
+      this.editor.customConfig.uploadImgHeaders = {
+        'authorization': storejs.get('token')
+      }
+      this.editor.customConfig.uploadImgServer = `${origin}/api/back/resource/wangeditor/uploader`;
+      this.editor.customConfig.uploadImgShowBase64 = true;
+    }
   }
 };
 </script>

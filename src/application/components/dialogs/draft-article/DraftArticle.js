@@ -5,7 +5,7 @@
 export default class DraftArticle {
 
   /**
-   * @description 构造函数
+   * 构造函数
    */
   constructor(vueComponentInstance, opts = {}) {
     this.parent = vueComponentInstance;
@@ -13,6 +13,23 @@ export default class DraftArticle {
     this.me = this;
   }
 
+  /**
+   * 取消事件
+   */
+  onCancel() {
+    this.isShow = false;
+  }
+
+  /**
+   * 关闭
+   */
+  close() {
+    this.isShow = false;
+  }
+
+  /**
+   * 主动显示
+   */
   show() {
     this.isShow = true;
   }

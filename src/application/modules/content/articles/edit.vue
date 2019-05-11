@@ -5,7 +5,8 @@
         <span class="h-panel-title">{{`${id ? '编辑' : '新建'}${page.name}`}}</span>
         <span style="float: right">
           <button class="h-btn" @click="dialog.draftArticle.show()">导入草稿</button>
-          <button class="h-btn" @click="submit">保存草稿</button>
+          <button class="h-btn" @click="saveDraft()">保存草稿</button>
+          <button class="h-btn" @click="()=>{ dialog.image.isShow = true }">图片管理</button>
           <button class="h-btn h-btn-primary" @click="submit">{{`${id ? '保存修改' : '确认新建'}`}}</button>
         </span>
       </div>
@@ -194,8 +195,15 @@
 
     <!-- 草稿箱 -->
     <div v-if="dialog.draftArticle">
-      <dialog-draft-article :options="dialog.draftArticle"></dialog-draft-article>
+      <dialog-draft-article :options="dialog.draftArticle" @importDraft="importDraft"></dialog-draft-article>
     </div>
+
+    <!-- 图片管理 -->
+    <Modal v-model="dialog.image.isShow" :hasCloseIcon="true" :className="'nopadding'">
+      <div v-width="900">
+        <resource-list :isDialog="true"></resource-list>
+      </div>
+    </Modal>
   </div>
 </template>
 <script>
@@ -206,9 +214,12 @@ import Select from '@/application/components/jscms-form/Select.js';
 import uploadAvatar from '@/application/components/upload-avatar';
 import dialogDraftArticle from '@/application/components/dialogs/draft-article/index.js';
 
+import resourceList from '@/application/modules/resource/images/list.vue';
+
 export default {
   components: {
     uploadAvatar,
+    resourceList,
     dialogDraftArticle: dialogDraftArticle.component
   },
   data() {
@@ -216,7 +227,10 @@ export default {
       id: this.$route.query.id,
       uploadAction: storejs.get('origin') + '/api/back/resource/uploader',
       dialog: {
-        draftArticle: new dialogDraftArticle.DraftArticle(this)
+        draftArticle: new dialogDraftArticle.DraftArticle(this),
+        image: {
+          isShow: false
+        }
       },
       uploadData: {
         token: storejs.get('token')
@@ -344,7 +358,55 @@ export default {
     },
 
     /**
-     * 抓取数据
+     * 保存到草稿
+     */
+    async saveDraft() {
+      let params = this.form.to.json({ formField: true });
+      let res = await this.req$.get(`/api/back/article/draft?name=${params.title}`);
+      if (res.code === 0 && res.data) {
+        this.$Confirm('发现存在同名文章的草稿，是否要覆盖？如果取消的话本次将不会进行保存。', '询问')
+          .then(async () => {
+            let updateRes = await this.req$.post('/api/back/article/draft/update', {
+              name: params.title,
+              info: params
+            });
+            this.$Message({
+              text: updateRes.msg,
+              type: updateRes.code === 0 ? 'success' : 'error'
+            });
+          })
+          .catch(() => {
+            this.$Message.error('取消操作');
+          });
+      } else {
+        let createRes = await this.req$.post('/api/back/article/draft/create', {
+          name: params.title,
+          info: params
+        });
+        this.$Message({
+          text: createRes.msg,
+          type: createRes.code === 0 ? 'success' : 'error'
+        });
+      }
+    },
+
+    /**
+     * 导入草稿钩子
+     */
+    async importDraft(data) {
+      this.$Confirm(`确定要导入文章【${data.name}】吗？会覆盖现在正在编辑的文章。`, '提醒')
+        .then(() => {
+          this.form.setData(data.info);
+          this.dialog.draftArticle.close();
+          this.$Message.success('导入完成');
+        })
+        .catch(() => {
+          this.$Message.error('取消导入');
+        });
+    },
+
+    /**
+     * 抓取文章数据
      */
     async fetchData(callback) {
       let res = await this.req$.get('/api/back/article', {
@@ -362,6 +424,9 @@ export default {
       }
     },
 
+    /**
+     * 抓取分类数据
+     */
     async fetchCategory(callback) {
       let res = await this.req$.get('/api/back/category/all');
       return res.data.list;
@@ -387,6 +452,15 @@ export default {
 
   .editor-warp {
     padding: 20px;
+  }
+}
+
+.nopadding {
+  .h-notify-content {
+    padding-top: 30px;
+    padding-left: 0px;
+    padding-right: 0px;
+    padding-bottom: 0px;
   }
 }
 </style>

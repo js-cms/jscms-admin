@@ -2,12 +2,12 @@ import _ from 'lodash';
 import crud from '@/application/common/crud/index.js';
 
 /**
- * @description GeneralEdit 通用表单弹窗。
+ * GeneralEdit 通用表单弹窗。
  */
 export default class GeneralEdit {
 
   /**
-   * @description 构造函数
+   * 构造函数
    */
   constructor(vueComponentInstance, opts = {}) {
     this.parent = vueComponentInstance;
@@ -28,7 +28,7 @@ export default class GeneralEdit {
   }
 
   /**
-   * @description 显示Dialog
+   * 显示Dialog
    */
   _show(data = {}, type = 'create') {
     //合并对象
@@ -43,7 +43,7 @@ export default class GeneralEdit {
   }
 
   /**
-   * @description 显示Dialog
+   * 显示Dialog
    */
   create(data = {}) {
     this._show(data, 'create');
@@ -53,7 +53,7 @@ export default class GeneralEdit {
   }
 
   /**
-   * @description 显示Dialog
+   * 显示Dialog
    */
   update(data = {}) {
     if (data.formData) {
@@ -66,14 +66,14 @@ export default class GeneralEdit {
   }
 
   /**
-   * @description 关闭事件
+   * 关闭事件
    */
   onClose() {
     this.isShow = false;
   }
 
   /**
-   * @description 取消事件
+   * 取消事件
    */
   onCancel() {
     this.isShow = false;
@@ -134,7 +134,7 @@ export default class GeneralEdit {
   }
 
   /**
-   * @description 确认事件
+   * 确认事件
    */
   onConfirm(form, index) {
     let res = form.validator.all();
