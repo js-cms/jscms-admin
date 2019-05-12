@@ -24,7 +24,7 @@ export default [
       },
       {
         title: '菜单配置',
-        key: 'WebConfigMenusList'
+        key: 'WebConfigMenusEdit'
       },
       {
         title: '链接配置',

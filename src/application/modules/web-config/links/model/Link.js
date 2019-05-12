@@ -2,7 +2,7 @@ import modelman from 'modelman';
 
 let model = new modelman.Model({
   name: 'configLinks',
-  displayName: '链接配置'
+  displayName: '友情链接配置'
 });
 
 model.assign({
