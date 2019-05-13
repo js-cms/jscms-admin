@@ -8,6 +8,13 @@
         v-if="f.tableField===true"
       >
         <template slot-scope="{data}">
+          <com-options
+            v-if="f.constructor === modelman.type.Number && f.extra.options"
+            :data="data"
+            :field="f"
+            :keyname="key"
+            :index="index"
+          ></com-options>
           <com-object
             v-if="f.constructor === modelman.type.Object"
             :data="data"
@@ -23,7 +30,7 @@
             :index="index"
           ></com-objectid>
           <com-text
-            v-if="f.constructor === modelman.type.String || f.constructor === modelman.type.Number || f.constructor === modelman.type.Email || f.constructor === modelman.type.Boolean"
+            v-if="f.constructor === modelman.type.String || (f.constructor === modelman.type.Number && !f.extra.options) || f.constructor === modelman.type.Email || f.constructor === modelman.type.Boolean"
             :data="data"
             :field="f"
             :keyname="key"
@@ -113,6 +120,7 @@ import modelman from 'modelman';
 import ComText from './components/text';
 import ComObject from './components/object';
 import ComObjectid from './components/objectid';
+import ComOptions from './components/options';
 import ComDate from './components/date';
 import crud from '@/application/common/crud/index.js';
 
@@ -143,6 +151,7 @@ export default {
     ComText,
     ComObject,
     ComObjectid,
+    ComOptions,
     ComDate
   },
   data() {

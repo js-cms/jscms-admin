@@ -17,6 +17,9 @@
       <div class="filter-item" v-width="200">
         <Select v-model="params.categoryId" :datas="categories.options" placeholder="筛选文章分类"></Select>
       </div>
+      <div class="filter-item" v-width="200">
+        <Select v-model="params.topType" :datas="topTypeOptions.options" placeholder="筛选文章置顶方式"></Select>
+      </div>
       <div class="filter-item">
         <div class="h-input-group" v-width="400">
           <input type="text" placeholder="输入关键词进行模糊搜索" v-model="params.keyword">
@@ -53,6 +56,7 @@ export default {
     return {
       model: {},
       categories: [],
+      topTypeOptions: new Select(article.fields.topType.extra.options, true),
       page: {
         name: ''
       },
@@ -61,17 +65,23 @@ export default {
         generalEdit: ''
       },
       params: {
+        topType: '',
         categoryId: '',
         keyword: ''
       }
     };
   },
   watch: {
+    'params.topType': function() {
+      this.search();
+    },
+
     'params.categoryId': function() {
       this.search();
     }
   },
   mounted() {
+    console.log(this.topTypeOptions);
     this.fetchModel$('文章', 'article', model => {
       this.model = model;
       this.init();
@@ -137,8 +147,9 @@ export default {
           }
         },
         async fetchData() {
+          this.data.list = [];
           this.data.pagination.size = 10;
-          let { keyword, categoryId } = this.$parent.params;
+          let { keyword, categoryId, topType } = this.$parent.params;
 
           let res = await this.req$.get(
             `
@@ -146,7 +157,8 @@ export default {
           pageSize=${this.data.pagination.size}
           &pageNumber=${this.data.pagination.page}
           &keyword=${keyword}
-          &categoryId=${categoryId}`
+          &categoryId=${categoryId}
+          &topType=${topType}`
               .replace(/\ +/g, '')
               .replace(/[\r\n]/g, '')
           );
@@ -173,7 +185,7 @@ export default {
     },
 
     search() {
-      this.$children[3].fetchData();
+      this.$children[4].fetchData();
     }
   }
 };
