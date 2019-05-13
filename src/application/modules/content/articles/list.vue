@@ -14,14 +14,17 @@
       </span>
     </div>
     <div class="h-panel-bar">
-      <div class="filter-item" v-width="200">
+      <div class="filter-item" v-width="150">
         <Select v-model="params.categoryId" :datas="categories.options" placeholder="筛选文章分类"></Select>
       </div>
-      <div class="filter-item" v-width="200">
+      <div class="filter-item" v-width="150">
         <Select v-model="params.topType" :datas="topTypeOptions.options" placeholder="筛选文章置顶方式"></Select>
       </div>
+      <div class="filter-item" v-width="150">
+        <Select v-model="params.status" :datas="statusOptions.options" placeholder="筛选文章状态"></Select>
+      </div>
       <div class="filter-item">
-        <div class="h-input-group" v-width="400">
+        <div class="h-input-group" v-width="300">
           <input type="text" placeholder="输入关键词进行模糊搜索" v-model="params.keyword">
           <Button color="primary" @click="search()">模糊搜索</Button>
         </div>
@@ -57,6 +60,7 @@ export default {
       model: {},
       categories: [],
       topTypeOptions: new Select(article.fields.topType.extra.options, true),
+      statusOptions: new Select(article.fields.status.extra.options, true),
       page: {
         name: ''
       },
@@ -67,17 +71,17 @@ export default {
       params: {
         topType: '',
         categoryId: '',
-        keyword: ''
+        keyword: '',
+        status: ''
       }
     };
   },
   watch: {
-    'params.topType': function() {
-      this.search();
-    },
-
-    'params.categoryId': function() {
-      this.search();
+    params: {
+      handler() {
+        this.search();
+      },
+      deep: true
     }
   },
   mounted() {
@@ -149,7 +153,7 @@ export default {
         async fetchData() {
           this.data.list = [];
           this.data.pagination.size = 10;
-          let { keyword, categoryId, topType } = this.$parent.params;
+          let { keyword, categoryId, topType, status } = this.$parent.params;
 
           let res = await this.req$.get(
             `
@@ -158,7 +162,8 @@ export default {
           &pageNumber=${this.data.pagination.page}
           &keyword=${keyword}
           &categoryId=${categoryId}
-          &topType=${topType}`
+          &topType=${topType}
+          &status=${status}`
               .replace(/\ +/g, '')
               .replace(/[\r\n]/g, '')
           );
@@ -185,7 +190,7 @@ export default {
     },
 
     search() {
-      this.$children[4].fetchData();
+      this.$children[5].fetchData();
     }
   }
 };

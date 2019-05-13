@@ -157,6 +157,33 @@
                     :placeholder="form.fields.description.placeholder"
                   ></textarea>
                 </FormItem>
+                <FormItem label="文章状态">
+                  <Select v-model="form.fields.status.value" :datas="options.status.options"></Select>
+                </FormItem>
+                <FormItem label="需要来源">
+                  <Radio
+                    v-model="form.fields.isSource.value"
+                    :datas="options.isSource.options"
+                    keyName="val"
+                    titleName="name"
+                  ></Radio>
+                </FormItem>
+                <template v-if="form.fields.isSource.value">
+                <FormItem label="来源名称">
+                  <input
+                    type="text"
+                    v-model="form.fields.sourceName.value"
+                    placeholder="请输入来源名称"
+                  >
+                </FormItem>
+                <FormItem label="来源链接">
+                  <input
+                    type="text"
+                    v-model="form.fields.sourceUrl.value"
+                    placeholder="请输入来源链接"
+                  >
+                </FormItem>
+                </template>
               </Form>
             </div>
           </div>
@@ -209,12 +236,13 @@
 <script>
 import storejs from 'store';
 
-import util from '@/application/common/util/index.js';
-import Select from '@/application/components/jscms-form/Select.js';
 import uploadAvatar from '@/application/components/upload-avatar';
 import dialogDraftArticle from '@/application/components/dialogs/draft-article/index.js';
-
 import resourceList from '@/application/modules/resource/images/list.vue';
+
+import util from '@/application/common/util/index.js';
+import Select from '@/application/components/jscms-form/Select.js';
+import Radio from '@/application/components/jscms-form/Radio';
 
 export default {
   components: {
@@ -241,7 +269,11 @@ export default {
       },
       form: '',
       options: {
-        category: []
+        category: {},
+        status: {},
+        type: {},
+        topType: {},
+        isSource: {}
       }
     };
   },
@@ -289,6 +321,8 @@ export default {
       this.options.category = new Select(this.form.fields.categoryId.extra.options);
       this.options.type = new Select(this.form.fields.type.extra.options);
       this.options.topType = new Select(this.form.fields.topType.extra.options);
+      this.options.status = new Select(this.form.fields.status.extra.options);
+      this.options.isSource = new Radio(this.form.fields.isSource.extra.options);
     },
 
     /**

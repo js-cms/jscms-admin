@@ -3,7 +3,7 @@ const webpack = require('webpack');
 const globalVars = require('./src/css/var.js');
 
 module.exports = {
-  publicPath: '/management/',
+  publicPath: '/m/',
   pages: {
     index: {
       entry: 'src/main.js',
