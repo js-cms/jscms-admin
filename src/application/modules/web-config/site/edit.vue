@@ -8,7 +8,61 @@
         </span>
       </div>
       <div class="h-panel-body">
-        <jscms-form :form="form" :parent="this" :labelWidth="130"></jscms-form>
+        <!-- <jscms-form :form="form" :parent="this" :labelWidth="130"></jscms-form> -->
+
+        <!-- 站点主要信息 -->
+        <div class="main-block-warp" v-if="form">
+          <div class="h-panel">
+            <div class="h-panel-bar">
+              <span class="h-panel-title">站点主要信息</span>
+            </div>
+            <div class="h-panel-body">
+              <Form :label-width="110">
+                <FormItem label="分类的封面">
+                  <upload-avatar
+                    buttonName="上传图片"
+                    :action="uploadAction"
+                    :extraData="uploadData"
+                    :imageUrl="form.fields.poster.value"
+                    :height="198"
+                    :width="300"
+                    @complete="(type, res) => {
+                      if (type === 'success') {
+                        $Message[res.code === 0 ? 'success' : 'error'](res.msg);
+                        form.fields.poster.value = res.data.imageUrl;
+                      } else {
+                        $Message.error('未知错误');
+                      }
+                    }" 
+                  ></upload-avatar>
+                </FormItem>
+                <FormItem label="中文分类名称">
+                  <input type="text" v-model="form.fields.name.value" :placeholder="form.fields.name.placeholder">
+                </FormItem>
+                <FormItem label="英文分类别名">
+                  <input type="text" v-model="form.fields.alias.value" :placeholder="form.fields.alias.placeholder">
+                </FormItem>
+                <FormItem label="分类标签">
+                  <TagInput
+                    v-model="form.fields.tags.value"
+                    :limit="20"
+                    :wordlimit="20"
+                    placeholder="输入标签，回车键确认"
+                  ></TagInput>
+                </FormItem>
+                <FormItem label="分类简介">
+                  <textarea
+                    :name="form.fields.intro.name"
+                    v-model="form.fields.intro.value"
+                    :rows="form.fields.intro.extra.rows || 6"
+                    :placeholder="form.fields.intro.placeholder"
+                  ></textarea>
+                </FormItem>
+              </Form>
+            </div>
+          </div>
+        </div>
+
         <Loading text="Loading" :loading="containerLoading"></Loading>
       </div>
     </div>
