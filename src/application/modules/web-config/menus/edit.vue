@@ -76,7 +76,7 @@
         <div class="main-block-warp">
           <div class="h-panel">
             <div class="h-panel-bar">
-              <span class="h-panel-title">顶部菜单配置</span>
+              <span class="h-panel-title">底部菜单配置</span>
             </div>
             <div class="h-panel-body">
               <div class="from-warp">

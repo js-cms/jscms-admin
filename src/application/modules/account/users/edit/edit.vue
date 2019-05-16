@@ -1,6 +1,6 @@
 <template>
   <div class="account-info-vue">
-    <Form :model="account" ref="form" :labelWidth="100">
+    <Form :model="account" ref="form" :labelWidth="150">
       <FormItem label="头像" prop="avatar">
         <upload-image
           buttonName="上传图片"
@@ -62,10 +62,100 @@
         <input type="text" v-model="account.fields.work.value">
       </FormItem>
       <FormItem label="关于">
-        <textarea rows=3 v-autosize v-model="account.fields.about.value"/>
+        <textarea rows="3" v-autosize v-model="account.fields.about.value"/>
       </FormItem>
       <FormItem label="标签">
         <TagInput v-model="account.fields.tags.value"></TagInput>
+      </FormItem>
+      <FormItem label="微信二维码">
+        <upload-image
+          buttonName="上传图片"
+          :action="uploadAction"
+          :extraData="uploadData"
+          :imageUrl="account.fields.qrWx.value"
+          :height="200"
+          :width="200"
+          @complete="(type, res) => {
+                      if (type === 'success') {
+                        $Message[res.code === 0 ? 'success' : 'error'](res.msg);
+                        account.fields.qrWx.value = res.data.imageUrl;
+                      } else {
+                        $Message.error('未知错误');
+                      }
+                    }"
+        ></upload-image>
+      </FormItem>
+      <FormItem label="微信收款二维码">
+        <upload-image
+          buttonName="上传图片"
+          :action="uploadAction"
+          :extraData="uploadData"
+          :imageUrl="account.fields.qrWxpay.value"
+          :height="200"
+          :width="200"
+          @complete="(type, res) => {
+                      if (type === 'success') {
+                        $Message[res.code === 0 ? 'success' : 'error'](res.msg);
+                        account.fields.qrWxpay.value = res.data.imageUrl;
+                      } else {
+                        $Message.error('未知错误');
+                      }
+                    }"
+        ></upload-image>
+      </FormItem>
+      <FormItem label="微信公众号二维码">
+        <upload-image
+          buttonName="上传图片"
+          :action="uploadAction"
+          :extraData="uploadData"
+          :imageUrl="account.fields.qrWxpub.value"
+          :height="200"
+          :width="200"
+          @complete="(type, res) => {
+                      if (type === 'success') {
+                        $Message[res.code === 0 ? 'success' : 'error'](res.msg);
+                        account.fields.qrWxpub.value = res.data.imageUrl;
+                      } else {
+                        $Message.error('未知错误');
+                      }
+                    }"
+        ></upload-image>
+      </FormItem>
+      <FormItem label="支付宝收款二维码">
+        <upload-image
+          buttonName="上传图片"
+          :action="uploadAction"
+          :extraData="uploadData"
+          :imageUrl="account.fields.qrAlipay.value"
+          :height="200"
+          :width="200"
+          @complete="(type, res) => {
+                      if (type === 'success') {
+                        $Message[res.code === 0 ? 'success' : 'error'](res.msg);
+                        account.fields.qrAlipay.value = res.data.imageUrl;
+                      } else {
+                        $Message.error('未知错误');
+                      }
+                    }"
+        ></upload-image>
+      </FormItem>
+      <FormItem label="银联云闪付收款二维码">
+        <upload-image
+          buttonName="上传图片"
+          :action="uploadAction"
+          :extraData="uploadData"
+          :imageUrl="account.fields.qrUnionpay.value"
+          :height="200"
+          :width="200"
+          @complete="(type, res) => {
+                      if (type === 'success') {
+                        $Message[res.code === 0 ? 'success' : 'error'](res.msg);
+                        account.fields.qrUnionpay.value = res.data.imageUrl;
+                      } else {
+                        $Message.error('未知错误');
+                      }
+                    }"
+        ></upload-image>
       </FormItem>
       <FormItem label="激活状态">
         <Radio

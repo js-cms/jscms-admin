@@ -67,22 +67,26 @@ export default {
     };
   },
   created() {
-    this.imgUrl = this.imageUrl;
+    this.imgUrl = this.toHttp(this.imageUrl);
   },
   watch: {
     imageUrl(val) {
-      if (val) {
-        if (val.substring(0, 4) !== 'http') {
-          this.imgUrl = storejs.get('origin') + val;
-        } else {
-          this.imgUrl = val
-        }
-      }
+      this.imgUrl = this.toHttp(val);
     }
   },
   mounted() {
   },
   methods: {
+    toHttp(url) {
+      if (url) {
+        if (url.substring(0, 4) !== 'http') {
+          return storejs.get('origin') + url;
+        } else {
+          return url
+        }
+      }
+      return '';
+    },
     handleFileChange(e) {
       this.uploadLoading = true;
       if (typeof e.target === "undefined") {

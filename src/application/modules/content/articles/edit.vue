@@ -103,6 +103,67 @@
           </Row>
         </div>
 
+        <!-- 附加设置 -->
+        <div class="main-block-warp" v-if="form">
+          <div class="h-panel">
+            <div class="h-panel-bar">
+              <span class="h-panel-title">附加设置</span>
+            </div>
+            <div class="h-panel-body">
+              <Form :label-width="110">
+                <FormItem label="显示收款二维码">
+                  <Radio
+                    v-model="form.fields.isReward.value"
+                    :datas="options.isReward.options"
+                    keyName="val"
+                    titleName="name"
+                  ></Radio>
+                </FormItem>
+                <FormItem label="显示微信公众号">
+                  <Radio
+                    v-model="form.fields.isWxpub.value"
+                    :datas="options.isWxpub.options"
+                    keyName="val"
+                    titleName="name"
+                  ></Radio>
+                </FormItem>
+                <FormItem label="显示关于作者">
+                  <Radio
+                    v-model="form.fields.isAbout.value"
+                    :datas="options.isAbout.options"
+                    keyName="val"
+                    titleName="name"
+                  ></Radio>
+                </FormItem>
+                <FormItem label="需要来源">
+                  <Radio
+                    v-model="form.fields.isSource.value"
+                    :datas="options.isSource.options"
+                    keyName="val"
+                    titleName="name"
+                  ></Radio>
+                </FormItem>
+                <template v-if="form.fields.isSource.value">
+                <FormItem label="来源名称">
+                  <input
+                    type="text"
+                    v-model="form.fields.sourceName.value"
+                    placeholder="请输入来源名称"
+                  >
+                </FormItem>
+                <FormItem label="来源链接">
+                  <input
+                    type="text"
+                    v-model="form.fields.sourceUrl.value"
+                    placeholder="请输入来源链接"
+                  >
+                </FormItem>
+                </template>
+              </Form>
+            </div>
+          </div>
+        </div>
+
         <!-- 主要信息 -->
         <div class="main-block-warp" v-if="form">
           <div class="h-panel">
@@ -160,30 +221,6 @@
                 <FormItem label="文章状态">
                   <Select v-model="form.fields.status.value" :datas="options.status.options"></Select>
                 </FormItem>
-                <FormItem label="需要来源">
-                  <Radio
-                    v-model="form.fields.isSource.value"
-                    :datas="options.isSource.options"
-                    keyName="val"
-                    titleName="name"
-                  ></Radio>
-                </FormItem>
-                <template v-if="form.fields.isSource.value">
-                <FormItem label="来源名称">
-                  <input
-                    type="text"
-                    v-model="form.fields.sourceName.value"
-                    placeholder="请输入来源名称"
-                  >
-                </FormItem>
-                <FormItem label="来源链接">
-                  <input
-                    type="text"
-                    v-model="form.fields.sourceUrl.value"
-                    placeholder="请输入来源链接"
-                  >
-                </FormItem>
-                </template>
               </Form>
             </div>
           </div>
@@ -323,6 +360,9 @@ export default {
       this.options.topType = new Select(this.form.fields.topType.extra.options);
       this.options.status = new Select(this.form.fields.status.extra.options);
       this.options.isSource = new Radio(this.form.fields.isSource.extra.options);
+      this.options.isReward = new Radio(this.form.fields.isReward.extra.options);
+      this.options.isWxpub = new Radio(this.form.fields.isWxpub.extra.options);
+      this.options.isAbout = new Radio(this.form.fields.isAbout.extra.options);
     },
 
     /**
