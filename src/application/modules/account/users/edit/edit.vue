@@ -2,7 +2,7 @@
   <div class="account-info-vue">
     <Form :model="account" ref="form" :labelWidth="100">
       <FormItem label="头像" prop="avatar">
-        <upload-avatar
+        <upload-image
           buttonName="上传图片"
           :action="uploadAction"
           :extraData="uploadData"
@@ -15,7 +15,7 @@
               $Message.error('未知错误');
             }
           }"
-        ></upload-avatar>
+        ></upload-image>
       </FormItem>
       <FormItem label="手机号">
         <input type="text" v-model="account.fields.phone.value">
@@ -89,14 +89,14 @@ import moment from 'moment';
 import bcrypt from 'bcryptjs';
 import _ from 'lodash';
 
-import uploadAvatar from '@/application/components/upload-avatar';
+import uploadImage from '@/application/components/upload-image';
 
 export default {
   props: {
     account: Object
   },
   components: {
-    uploadAvatar
+    uploadImage
   },
   data() {
     return {

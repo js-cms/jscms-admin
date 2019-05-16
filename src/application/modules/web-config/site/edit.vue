@@ -29,7 +29,7 @@
                 <FormItem label="站点首页关键字">
                   <input type="text" v-model="form.fields.keywords.value" :placeholder="form.fields.keywords.placeholder">
                 </FormItem>
-                <FormItem label="站点图标地址">
+                <FormItem label="站点图标地址（favicon.ico）">
                   <input type="text" v-model="form.fields.favicon.value" :placeholder="form.fields.favicon.placeholder">
                 </FormItem>
                 <FormItem label="站点描述">
@@ -66,15 +66,6 @@
                 <FormItem label="电话号码">
                   <input type="text" v-model="form.fields.phone.value" :placeholder="form.fields.phone.placeholder">
                 </FormItem>
-                <FormItem label="微信公号二维码">
-                  <input type="text" v-model="form.fields.vxqr.value" :placeholder="form.fields.vxqr.placeholder">
-                </FormItem>
-                <FormItem label="微信收款二维码">
-                  <input type="text" v-model="form.fields.wxpay.value" :placeholder="form.fields.wxpay.placeholder">
-                </FormItem>
-                <FormItem label="支付宝收款二维码">
-                  <input type="text" v-model="form.fields.alipay.value" :placeholder="form.fields.alipay.placeholder">
-                </FormItem>
                 <FormItem label="关于网站">
                   <textarea type="text" v-model="form.fields.about.value" :rows="6" :placeholder="form.fields.about.placeholder"></textarea>
                 </FormItem>
@@ -83,6 +74,109 @@
                 </FormItem>
                 <FormItem label="网站底部代码">
                   <CodeEditor v-model="form.fields.footHTML.value" :height="form.fields.footHTML.extra.height" :mode="form.fields.footHTML.extra.lang||''"  />
+                </FormItem>
+              </Form>
+            </div>
+          </div>
+        </div>
+
+        <!-- 二维码设置 -->
+        <div class="main-block-warp" v-if="form">
+          <div class="h-panel">
+            <div class="h-panel-bar">
+              <span class="h-panel-title">二维码设置</span>
+            </div>
+            <div class="h-panel-body"> 
+              <Form :label-width="150">
+                <FormItem label="客服微信二维码">
+                  <upload-image
+                    buttonName="上传图片"
+                    :action="uploadAction"
+                    :extraData="uploadData"
+                    :imageUrl="form.fields.qrWxservice.value"
+                    :height="200"
+                    :width="200"
+                    @complete="(type, res) => {
+                      if (type === 'success') {
+                        $Message[res.code === 0 ? 'success' : 'error'](res.msg);
+                        form.fields.qrWxservice.value = res.data.imageUrl;
+                      } else {
+                        $Message.error('未知错误');
+                      }
+                    }"
+                  ></upload-image>
+                </FormItem>
+                <FormItem label="微信收款二维码">
+                  <upload-image
+                    buttonName="上传图片"
+                    :action="uploadAction"
+                    :extraData="uploadData"
+                    :imageUrl="form.fields.qrWxpay.value"
+                    :height="200"
+                    :width="200"
+                    @complete="(type, res) => {
+                      if (type === 'success') {
+                        $Message[res.code === 0 ? 'success' : 'error'](res.msg);
+                        form.fields.qrWxpay.value = res.data.imageUrl;
+                      } else {
+                        $Message.error('未知错误');
+                      }
+                    }"
+                  ></upload-image>
+                </FormItem>
+                <FormItem label="微信公众号二维码">
+                  <upload-image
+                    buttonName="上传图片"
+                    :action="uploadAction"
+                    :extraData="uploadData"
+                    :imageUrl="form.fields.qrWxpub.value"
+                    :height="200"
+                    :width="200"
+                    @complete="(type, res) => {
+                      if (type === 'success') {
+                        $Message[res.code === 0 ? 'success' : 'error'](res.msg);
+                        form.fields.qrWxpub.value = res.data.imageUrl;
+                      } else {
+                        $Message.error('未知错误');
+                      }
+                    }"
+                  ></upload-image>
+                </FormItem>
+                <FormItem label="支付宝收款二维码">
+                  <upload-image
+                    buttonName="上传图片"
+                    :action="uploadAction"
+                    :extraData="uploadData"
+                    :imageUrl="form.fields.qrAlipay.value"
+                    :height="200"
+                    :width="200"
+                    @complete="(type, res) => {
+                      if (type === 'success') {
+                        $Message[res.code === 0 ? 'success' : 'error'](res.msg);
+                        form.fields.qrAlipay.value = res.data.imageUrl;
+                      } else {
+                        $Message.error('未知错误');
+                      }
+                    }"
+                  ></upload-image>
+                </FormItem>
+                <FormItem label="银联云闪付收款二维码">
+                  <upload-image
+                    buttonName="上传图片"
+                    :action="uploadAction"
+                    :extraData="uploadData"
+                    :imageUrl="form.fields.qrUnionpay.value"
+                    :height="200"
+                    :width="200"
+                    @complete="(type, res) => {
+                      if (type === 'success') {
+                        $Message[res.code === 0 ? 'success' : 'error'](res.msg);
+                        form.fields.qrUnionpay.value = res.data.imageUrl;
+                      } else {
+                        $Message.error('未知错误');
+                      }
+                    }"
+                  ></upload-image>
                 </FormItem>
               </Form>
             </div>
@@ -116,13 +210,13 @@
                   <Radio v-model="form.fields.boolLoginVercode.value" :datas="[{val: true, name: '开启'}, {val: false, name: '关闭'}]" keyName="val" titleName="name"></Radio>
                 </FormItem>
                 <FormItem label="邮箱服务器主机">
-                  <input type="text" v-model="form.fields.emailConfService.value" :placeholder="form.fields.emailConfService.placeholder">
+                  <input type="text" v-model="form.fields.confEmailService.value" :placeholder="form.fields.confEmailService.placeholder">
                 </FormItem>
                 <FormItem label="邮箱服务账号">
-                  <input type="text" v-model="form.fields.emailConfUser.value" :placeholder="form.fields.emailConfUser.placeholder">
+                  <input type="text" v-model="form.fields.confEmailUser.value" :placeholder="form.fields.confEmailUser.placeholder">
                 </FormItem>
                 <FormItem label="邮箱服务密码">
-                  <input type="text" v-model="form.fields.emailConfPass.value" :placeholder="form.fields.emailConfPass.placeholder">
+                  <input type="text" v-model="form.fields.confEmailPass.value" :placeholder="form.fields.confEmailPass.placeholder">
                 </FormItem>
               </Form>
             </div>
@@ -134,17 +228,23 @@
   </div>
 </template>
 <script>
+import storejs from 'store';
 import site from './model/Site';
 import util from '@/application/common/util/index.js';
 import jscmsForm from '@/application/components/jscms-form/jscms-form';
-import { setTimeout } from 'timers';
+import uploadImage from '@/application/components/upload-image';
 
 export default {
   components: {
-    jscmsForm
+    jscmsForm,
+    uploadImage
   },
   data() {
     return {
+      uploadAction: storejs.get('origin') + '/api/back/resource/uploader',
+      uploadData: {
+        token: storejs.get('token')
+      },
       page: {
         name: site.model.displayName
       },

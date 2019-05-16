@@ -1,5 +1,5 @@
 <template>
-  <div class="upload-avatar" @click.stop="activeUpload" :style="style">
+  <div class="upload-image" @click.stop="activeUpload" :style="style">
     <div class="cross" @click.stop="activeUpload" v-show="!imgUrl">
       <div class="across"></div>
       <div class="upright"></div>
@@ -11,6 +11,7 @@
 
 <script>
 import upload from "uploadman";
+import storejs from "store";
 
 export default {
   props: {
@@ -71,7 +72,11 @@ export default {
   watch: {
     imageUrl(val) {
       if (val) {
-        this.imgUrl = val;
+        if (val.substring(0, 4) !== 'http') {
+          this.imgUrl = storejs.get('origin') + val;
+        } else {
+          this.imgUrl = val
+        }
       }
     }
   },
@@ -98,6 +103,7 @@ export default {
     request(file) {
       const { headers, withCookie, extraData, uploadKey, action } = this;
       let data = JSON.parse(JSON.stringify(extraData));
+      data.originalImageUrl = this.imgUrl;
       const options = {
         headers: headers,
         withCredentials: withCookie,
@@ -152,7 +158,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.upload-avatar {
+.upload-image {
   height: 70px;
   width: 70px;
   background-color: transparent;

@@ -62,7 +62,7 @@
             <div class="h-panel-body">
               <Form :label-width="110">
                 <FormItem label="分类的封面">
-                  <upload-avatar
+                  <upload-image
                     buttonName="上传图片"
                     :action="uploadAction"
                     :extraData="uploadData"
@@ -77,7 +77,7 @@
                         $Message.error('未知错误');
                       }
                     }" 
-                  ></upload-avatar>
+                  ></upload-image>
                 </FormItem>
                 <FormItem label="中文分类名称">
                   <input type="text" v-model="form.fields.name.value" :placeholder="form.fields.name.placeholder">
@@ -114,11 +114,11 @@ import storejs from 'store';
 
 import util from '@/application/common/util/index.js';
 import Select from '@/application/components/jscms-form/Select.js';
-import uploadAvatar from '@/application/components/upload-avatar';
+import uploadImage from '@/application/components/upload-image';
 
 export default {
   components: {
-    uploadAvatar
+    uploadImage
   },
   data() {
     return {

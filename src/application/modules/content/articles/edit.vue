@@ -65,7 +65,7 @@
                   <div class="h-panel-body" v-show="form.fields.isIndepUser.value">
                     <Form :label-width="110">
                       <FormItem label="发布者头像">
-                        <upload-avatar
+                        <upload-image
                           buttonName="上传图片"
                           :action="uploadAction"
                           :extraData="uploadData"
@@ -78,7 +78,7 @@
                               $Message.error('未知错误');
                             }
                           }"
-                        ></upload-avatar>
+                        ></upload-image>
                       </FormItem>
                       <FormItem label="发布者昵称">
                         <input
@@ -112,7 +112,7 @@
             <div class="h-panel-body">
               <Form :label-width="110">
                 <FormItem label="文章的封面">
-                  <upload-avatar
+                  <upload-image
                     buttonName="上传图片"
                     :action="uploadAction"
                     :extraData="uploadData"
@@ -127,7 +127,7 @@
                         $Message.error('未知错误');
                       }
                     }"
-                  ></upload-avatar>
+                  ></upload-image>
                 </FormItem>
                 <FormItem label="文章的标题">
                   <input type="text" v-model="form.fields.title.value" placeholder="请输入文章的标题">
@@ -236,7 +236,7 @@
 <script>
 import storejs from 'store';
 
-import uploadAvatar from '@/application/components/upload-avatar';
+import uploadImage from '@/application/components/upload-image';
 import dialogDraftArticle from '@/application/components/dialogs/draft-article/index.js';
 import resourceList from '@/application/modules/resource/images/list.vue';
 
@@ -246,7 +246,7 @@ import Radio from '@/application/components/jscms-form/Radio';
 
 export default {
   components: {
-    uploadAvatar,
+    uploadImage,
     resourceList,
     dialogDraftArticle: dialogDraftArticle.component
   },
