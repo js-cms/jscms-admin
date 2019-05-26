@@ -120,6 +120,7 @@ export default {
     },
 
     search() {
+      this.$children[1].pagination.page = 1;
       this.$children[1].fetchData();
     }
   }

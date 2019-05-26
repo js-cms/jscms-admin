@@ -51,11 +51,6 @@ export default {
       params: {}
     };
   },
-  watch: {
-    'params.categoryId': function() {
-      this.search();
-    }
-  },
   mounted() {
     this.fetchModel$('分类', 'category', model => {
       this.model = model;

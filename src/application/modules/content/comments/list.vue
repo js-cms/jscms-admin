@@ -127,6 +127,9 @@ export default {
       };
     },
 
+    /**
+     * 保存数据
+     */
     async saveData(params, type) {
       let res = await req.post(`/api/back/comment/${type === 1 ? 'create' : 'update'}`, params);
       this.$Message({
@@ -135,6 +138,9 @@ export default {
       });
     },
 
+    /**
+     * 拉取数据
+     */
     async fetchData(reload) {
       if (reload) {
         this.data.pagination.page = 1;
@@ -145,10 +151,13 @@ export default {
       this.data.list = list;
       this.data.pagination.total = total;
     },
-
+    
+    /**
+     * 搜索
+     */
     async search() {
+      this.$children[2].pagination.page = 1;
       this.$children[2].fetchData();
-      // search
     }
   }
 };

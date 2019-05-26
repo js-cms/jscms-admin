@@ -190,6 +190,7 @@ export default {
     },
 
     search() {
+      this.$children[5].pagination.page = 1;
       this.$children[5].fetchData();
     }
   }
