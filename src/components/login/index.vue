@@ -74,7 +74,7 @@ export default {
           name: 'Home'
         });
       } else {
-        if ( res.msg.detail ) {
+        if (res.msg.detail) {
           this.$Message({
             type: 'error',
             text: res.msg.detail[0].message, 
