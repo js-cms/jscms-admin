@@ -34,7 +34,7 @@
     "lodash": "^4.17.11",
     "lodash.debounce": "^4.0.8",
     "manba": "^1.2.8",
-    "marked": "^0.5.2",
+    "marked": "^1.1.1",
     "modelman": "^0.1.4",
     "moment": "^2.24.0",
     "plupload-es6": "^2.1.11",
